@@ -1,0 +1,6 @@
+*.class
+captures
+GeneratedPluginRegistrant.java
+
+key-release.jks
+key.properties

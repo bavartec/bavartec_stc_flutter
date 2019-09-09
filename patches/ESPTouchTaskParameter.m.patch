@@ -1,0 +1,22 @@
+--- a/ios/Classes/ESPTouchTaskParameter.m
++++ b/ios/Classes/ESPTouchTaskParameter.m
+@@ -42,8 +42,8 @@ static int _datagramCount = 0;
+ {
+     self = [super init];
+     if (self) {
+-        self.intervalGuideCodeMillisecond = 8;
+-        self.intervalDataCodeMillisecond = 8;
++        self.intervalGuideCodeMillisecond = 4;
++        self.intervalDataCodeMillisecond = 4;
+         self.timeoutGuideCodeMillisecond = 2000;
+         self.timeoutDataCodeMillisecond = 4000;
+         self.timeoutTotalCodeMillisecond = 2000 + 4000;
+@@ -63,7 +63,7 @@ static int _datagramCount = 0;
+         self.thresholdSucBroadcastCount = 1;
+         self.expectTaskResultCount = 1;
+         self.isIPv4Supported0 = YES;
+-        self.isIPv6Supported0 = YES;
++        self.isIPv6Supported0 = NO;
+     }
+     return self;
+ }

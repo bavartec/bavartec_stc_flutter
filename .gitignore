@@ -1,0 +1,14 @@
+.DS_Store
+.dart_tool/
+
+.packages
+.pub/
+
+build/
+
+.flutter-plugins
+
+*.iml
+.gradle/
+local.properties
+**/.idea/

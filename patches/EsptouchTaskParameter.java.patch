@@ -1,0 +1,13 @@
+--- a/android/src/main/java/com/espressif/iot/esptouch/task/EsptouchTaskParameter.java
++++ b/android/src/main/java/com/espressif/iot/esptouch/task/EsptouchTaskParameter.java
+@@ -23,8 +23,8 @@ public class EsptouchTaskParameter implements IEsptouchTaskParameter {
+     private boolean mBroadcast = true;
+ 
+     public EsptouchTaskParameter() {
+-        mIntervalGuideCodeMillisecond = 8;
+-        mIntervalDataCodeMillisecond = 8;
++        mIntervalGuideCodeMillisecond = 4;
++        mIntervalDataCodeMillisecond = 4;
+         mTimeoutGuideCodeMillisecond = 2000;
+         mTimeoutDataCodeMillisecond = 4000;
+         mTotalRepeatTime = 1;
