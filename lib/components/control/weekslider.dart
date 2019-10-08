@@ -97,6 +97,12 @@ class _WeekSliderState extends MyState<WeekSlider> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    times = widget.times;
+  }
+
+  @override
   void didUpdateWidget(final WeekSlider oldWidget) {
     super.didUpdateWidget(oldWidget);
     times = widget.times;

@@ -40,7 +40,7 @@ class _MyConfigSensorPageState extends MyState<MyConfigSensorPage> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String sensor = prefs.getString("/config/sensor/sensor");
 
-    if (sensor == null) {
+    if (sensor == null || sensor == "UNKNOWN") {
       setState(() {
         stateChild = _MyConfigSensorPageStart(
           onStateChanged: _onStateChanged,
@@ -250,11 +250,18 @@ class _MyConfigSensorPageLoopState extends MyState<_MyConfigSensorPageLoop> {
 Hinweis: Lesen Sie die Außenfühlertemperatur an Ihrer Heizung ab."""),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 30.0),
-          child: dropdown(selection, (selection) {
-            setState(() {
-              this.selection = selection;
-            });
-          }, options.values.toList(growable: false)),
+          child: dropdownMap(
+            selection,
+            options.keys.toList(growable: false),
+            onChanged: (selection) {
+              setState(() {
+                this.selection = selection;
+              });
+            },
+            mapping: (key) {
+              return options[key];
+            },
+          ),
         ),
         OutlineButton(
           borderSide: const BorderSide(),
@@ -264,7 +271,7 @@ Hinweis: Lesen Sie die Außenfühlertemperatur an Ihrer Heizung ab."""),
               return;
             }
 
-            final String sensor = options.entries.singleWhere((entry) => entry.value == selection).key;
+            final String sensor = selection;
             final SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setString("/config/sensor/sensor", sensor);
             widget.onStateChanged(
@@ -423,13 +430,13 @@ class _MyConfigSensorPageXState extends MyState<_MyConfigSensorPageX> {
           padding: const EdgeInsets.all(15.0),
           child: dropdown(
             sensor,
-            (String sensor) {
+            sensors,
+            onChanged: (String sensor) {
               indicate(null);
               setState(() {
                 this.sensor = sensor;
               });
             },
-            sensors,
           ),
         ),
         Padding(

@@ -76,6 +76,12 @@ class _BigSliderState extends MyState<BigSlider> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    value = widget.newValue;
+  }
+
+  @override
   void didUpdateWidget(final BigSlider oldWidget) {
     super.didUpdateWidget(oldWidget);
     value = widget.newValue;

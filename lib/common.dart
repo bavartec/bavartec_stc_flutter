@@ -1,7 +1,11 @@
+import 'dart:ui';
+
 import 'package:bavartec_stc/components/indicator.dart';
 import 'package:flutter/material.dart';
 
 const double KELVIN = 273.15;
+
+typedef Mapping<K, V> = V Function(K key);
 
 String formatQueryString(final String raw) {
   return Uri.splitQueryString(raw).entries.map((entry) {
@@ -54,14 +58,20 @@ abstract class MyState<T extends StatefulWidget> extends State<T> {
     Scrollable.of(context).position.hold(null);
   }
 
-  DropdownButton<String> dropdown(final String value, final ValueChanged<String> onChanged, final List<String> items) {
-    return DropdownButton<String>(
+  DropdownButton<String> dropdown(final String value, final List<String> items,
+      {final ValueChanged<String> onChanged}) {
+    return dropdownMap(value, items, onChanged: onChanged, mapping: (value) => value);
+  }
+
+  DropdownButton<T> dropdownMap<T>(final T value, final List<T> items,
+      {final ValueChanged<T> onChanged, final Mapping<T, String> mapping}) {
+    return DropdownButton<T>(
       value: value,
       onChanged: onChanged,
-      items: items.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
+      items: items.map<DropdownMenuItem<T>>((T value) {
+        return DropdownMenuItem<T>(
           value: value,
-          child: Text(value),
+          child: Text(mapping(value)),
         );
       }).toList(),
     );
@@ -116,7 +126,10 @@ abstract class MyState<T extends StatefulWidget> extends State<T> {
   @override
   void setState(fn) {
     if (mounted) {
-      super.setState(fn);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        super.setState(fn);
+      });
+      window.scheduleFrame();
     } else {
       fn();
     }
