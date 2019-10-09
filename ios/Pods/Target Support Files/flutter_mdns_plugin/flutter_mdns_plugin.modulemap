@@ -1,0 +1,6 @@
+framework module flutter_mdns_plugin {
+  umbrella header "flutter_mdns_plugin-umbrella.h"
+
+  export *
+  module * { export * }
+}

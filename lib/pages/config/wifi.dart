@@ -7,6 +7,10 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smartconfig/smartconfig.dart';
 
+import 'package:permission_handler/permission_handler.dart';
+
+
+
 class MyConfigWifiPage extends StatefulWidget {
   MyConfigWifiPage({Key key, this.title}) : super(key: key);
 
@@ -31,6 +35,10 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
   void _onLoad() async {
     indicate(null);
 
+    initWifiList();
+  }
+
+  void initWifiList() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String ssid = prefs.getString("/config/wifi/ssid");
     final String pass = prefs.getString("/config/wifi/pass") ?? '';
@@ -47,7 +55,7 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
     }
 
     if (wifiName == null) {
-      toast("permission required");
+      toast("permission required god!");
       return;
     }
 
@@ -90,23 +98,63 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
     isSubmitting = false;
   }
 
+
   Future<bool> smartConfig(final String ssid, final String bssid, final String pass) async {
     return (await Smartconfig.start(ssid, bssid, pass)) || (await Api.mdnsQuery()) != null;
   }
 
+  Future<bool> _requestPermissions() async {
+    Map<PermissionGroup, PermissionStatus> permissions =
+    await PermissionHandler().requestPermissions([
+      PermissionGroup.storage,
+      PermissionGroup.location,
+    ]);
+
+    print(permissions.values.toList().toString());
+
+    List<bool> results = permissions.values.toList().map((status) {
+      return status == PermissionStatus.granted;
+    }).toList();
+
+
+    return !results.contains(false);
+
+  }
+
   Future<bool> getConnectivityPermission() async {
+    //_requestPermissions();
+
+    print("platform is Android:["+Platform.isAndroid.toString()+"]");
     if (Platform.isAndroid) {
       return Platform.requireLocation();
     }
 
     if (Platform.isIOS) {
-      final Connectivity connectivity = Connectivity();
-      LocationAuthorizationStatus status = await connectivity.getLocationServiceAuthorization();
 
-      if (status == LocationAuthorizationStatus.notDetermined) {
-        status = await connectivity.requestLocationServiceAuthorization();
+      ConnectivityResult result;
+      // Platform messages may fail, so we use a try/catch PlatformException.
+
+
+      final Connectivity connectivity = Connectivity();
+      try {
+        result = await connectivity.checkConnectivity();
+      } on PlatformException catch (e) {
+        print(e.toString());
       }
 
+      print("[mike][ios...]");
+      LocationAuthorizationStatus status = await connectivity.getLocationServiceAuthorization();
+
+      //for(var i=0; i<10; i++) {
+        if (status == LocationAuthorizationStatus.notDetermined ||
+            status == LocationAuthorizationStatus.denied) {
+          status = await connectivity.requestLocationServiceAuthorization();
+
+       // }else{
+       //   break;
+       // }
+      }
+      print("[mike][" + status.toString() + "]");
       if (status != LocationAuthorizationStatus.authorizedAlways &&
           status != LocationAuthorizationStatus.authorizedWhenInUse) {
         return false;
@@ -118,7 +166,7 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
 
   Future<List<String>> getConnectivity() async {
     final bool permission = await getConnectivityPermission();
-
+    print(permission.toString());
     if (!permission) {
       return [null, null];
     }
@@ -129,9 +177,12 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
     if (result != ConnectivityResult.wifi) {
       return [null, null];
     }
-
+    print("1111");
     final String wifiName = await connectivity.getWifiName();
     final String wifiBSSID = await connectivity.getWifiBSSID();
+    print("2222");
+    print(wifiName.toString());
+    print(wifiBSSID.toString());
     return [wifiName, wifiBSSID];
   }
 
@@ -206,6 +257,11 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
               borderSide: const BorderSide(),
               onPressed: _onSubmit,
               child: const Text("Submit"),
+            ),
+            OutlineButton(
+              borderSide: const BorderSide(),
+              onPressed: initWifiList,
+              child: const Text("initwifilist"),
             ),
           ],
         ),

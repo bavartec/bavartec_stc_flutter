@@ -2,6 +2,7 @@ import 'package:bavartec_stc/common.dart';
 import 'package:flutter/material.dart';
 
 typedef Future<bool> Action();
+typedef bool ActionEx(BuildContext context);
 
 class MyIndexPage extends StatefulWidget {
   MyIndexPage({
@@ -10,12 +11,14 @@ class MyIndexPage extends StatefulWidget {
     @required this.prefix,
     @required this.labels,
     this.actions = const {},
+    this.actionExs = const {},
   }) : super(key: key);
 
   final String title;
   final String prefix;
   final List<String> labels;
   final Map<String, Action> actions;
+  final Map<String, ActionEx> actionExs;
 
   @override
   _MyIndexPageState createState() => _MyIndexPageState();
@@ -36,7 +39,10 @@ class _MyIndexPageState extends MyState<MyIndexPage> {
                     onPressed: () {
                       if (widget.actions.containsKey(label.toLowerCase())) {
                         indicateSuccess(widget.actions[label.toLowerCase()]());
-                      } else {
+                      } else if(widget.actionExs.containsKey(label.toLowerCase())) {
+                        widget.actionExs[label.toLowerCase()](context);
+                      } else
+                      {
                         navigate(widget.prefix + label.toLowerCase());
                       }
                     },
