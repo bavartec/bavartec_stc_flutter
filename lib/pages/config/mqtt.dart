@@ -1,10 +1,8 @@
 import 'package:bavartec_stc/api.dart';
 import 'package:bavartec_stc/common.dart';
+import 'package:bavartec_stc/mqtt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-const String SERVER = "mqtt.bavartec.de";
-const int PORT = 8883;
 
 class MyConfigMQTTPage extends StatefulWidget {
   MyConfigMQTTPage({Key key, this.title}) : super(key: key);
@@ -16,175 +14,242 @@ class MyConfigMQTTPage extends StatefulWidget {
 }
 
 class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
-  TextEditingController serverController = TextEditingController(text: SERVER);
-  TextEditingController portController = TextEditingController(text: PORT.toString());
-  String server = SERVER;
-  int port = PORT;
-  String user = '';
-  String password = '';
-  bool showPassword = false;
+  TextEditingController serverController = TextEditingController();
+  TextEditingController portController = TextEditingController();
+  TextEditingController userController = TextEditingController();
+  TextEditingController passController = TextEditingController();
+
+  bool provider = true;
+  String server;
+  int port;
+  String user;
+  String pass;
+  bool showPass = false;
+
+  void _onLoad() async {
+    await MQTT.load();
+
+    setState(() {
+      server = MQTT.server;
+      port = MQTT.port;
+      user = MQTT.user;
+      pass = MQTT.pass;
+
+      serverController.value = new TextEditingValue(text: server ?? '');
+      portController.value = new TextEditingValue(text: port == null ? '' : port.toString());
+      userController.value = new TextEditingValue(text: user ?? '');
+      passController.value = new TextEditingValue(text: pass ?? '');
+    });
+  }
 
   void _onSubmit() async {
-    if (user.length == 0 || password.length == 0) {
-      indicate(null);
-      toast("please enter username and password");
+    indicateNull();
+
+    final String server = provider ? MQTT.SERVER : this.server;
+    final int port = provider ? MQTT.PORT : this.port;
+
+    final String validation = MQTT.validate(server, port, user, pass);
+
+    if (validation != null) {
+      toast(validation);
       return;
     }
 
-    await indicateSuccess(Api.configMQTT(server, port, user, password));
+    if (provider) {
+      final String registration = await MQTT.register(user, pass);
+      toast(locale().apiRegister[registration]);
+
+      if (registration != 'success') {
+        return;
+      }
+    }
+
+    MQTT.set(server, port, user, pass);
+    MQTT.save();
+
+    await indicateSuccess(Api.configMQTT(server, port, user, pass));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _onLoad();
   }
 
   @override
   Widget build(final BuildContext context) {
-    return scaffold(
-      widget.title,
-      Padding(
-        padding: const EdgeInsets.all(40.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              "Server",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: 300.0,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  TextField(
-                    autocorrect: false,
-                    controller: serverController,
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(255),
-                    ],
-                    onChanged: (server) {
-                      indicate(null);
-                      setState(() {
-                        this.server = server;
-                      });
-                    },
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 15.0),
-            const Text(
-              "Port",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: 300.0,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  TextField(
-                    autocorrect: false,
-                    controller: portController,
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(5),
-                    ],
-                    keyboardType: TextInputType.numberWithOptions(),
-                    onChanged: (port) {
-                      indicate(null);
-                      setState(() {
-                        this.port = int.parse(port);
-                      });
-                    },
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 15.0),
-            const Text(
-              "User",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: 300.0,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  TextField(
-                    autocorrect: false,
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(31),
-                    ],
-                    onChanged: (user) {
-                      indicate(null);
-                      setState(() {
-                        this.user = user;
-                      });
-                    },
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 15.0),
-            const Text(
-              "Password",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: 300.0,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  TextField(
-                    autocorrect: false,
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(63),
-                    ],
-                    obscureText: !showPassword,
-                    onChanged: (password) {
-                      indicate(null);
-                      setState(() {
-                        this.password = password;
-                      });
-                    },
-                    textAlign: TextAlign.center,
-                  ),
-                  CheckboxListTile(
-                    value: showPassword,
-                    onChanged: (value) {
-                      indicate(null);
-                      setState(() {
-                        this.showPassword = value;
-                      });
-                    },
-                    title: const Text("Show Password"),
-                    controlAffinity: ListTileControlAffinity.platform,
-                  ),
-                ],
-              ),
-            ),
-            OutlineButton(
-              borderSide: const BorderSide(),
-              onPressed: _onSubmit,
-              child: const Text("Submit"),
-            ),
-          ],
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          locale().provider,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
         ),
-      ),
+        dropdownMap(
+          provider,
+          [true, false],
+          onChanged: (provider) {
+            setState(() {
+              this.provider = provider;
+            });
+          },
+          mapping: (provider) {
+            return provider ? "BavarTec" : locale().custom;
+          },
+        ),
+        const SizedBox(height: 15.0),
+        Visibility(
+          visible: !provider,
+          child: Column(
+            children: <Widget>[
+              Text(
+                locale().server,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: 300.0,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    TextField(
+                      autocorrect: false,
+                      controller: serverController,
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(255),
+                      ],
+                      onChanged: (server) {
+                        indicateNull();
+                        setState(() {
+                          this.server = server;
+                        });
+                      },
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 15.0),
+              Text(
+                locale().port,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: 300.0,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    TextField(
+                      autocorrect: false,
+                      controller: portController,
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(5),
+                      ],
+                      keyboardType: TextInputType.numberWithOptions(),
+                      onChanged: (port) {
+                        indicateNull();
+                        setState(() {
+                          this.port = int.tryParse(port);
+                        });
+                      },
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 15.0),
+            ],
+          ),
+        ),
+        Text(
+          locale().username,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: 300.0,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextField(
+                autocorrect: false,
+                controller: userController,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(31),
+                ],
+                onChanged: (user) {
+                  indicateNull();
+                  setState(() {
+                    this.user = user;
+                  });
+                },
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 15.0),
+        Text(
+          locale().password,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: 300.0,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextField(
+                autocorrect: false,
+                controller: passController,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(63),
+                ],
+                obscureText: !showPass,
+                onChanged: (password) {
+                  indicateNull();
+                  setState(() {
+                    this.pass = password;
+                  });
+                },
+                textAlign: TextAlign.center,
+              ),
+              CheckboxListTile(
+                value: showPass,
+                onChanged: (value) {
+                  indicateNull();
+                  setState(() {
+                    this.showPass = value;
+                  });
+                },
+                title: Text(locale().showPassword),
+                controlAffinity: ListTileControlAffinity.platform,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 15.0),
+        OutlineButton(
+          borderSide: const BorderSide(),
+          onPressed: _onSubmit,
+          child: Text(locale().submit),
+        ),
+      ],
     );
   }
 }

@@ -76,7 +76,7 @@ class MainActivity : FlutterActivity(), MethodCallHandler {
                 apConfig.run(ssid, pass, safeSuccess)
             }
             "discoverWifi" -> {
-                mnsd.discoverWifi(false, safeSuccess)
+                mnsd.discoverWifi(safeSuccess)
             }
             "homeSSID" -> {
                 result.success(apConfig.homeSSID())

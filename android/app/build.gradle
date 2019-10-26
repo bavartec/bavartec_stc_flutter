@@ -22,7 +22,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
@@ -32,7 +32,7 @@ android {
     defaultConfig {
         applicationId "de.bavartec.stc"
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
     }
@@ -57,7 +57,7 @@ android {
             shrinkResources false
         }
     }
-    buildToolsVersion '28.0.3'
+    buildToolsVersion '29.0.2'
     compileOptions {
         sourceCompatibility '1.8'
         targetCompatibility '1.8'

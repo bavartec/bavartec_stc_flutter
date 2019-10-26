@@ -1,10 +1,10 @@
 package de.bavartec.stc
 
-import android.os.CountDownTimer
+import android.os.*
 
 class Timeout(
-        millis: Long,
-        private val onTimeout: () -> Unit
+    millis: Long,
+    private val onTimeout: () -> Unit
 ) {
     private val mTimer: CountDownTimer
 

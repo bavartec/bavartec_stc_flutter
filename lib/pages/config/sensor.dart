@@ -38,9 +38,9 @@ class _MyConfigSensorPageState extends MyState<MyConfigSensorPage> {
 
   void _onLoad() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String sensor = prefs.getString("/config/sensor/sensor");
+    final String sensor = prefs.getString('/config/sensor/sensor');
 
-    if (sensor == null || sensor == "UNKNOWN") {
+    if (sensor == null || sensor == 'UNKNOWN') {
       setState(() {
         stateChild = _MyConfigSensorPageStart(
           onStateChanged: _onStateChanged,
@@ -72,12 +72,9 @@ class _MyConfigSensorPageState extends MyState<MyConfigSensorPage> {
 
   @override
   Widget build(final BuildContext context) {
-    return scaffold(
-      widget.title,
-      Padding(
-        padding: const EdgeInsets.all(40.0),
-        child: this.stateChild,
-      ),
+    return Padding(
+      padding: const EdgeInsets.all(40.0),
+      child: this.stateChild,
     );
   }
 }
@@ -99,16 +96,13 @@ class _MyConfigSensorPageStartState extends MyState<_MyConfigSensorPageStart> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        const Text("""
-Smart Thermo Control ist kompatibel mit einer großen Vielzahl an Außenfühlern.
-Damit das Gerät richtig arbeiten kann, muss zunächst der genaue Typ ermittelt werden.
-Im folgenden werden Sie aufgefordert, die untenstehenden Schalter wie jeweils gezeigt einzustellen."""),
+        Text(locale().configSensorStart),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 30.0),
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 300.0),
             child: Image.asset(
-              "assets/manual/dip/zero.png",
+              'assets/manual/dip/zero.png',
               alignment: Alignment.center,
               repeat: ImageRepeat.noRepeat,
               matchTextDirection: false,
@@ -127,7 +121,7 @@ Im folgenden werden Sie aufgefordert, die untenstehenden Schalter wie jeweils ge
                 ),
               );
             },
-            child: const Text("Weiter"),
+            child: Text(locale().doContinue),
           ),
         ),
         Padding(
@@ -141,7 +135,7 @@ Im folgenden werden Sie aufgefordert, die untenstehenden Schalter wie jeweils ge
                 ),
               );
             },
-            child: const Text("Erweitert"),
+            child: Text(locale().advanced),
           ),
         ),
       ],
@@ -184,7 +178,7 @@ class _MyConfigSensorPageLoopState extends MyState<_MyConfigSensorPageLoop> {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const Text("Einen kurzen Moment Geduld ..."),
+              Text(locale().configSensorWait),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 30.0),
                 child: CircularProgressIndicator(),
@@ -197,18 +191,18 @@ class _MyConfigSensorPageLoopState extends MyState<_MyConfigSensorPageLoop> {
           final String data = snap.data;
           final Map<String, String> dataMap = Uri.splitQueryString(data);
 
-          if (dataMap["type"] != dip) {
-            dip = dataMap["type"];
+          if (dataMap['type'] != dip) {
+            dip = dataMap['type'];
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const Text("Stellen Sie die Schalter wie dargestellt ein:"),
+                Text(locale().configSensorDIP),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 30.0),
                   child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 300.0),
                     child: Image.asset(
-                      "assets/manual/dip/${dip}X.png",
+                      'assets/manual/dip/${dip}X.png',
                       alignment: Alignment.center,
                       repeat: ImageRepeat.noRepeat,
                       matchTextDirection: false,
@@ -223,13 +217,13 @@ class _MyConfigSensorPageLoopState extends MyState<_MyConfigSensorPageLoop> {
                       selection = null;
                     });
                   },
-                  child: const Text("Erledigt"),
+                  child: Text(locale().done),
                 ),
               ],
             );
           } else {
-            print(dataMap.remove("value"));
-            print(dataMap.remove("type"));
+            print(dataMap.remove('value'));
+            print(dataMap.remove('type'));
             return _buildChoose(dataMap.map((key, value) {
               final int temp = (double.parse(value) - KELVIN).round();
               return MapEntry(key, "$temp°C");
@@ -237,7 +231,7 @@ class _MyConfigSensorPageLoopState extends MyState<_MyConfigSensorPageLoop> {
           }
         }
 
-        return const Text("Verbindung fehlgeschlagem");
+        return Text(locale().errorConnectionFailed);
       },
     );
   }
@@ -246,8 +240,7 @@ class _MyConfigSensorPageLoopState extends MyState<_MyConfigSensorPageLoop> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        const Text("""Welche Temperatur hat es gerade draußen?
-Hinweis: Lesen Sie die Außenfühlertemperatur an Ihrer Heizung ab."""),
+        Text(locale().configSensorChoose),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 30.0),
           child: dropdownMap(
@@ -267,13 +260,12 @@ Hinweis: Lesen Sie die Außenfühlertemperatur an Ihrer Heizung ab."""),
           borderSide: const BorderSide(),
           onPressed: () async {
             if (selection == null) {
-              toast("please select temperature");
               return;
             }
 
             final String sensor = selection;
             final SharedPreferences prefs = await SharedPreferences.getInstance();
-            prefs.setString("/config/sensor/sensor", sensor);
+            prefs.setString('/config/sensor/sensor', sensor);
             widget.onStateChanged(
               _MyConfigSensorPageEnd(
                 sensor: sensor,
@@ -281,7 +273,7 @@ Hinweis: Lesen Sie die Außenfühlertemperatur an Ihrer Heizung ab."""),
               ),
             );
           },
-          child: const Text("Weiter"),
+          child: Text(locale().doContinue),
         ),
       ],
     );
@@ -322,13 +314,13 @@ class _MyConfigSensorPageEndState extends MyState<_MyConfigSensorPageEnd> {
         Text.rich(
           TextSpan(
             children: <TextSpan>[
-              TextSpan(text: "Ihr Außenfühler wurde als "),
+              TextSpan(text: locale().configSensorRecognized[0]),
               TextSpan(text: widget.sensor, style: TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(text: " erkannt."),
+              TextSpan(text: locale().configSensorRecognized[1]),
             ],
           ),
         ),
-        const Text("Stellen Sie die Schalter wie dargestellt ein:"),
+        Text(locale().configSensorDIP),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 30.0),
           child: FutureBuilder(
@@ -343,7 +335,7 @@ class _MyConfigSensorPageEndState extends MyState<_MyConfigSensorPageEnd> {
                 return ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 300.0),
                   child: Image.asset(
-                    "assets/manual/dip/$dip.png",
+                    'assets/manual/dip/$dip.png',
                     alignment: Alignment.center,
                     repeat: ImageRepeat.noRepeat,
                     matchTextDirection: false,
@@ -351,7 +343,7 @@ class _MyConfigSensorPageEndState extends MyState<_MyConfigSensorPageEnd> {
                 );
               }
 
-              return const Text("Verbindung fehlgeschlagem");
+              return Text(locale().errorConnectionFailed);
             },
           ),
         ),
@@ -369,7 +361,7 @@ class _MyConfigSensorPageEndState extends MyState<_MyConfigSensorPageEnd> {
                     ),
                   );
                 },
-                child: const Text("Nochmal"),
+                child: Text(locale().again),
               ),
             ),
             Padding(
@@ -378,9 +370,9 @@ class _MyConfigSensorPageEndState extends MyState<_MyConfigSensorPageEnd> {
                 borderSide: const BorderSide(),
                 onPressed: () {
                   Api.control(enabled: true);
-                  navigate("/");
+                  navigate('/');
                 },
-                child: const Text("Fertig"),
+                child: Text(locale().finish),
               ),
             ),
           ],
@@ -406,7 +398,7 @@ class _MyConfigSensorPageXState extends MyState<_MyConfigSensorPageX> {
 
   void _onSubmit() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("/config/sensor/sensor", sensor);
+    prefs.setString('/config/sensor/sensor', sensor);
     widget.onStateChanged(
       _MyConfigSensorPageEnd(
         sensor: sensor,
@@ -420,8 +412,8 @@ class _MyConfigSensorPageXState extends MyState<_MyConfigSensorPageX> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        const Text(
-          "Sensor",
+        Text(
+          locale().sensor,
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
@@ -432,7 +424,7 @@ class _MyConfigSensorPageXState extends MyState<_MyConfigSensorPageX> {
             sensor,
             sensors,
             onChanged: (String sensor) {
-              indicate(null);
+              indicateNull();
               setState(() {
                 this.sensor = sensor;
               });
@@ -444,7 +436,7 @@ class _MyConfigSensorPageXState extends MyState<_MyConfigSensorPageX> {
           child: OutlineButton(
             borderSide: const BorderSide(),
             onPressed: _onSubmit,
-            child: const Text("Submit"),
+            child: Text(locale().submit),
           ),
         ),
         Padding(
@@ -458,7 +450,7 @@ class _MyConfigSensorPageXState extends MyState<_MyConfigSensorPageX> {
                 ),
               );
             },
-            child: const Text("Zurück"),
+            child: Text(locale().back),
           ),
         ),
       ],

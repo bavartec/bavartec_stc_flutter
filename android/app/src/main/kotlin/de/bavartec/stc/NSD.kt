@@ -1,15 +1,14 @@
 package de.bavartec.stc
 
-import android.net.nsd.NsdManager
-import android.net.nsd.NsdManager.PROTOCOL_DNS_SD
-import android.net.nsd.NsdServiceInfo
+import android.net.nsd.*
+import android.net.nsd.NsdManager.*
 import android.net.wifi.*
-import android.util.Log
+import android.util.*
 
 class NSD(
-        private val manager: NsdManager,
-        wifi: WifiManager
-) : NsdManager.DiscoveryListener {
+    private val manager: NsdManager,
+    wifi: WifiManager
+) : DiscoveryListener {
     companion object {
         const val TAG = "NSD"
         const val SERVICE_TYPE = "_http._tcp"
@@ -18,7 +17,6 @@ class NSD(
 
     private val multicastLock = wifi.createMulticastLock("nsd")
 
-    private var discoveredService: NsdServiceInfo? = null
     private val discoveryRequests = ArrayList<(String?) -> Unit>()
 
     private var running = false
@@ -26,25 +24,14 @@ class NSD(
         broadcast(null)
     }
 
-    fun discoverWifi(cache: Boolean, callback: (String?) -> Unit) {
-        val cached = discoveredService
-
-        if (cache && cached != null) {
-            callback(format(cached))
-            return
-        }
-
+    fun discoverWifi(callback: (String?) -> Unit) {
         discoveryRequests += callback
         startDiscovery()
     }
 
-    fun invalidateWifi() {
-        discoveredService = null
-        broadcast(null)
-    }
-
     private fun broadcast(service: NsdServiceInfo?) {
         val value = service?.let(this::format)
+        Log.d(TAG, "broadcast: $value")
         discoveryRequests.forEach { it(value) }
         discoveryRequests.clear()
     }
@@ -57,24 +44,22 @@ class NSD(
     }
 
     private fun startDiscovery() {
-        timeout.restart()
-
         if (running) {
             return
         }
 
+        running = true
         multicastLock.acquire()
         manager.discoverServices(SERVICE_TYPE, PROTOCOL_DNS_SD, this)
-        running = true
+        timeout.restart()
     }
 
     private fun stopDiscovery() {
-        timeout.stop()
-
         if (!running) {
             return
         }
 
+        timeout.stop()
         manager.stopServiceDiscovery(this)
         multicastLock.release()
         running = false
@@ -91,17 +76,14 @@ class NSD(
             return
         }
 
-        manager.resolveService(service, object : NsdManager.ResolveListener {
+        manager.resolveService(service, object : ResolveListener {
             override fun onResolveFailed(serviceInfo: NsdServiceInfo, errorCode: Int) {
                 Log.e(TAG, "Resolve failed: $errorCode")
             }
 
             override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
                 Log.i(TAG, "Resolve Succeeded: $serviceInfo")
-
-                discoveredService = serviceInfo
                 broadcast(serviceInfo)
-
                 stopDiscovery()
             }
         })
@@ -114,7 +96,7 @@ class NSD(
             return
         }
 
-        invalidateWifi()
+        broadcast(null)
     }
 
     override fun onDiscoveryStopped(serviceType: String) {

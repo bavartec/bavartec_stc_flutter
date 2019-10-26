@@ -19,7 +19,7 @@ class _MyQueryPageState extends MyState<MyQueryPage> {
 
     setState(() {
       if (text == null) {
-        this.text = "no response";
+        this.text = locale().errorNoResponse;
       } else {
         this.text = formatQueryString(text);
       }
@@ -28,24 +28,21 @@ class _MyQueryPageState extends MyState<MyQueryPage> {
 
   @override
   Widget build(final BuildContext context) {
-    return scaffold(
-      widget.title,
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const SizedBox(height: 30.0),
-          Text(text ?? "</>"),
-          const SizedBox(height: 30.0),
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: OutlineButton(
-              borderSide: const BorderSide(),
-              onPressed: _onRefresh,
-              child: const Text("Refresh"),
-            ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        const SizedBox(height: 30.0),
+        Text(text ?? "</>"),
+        const SizedBox(height: 30.0),
+        Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: OutlineButton(
+            borderSide: const BorderSide(),
+            onPressed: _onRefresh,
+            child: Text(locale().refresh),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

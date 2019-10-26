@@ -29,6 +29,10 @@ class IndicatorPainter extends CustomPainter {
 
   @override
   void paint(final Canvas canvas, final Size size) {
+    if (color == null) {
+      return;
+    }
+
     final Paint border = Paint()
       ..color = Colors.black
       ..style = PaintingStyle.fill;

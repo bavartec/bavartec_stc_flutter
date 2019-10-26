@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io' as dartio;
 
+import 'package:device_info/device_info.dart';
 import 'package:flutter/services.dart';
 
 class Platform {
@@ -16,6 +17,20 @@ class Platform {
           'ssid': ssid,
           'pass': pass,
         });
+  }
+
+  static Future<String> deviceIdentifier() async {
+    final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+    if (isAndroid) {
+      return (await deviceInfo.androidInfo).androidId;
+    }
+
+    if (isIOS) {
+      return (await deviceInfo.iosInfo).identifierForVendor;
+    }
+
+    return null;
   }
 
   static Future<String> discoverWifi() async {

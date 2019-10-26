@@ -6,7 +6,7 @@ import de.bavartec.stc.Utils.bytes
 import java.net.*
 
 class APConfig(
-        private val wifi: WifiManager
+    private val wifi: WifiManager
 ) {
     companion object {
         const val TAG = "APConfig"
@@ -71,9 +71,9 @@ class APConfig(
                     callback(waitForTraffic(timeout2))
                     return@Thread
                 } else if (supplicantState in arrayOf(
-                                SupplicantState.DISCONNECTED,
-                                SupplicantState.INACTIVE,
-                                SupplicantState.SCANNING)) {
+                        SupplicantState.DISCONNECTED,
+                        SupplicantState.INACTIVE,
+                        SupplicantState.SCANNING)) {
                     val id = findNetwork(ssid)
 
                     if (id == null) {
@@ -146,8 +146,8 @@ class APConfig(
     // @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     fun homeSSID(): String? {
         return wifi.connectionInfo.ssid
-                .takeIf { it != "<unknown ssid>" && it != SSID }
-                ?.removeSurrounding("\"")
+            .takeIf { it != "<unknown ssid>" && it != SSID }
+            ?.removeSurrounding("\"")
     }
 
     private fun request(url: String, data: Map<String, String>?, callback: (String?) -> Unit) {
@@ -174,8 +174,8 @@ class APConfig(
             val gateway = gateway().hostAddress
 
             request("http://$gateway/config/wifi", mapOf(
-                    "ssid" to ssid,
-                    "pass" to pass
+                "ssid" to ssid,
+                "pass" to pass
             )) { body ->
                 disconnect(ssid) {
                     callback(body != null)

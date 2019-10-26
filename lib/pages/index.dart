@@ -3,19 +3,25 @@ import 'package:flutter/material.dart';
 
 typedef Future<bool> Action();
 
+class MyIndex {
+  MyIndex({
+    @required this.label,
+    this.action,
+    this.route,
+  });
+
+  final String label;
+  final Action action;
+  final String route;
+}
+
 class MyIndexPage extends StatefulWidget {
-  MyIndexPage({
+  MyIndexPage(
+    this.indexes, {
     Key key,
-    this.title,
-    @required this.prefix,
-    @required this.labels,
-    this.actions = const {},
   }) : super(key: key);
 
-  final String title;
-  final String prefix;
-  final List<String> labels;
-  final Map<String, Action> actions;
+  final List<MyIndex> indexes;
 
   @override
   _MyIndexPageState createState() => _MyIndexPageState();
@@ -24,27 +30,26 @@ class MyIndexPage extends StatefulWidget {
 class _MyIndexPageState extends MyState<MyIndexPage> {
   @override
   Widget build(final BuildContext context) {
-    return scaffold(
-      widget.title,
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: widget.labels
-            .map((label) => Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: OutlineButton(
-                    borderSide: const BorderSide(),
-                    onPressed: () {
-                      if (widget.actions.containsKey(label.toLowerCase())) {
-                        indicateSuccess(widget.actions[label.toLowerCase()]());
-                      } else {
-                        navigate(widget.prefix + label.toLowerCase());
-                      }
-                    },
-                    child: Text(label),
-                  ),
-                ))
-            .toList(growable: false),
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: widget.indexes
+          .map((index) => Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: OutlineButton(
+                  borderSide: const BorderSide(),
+                  onPressed: () {
+                    if (index.action != null) {
+                      indicateSuccess(index.action());
+                    }
+
+                    if (index.route != null) {
+                      navigate(index.route);
+                    }
+                  },
+                  child: Text(index.label),
+                ),
+              ))
+          .toList(growable: false),
     );
   }
 }

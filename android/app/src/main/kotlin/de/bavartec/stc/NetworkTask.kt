@@ -7,8 +7,8 @@ import java.net.*
 import java.net.HttpURLConnection.*
 
 open class NetworkTask(
-        private val url: String,
-        private val data: Map<String, String>?
+    private val url: String,
+    private val data: Map<String, String>?
 ) : AsyncTask<Unit, Unit, String?>() {
     override fun doInBackground(vararg params: Unit?): String? {
         return try {

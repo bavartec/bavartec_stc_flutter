@@ -1,11 +1,40 @@
+import 'dart:async';
+import 'dart:math';
 import 'dart:ui';
 
-import 'package:bavartec_stc/components/indicator.dart';
+import 'package:bavartec_stc/i18n.dart';
+import 'package:bavartec_stc/main.dart';
 import 'package:flutter/material.dart';
 
 const double KELVIN = 273.15;
 
 typedef Mapping<K, V> = V Function(K key);
+
+enum Light { blue, red, yellow, green }
+
+class Lights {
+  Lights({
+    this.mdns,
+    this.mqtt,
+    this.sync,
+  });
+
+  Light mdns;
+  Light mqtt;
+  Light sync;
+
+  Light shine() {
+    if (sync != Light.blue) {
+      return sync;
+    }
+
+    return best(mdns, mqtt);
+  }
+
+  static Light best(final Light a, final Light b) {
+    return Light.values[max(a.index, b.index)];
+  }
+}
 
 String formatQueryString(final String raw) {
   return Uri.splitQueryString(raw).entries.map((entry) {
@@ -13,115 +42,20 @@ String formatQueryString(final String raw) {
   }).join('\n');
 }
 
-abstract class MyState<T extends StatefulWidget> extends State<T> {
-  BuildContext innerContext;
-  Color indicator;
+class Regex {
+  static const String _domainComponent = '[a-z0-9][a-z0-9_-]*[a-z0-9]';
+  static const String _domain = '$_domainComponent(.$_domainComponent)+';
+  static RegExp domain = RegExp('^$_domain\$');
 
-  MyState findRoot() {
-    MyState state = this;
+  static const String _ipComponent = '[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]';
+  static const String _ip = '$_ipComponent(.$_ipComponent)+';
+  static RegExp ip = RegExp('^$_ip\$');
 
-    while (state.innerContext == null) {
-      state = context.ancestorStateOfType(const TypeMatcher<MyState>()) as MyState;
-    }
+  static RegExp server = RegExp('^($_domain)|($_ip)\$');
+}
 
-    return state;
-  }
-
-  void indicate(final Color color) async {
-    setState(() {
-      indicator = color;
-    });
-  }
-
-  Future<T> indicateResult<T>(final Future<T> call) async {
-    final MyState root = findRoot();
-    root.indicate(const Color(0xffffff00));
-    final T result = await call;
-    final bool success = result != null;
-    root.indicate(success ? const Color(0xff00ff00) : const Color(0xffff0000));
-    return result;
-  }
-
-  Future<bool> indicateSuccess(final Future<bool> call) async {
-    final MyState root = findRoot();
-    root.indicate(const Color(0xffffff00));
-    final bool success = await call;
-    root.indicate(success ? const Color(0xff00ff00) : const Color(0xffff0000));
-    return success;
-  }
-
-  void navigate(final String route) {
-    Navigator.of(context).pushNamed(route);
-  }
-
-  void consumePointer() {
-    Scrollable.of(context).position.hold(null);
-  }
-
-  DropdownButton<String> dropdown(final String value, final List<String> items,
-      {final ValueChanged<String> onChanged}) {
-    return dropdownMap(value, items, onChanged: onChanged, mapping: (value) => value);
-  }
-
-  DropdownButton<T> dropdownMap<T>(final T value, final List<T> items,
-      {final ValueChanged<T> onChanged, final Mapping<T, String> mapping}) {
-    return DropdownButton<T>(
-      value: value,
-      onChanged: onChanged,
-      items: items.map<DropdownMenuItem<T>>((T value) {
-        return DropdownMenuItem<T>(
-          value: value,
-          child: Text(mapping(value)),
-        );
-      }).toList(),
-    );
-  }
-
-  Scaffold scaffold(final String title, final Widget child) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(title),
-            Container(
-              width: 20,
-              height: 20,
-              child: indicator == null ? null : Indicator(color: indicator),
-            ),
-          ],
-        ),
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Center(
-            child: Builder(
-              builder: (context) {
-                this.innerContext = context;
-                return child;
-              },
-            ),
-          ),
-        ),
-      ),
-      drawer: SafeArea(
-        child: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: const <String>["Config", "Control", "Debug"]
-                .map((label) => ListTile(
-                      title: Text(label),
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        navigate('/' + label.toLowerCase());
-                      },
-                    ))
-                .toList(growable: false),
-          ),
-        ),
-      ),
-    );
-  }
+abstract class MyBaseState<T extends StatefulWidget> extends State<T> {
+  MyLocalizations locale() => MyLocalizations.of(context);
 
   @override
   void setState(fn) {
@@ -134,15 +68,94 @@ abstract class MyState<T extends StatefulWidget> extends State<T> {
       fn();
     }
   }
+}
 
-  void toast(final String text) {
-    final ScaffoldState scaffold = Scaffold.of(innerContext ?? context);
+abstract class MyState<T extends StatefulWidget> extends MyBaseState<T> {
+  MyAppState findRoot() {
+    return context.ancestorStateOfType(const TypeMatcher<MyAppState>()) as MyAppState;
+  }
+
+  void indicate(final Light light) {
+    findRoot().indicate(
+      sync: light,
+    );
+  }
+
+  void indicateNull() {
+    indicate(Light.blue);
+  }
+
+  Future<T> indicateResult<T>(final Future<T> call) async {
+    indicate(Light.yellow);
+    final T result = await call;
+    final bool success = result != null;
+    indicate(success ? Light.green : Light.red);
+    return result;
+  }
+
+  Future<bool> indicateSuccess(final Future<bool> call) async {
+    indicate(Light.yellow);
+    final bool success = await call;
+    indicate(success ? Light.green : Light.red);
+    return success;
+  }
+
+  void navigate(final String route) {
+    indicateNull();
+    navigator().pushNamed(route);
+  }
+
+  NavigatorState navigator() => Navigator.of(context);
+
+  void consumePointer() {
+    scrollable().position.hold(null);
+  }
+
+  ScrollableState scrollable() => Scrollable.of(context);
+
+  DropdownButton<String> dropdown(
+    final String value,
+    final List<String> items, {
+    @required final ValueChanged<String> onChanged,
+  }) {
+    return dropdownMap<String>(
+      value,
+      items,
+      onChanged: onChanged,
+      mapping: (value) => value,
+    );
+  }
+
+  DropdownButton<T> dropdownMap<T>(
+    final T value,
+    final List<T> items, {
+    @required final ValueChanged<T> onChanged,
+    @required final Mapping<T, String> mapping,
+  }) {
+    return DropdownButton<T>(
+      value: value,
+      onChanged: onChanged,
+      items: items.map<DropdownMenuItem<T>>((T value) {
+        return DropdownMenuItem<T>(
+          value: value,
+          child: Text(mapping(value)),
+        );
+      }).toList(),
+    );
+  }
+
+  void toast(
+    final String text, {
+    final Duration duration,
+  }) {
+    final ScaffoldState scaffold = Scaffold.of(context);
     scaffold.showSnackBar(SnackBar(
       content: Text(text),
       action: SnackBarAction(
         label: "OK",
         onPressed: scaffold.hideCurrentSnackBar,
       ),
+      duration: duration ?? Duration(seconds: 5),
     ));
   }
 

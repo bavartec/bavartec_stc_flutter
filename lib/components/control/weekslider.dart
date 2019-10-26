@@ -1,23 +1,22 @@
 import 'dart:math';
 
 import 'package:bavartec_stc/common.dart';
+import 'package:bavartec_stc/i18n.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
-const week = <String>["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
-
 const List<String> weeklyDefault = [
-  "000000111000000001111100",
-  "000000111000000001111100",
-  "000000111000000001111100",
-  "000000111000000001111100",
-  "000000111000000001111100",
-  "000000001111111111111100",
-  "000000001111111111111100",
+  '000000111000000001111100',
+  '000000111000000001111100',
+  '000000111000000001111100',
+  '000000111000000001111100',
+  '000000111000000001111100',
+  '000000001111111111111100',
+  '000000001111111111111100',
 ];
 
 List<List<bool>> parseWeekly(final List<String> text) {
-  return text.map((line) => line.split("").map((c) => c == '1').toList(growable: false)).toList(growable: false);
+  return text.map((line) => line.split('').map((c) => c == '1').toList(growable: false)).toList(growable: false);
 }
 
 List<String> printWeekly(final List<List<bool>> times) {
@@ -121,6 +120,7 @@ class _WeekSliderState extends MyState<WeekSlider> {
         size: Size(double.infinity, 350.0),
         painter: WeekSliderPainter(
           times: times,
+          locale: locale(),
         ),
       ),
     );
@@ -130,9 +130,12 @@ class _WeekSliderState extends MyState<WeekSlider> {
 class WeekSliderPainter extends CustomPainter {
   WeekSliderPainter({
     @required this.times,
+    @required this.locale,
   });
 
   final List<List<bool>> times;
+
+  final MyLocalizations locale;
 
   @override
   void paint(final Canvas canvas, final Size size) {
@@ -171,10 +174,11 @@ class WeekSliderPainter extends CustomPainter {
     }
 
     for (int d = 0; d < 7; d++) {
+      final List<String> labels = [locale.weekdays[d], "06:00", "12:00", "18:00", "24:00"];
       final TextStyle textStyle = TextStyle(color: Colors.black, fontSize: 0.05 * size.height);
 
       for (int i = 0; i < (d == 0 ? 5 : 1); i++) {
-        final TextSpan span = TextSpan(style: textStyle, text: [week[d], "06:00", "12:00", "18:00", "24:00"][i]);
+        final TextSpan span = TextSpan(style: textStyle, text: labels[i]);
         final TextPainter tp = TextPainter(text: span, textDirection: TextDirection.ltr);
         tp.layout();
 
