@@ -87,6 +87,7 @@ abstract class MyState<T extends StatefulWidget> extends State<T> {
             Container(
               width: 20,
               height: 20,
+              color: Color.fromARGB(1, 255, 0, 0),
               child: indicator == null ? null : Indicator(color: indicator),
             ),
           ],
@@ -108,7 +109,7 @@ abstract class MyState<T extends StatefulWidget> extends State<T> {
         child: Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
-            children: const <String>["Config", "Control", "Debug"]
+            children: const <String>["Config", "Control", "Debug", "About Us", "Feedback"]
                 .map((label) => ListTile(
                       title: Text(label),
                       onTap: () {
@@ -116,6 +117,55 @@ abstract class MyState<T extends StatefulWidget> extends State<T> {
                         navigate('/' + label.toLowerCase());
                       },
                     ))
+                .toList(growable: false),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Scaffold scaffoldEx(final String title, final Widget child) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(title),
+            Container(
+              width: 20,
+              height: 20,
+              color: Color.fromARGB(1, 255, 0, 0),
+              child: indicator == null ? null : Indicator(color: indicator),
+            ),
+          ],
+        ),
+      ),
+      body: Container(
+        color: const Color(0xffffffff),
+        height: 3000,
+        child: SingleChildScrollView(
+          child: Container(
+            child: Builder(
+              builder: (context) {
+                this.innerContext = context;
+                return child;
+              },
+            ),
+          ),
+        ),
+      ),
+      drawer: SafeArea(
+        child: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: const <String>["Config", "Control", "Debug", "About Us", "Feedback"]
+                .map((label) => ListTile(
+              title: Text(label),
+              onTap: () {
+                Navigator.of(context).pop();
+                navigate('/' + label.toLowerCase());
+              },
+            ))
                 .toList(growable: false),
           ),
         ),
@@ -148,16 +198,19 @@ abstract class MyState<T extends StatefulWidget> extends State<T> {
 
   Offset toLocal(final Offset global, final bool normal, final bool center) {
     final RenderBox box = context.findRenderObject();
-    final Offset local = box.globalToLocal(global);
+    //print(box.toString());
 
+    final Offset local = box.globalToLocal(global);
+    print("locatl pos:"+local.dx.toString()+" "+local.dy.toString());
     double dx = local.dx;
     double dy = local.dy;
 
+    //归一化
     if (normal) {
       dx /= box.size.width;
       dy /= box.size.height;
     }
-
+    //以中心为原点
     if (center) {
       dx = 2 * dx - 1;
       dy = 2 * dy - 1;

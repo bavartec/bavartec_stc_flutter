@@ -17,6 +17,11 @@ dependencies:
   flutter_mdns_plugin:
     git: https://github.com/terrabythia/flutter_mdns_plugin.git
 
+  #多语言插件
+  flutter_localizations:
+    sdk: flutter
+  intl: 0.15.8
+  intl_translation: 0.17.4
 
 dev_dependencies:
   flutter_test:

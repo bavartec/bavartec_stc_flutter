@@ -193,4 +193,13 @@ class Api {
     print("update -> $success");
     return success;
   }
+
+  static Future<bool> submitFeedback(String url, String msg) async {
+    print("submit feedback");
+
+    final String result = await _request(true, url, {'feedback':msg});
+    final bool success = result != null;
+    print("submit -> $success");
+    return success;
+  }
 }

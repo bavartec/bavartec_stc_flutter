@@ -258,10 +258,11 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
               onPressed: _onSubmit,
               child: const Text("Submit"),
             ),
-            OutlineButton(
-              borderSide: const BorderSide(),
-              onPressed: initWifiList,
-              child: const Text("initwifilist"),
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Text("Please press the \'T1\' button of "+
+               "the device. When the LED1 is flashing,click \'Submit\'"+
+              " When the LED1 stop flashing, then network config is successful."),
             ),
           ],
         ),
