@@ -24,9 +24,12 @@ class _MyListenPageState extends MyState<MyListenPage> {
     }
 
     print("listenStart");
+    setState(() {
+      this.text = "getting service...";
+    });
     indicate(Light.yellow);
 
-    timer = Timer.periodic(Duration(milliseconds: 500), (timer) async {
+    timer = periodic(Duration(milliseconds: 500), () async {
       listening(await Api.debugListen());
     });
   }

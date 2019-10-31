@@ -2,16 +2,19 @@ import 'package:bavartec_stc/common.dart';
 import 'package:flutter/material.dart';
 
 typedef Future<bool> Action();
+typedef bool ActionEx(BuildContext context);
 
 class MyIndex {
   MyIndex({
     @required this.label,
     this.action,
+    this.actionEx,
     this.route,
   });
 
   final String label;
   final Action action;
+  final ActionEx actionEx;
   final String route;
 }
 
@@ -40,6 +43,10 @@ class _MyIndexPageState extends MyState<MyIndexPage> {
                   onPressed: () {
                     if (index.action != null) {
                       indicateSuccess(index.action());
+                    }
+
+                    if (index.actionEx != null) {
+                      index.actionEx(context);
                     }
 
                     if (index.route != null) {

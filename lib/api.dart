@@ -3,9 +3,14 @@ import 'package:bavartec_stc/platform.dart';
 import 'package:http/http.dart';
 import 'package:multicast_dns/multicast_dns.dart';
 
+import 'package:flutter_mdns_plugin/flutter_mdns_plugin.dart';
+import 'dart:async';
+
+const String discovery_service = "_googlecast._tcp";
+
 class Api {
   static Future<String> mdnsQuery() async {
-    if (Platform.isAndroid) {
+    if (Platform.isAndroid || true) {
       return await Platform.discoverWifi();
     }
 
@@ -21,6 +26,26 @@ class Api {
     }
 
     client.stop();
+
+    final DiscoveryCallbacks discoveryCallbacks = new DiscoveryCallbacks(
+      onDiscovered: (ServiceInfo info) {
+        print("Discovered ${info.toString()}");
+      },
+      onDiscoveryStarted: () {
+        print("Discovery started");
+      },
+      onDiscoveryStopped: () {
+        print("Discovery stopped");
+      },
+      onResolved: (ServiceInfo info) {
+        print("Resolved Service ${info.toString()}");
+      },
+    );
+
+    final FlutterMdnsPlugin fmp = new FlutterMdnsPlugin(discoveryCallbacks: discoveryCallbacks);
+
+    // cannot directly start discovery, have to wait for ios to be ready first...
+    Timer(Duration(seconds: 3), () => fmp.startDiscovery(name));
     return null;
   }
 
@@ -148,6 +173,15 @@ class Api {
     final String result = await _request(true, '/update', null);
     final bool success = result != null;
     print("update -> $success");
+    return success;
+  }
+
+  static Future<bool> submitFeedback(String url, String msg) async {
+    print("submit feedback");
+
+    final String result = await _request(true, url, {'feedback':msg});
+    final bool success = result != null;
+    print("submit -> $success");
     return success;
   }
 }

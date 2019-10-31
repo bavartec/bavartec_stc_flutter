@@ -1,0 +1,6 @@
+framework module smartconfig {
+  umbrella header "smartconfig-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -6,6 +6,13 @@ import 'package:bavartec_stc/mqtt.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+const KEY_H = '/control/valueH';
+const KEY_L = '/control/valueL';
+const KEY_WEEK_DATA = '/control/weekly';
+
+const MIN_T = 12.0;
+const MAX_T = 28.0;
+
 class MyControlPage extends StatefulWidget {
   MyControlPage({Key key, this.title}) : super(key: key);
 
@@ -16,30 +23,37 @@ class MyControlPage extends StatefulWidget {
 }
 
 class _MyControlPageState extends MyState<MyControlPage> {
-  double currentValue = 20.0;
-  double newValue = 20.0;
+  double currentValueH = 22.0;
+  double currentValueL = 18.0;
+  double newValueH = 22.0;
+  double newValueL = 18.0;
 
   List<List<bool>> weekly = parseWeekly(weeklyDefault);
 
   void _onLoad() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final double value = prefs.getDouble('/control/value');
-    final List<String> weekly = prefs.getStringList('/control/weekly');
+    final double valueH = prefs.getDouble(KEY_H);
+    final double valueL = prefs.getDouble(KEY_L);
+    final List<String> weekly = prefs.getStringList(KEY_WEEK_DATA);
 
     setState(() {
-      currentValue = value ?? currentValue;
-      newValue = value ?? newValue;
+      currentValueH = valueH ?? currentValueH;
+      newValueH = valueH ?? newValueH;
+      currentValueL = valueL ?? currentValueL;
+      newValueL = valueL ?? newValueL;
       this.weekly = weekly == null ? this.weekly : parseWeekly(weekly);
     });
   }
 
   void _onSave() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble('/control/value', newValue);
-    await prefs.setStringList('/control/weekly', printWeekly(weekly));
+    await prefs.setDouble(KEY_H, newValueH);
+    await prefs.setDouble(KEY_L, newValueL);
+    await prefs.setStringList(KEY_WEEK_DATA, printWeekly(weekly));
 
     setState(() {
-      currentValue = newValue;
+      currentValueH = newValueH;
+      currentValueL = newValueL;
     });
   }
 
@@ -52,7 +66,7 @@ class _MyControlPageState extends MyState<MyControlPage> {
   Future<bool> _syncLocal() {
     return Api.control(
       enabled: true,
-      controlValue: newValue,
+      controlValue: newValueH,
       weekly: printWeekly(weekly),
     );
   }
@@ -67,7 +81,7 @@ class _MyControlPageState extends MyState<MyControlPage> {
       return false;
     }
 
-    MQTT.publish('controlValue', currentValue.toString());
+    MQTT.publish('controlValue', currentValueH.toString());
     MQTT.publish('weekly', printWeekly(weekly).join());
     return true;
   }
@@ -81,21 +95,27 @@ class _MyControlPageState extends MyState<MyControlPage> {
   @override
   Widget build(final BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(40.0, 10.0, 40.0, 40.0),
+      padding: const EdgeInsets.fromLTRB(5.0, 15.0, 5.0, 2.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 250.0),
             child: BigSlider(
-              min: 12.0,
-              max: 28.0,
-              oldValue: currentValue,
-              newValue: newValue,
-              onChanged: (value) {
-                indicateNull();
+              min: MIN_T,
+              max: MAX_T,
+              oldValueH: currentValueH,
+              newValueH: newValueH,
+              oldValueL: currentValueL,
+              newValueL: newValueL,
+              onChanged: (value, isH) {
+                indicate(null);
                 setState(() {
-                  newValue = value;
+                  if (isH == 1) {
+                    newValueH = value;
+                  } else if (isH == 0) {
+                    newValueL = value;
+                  }
                 });
               },
             ),
@@ -108,7 +128,7 @@ class _MyControlPageState extends MyState<MyControlPage> {
             },
             child: Text(locale().save),
           ),
-          const SizedBox(height: 30.0),
+          const SizedBox(height: 10.0),
           ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 600.0),
             child: WeekSlider(

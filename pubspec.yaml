@@ -3,14 +3,20 @@ name: bavartec_stc
 dependencies:
   flutter:
     sdk: flutter
+  #多语言插件
   flutter_localizations:
     sdk: flutter
+  flutter_mdns_plugin:
+    git: https://github.com/terrabythia/flutter_mdns_plugin.git
 
   connectivity: ^0.4.5
   device_info: ^0.4.1
   http: ^0.12.0
+  intl: ^0.15.8
+  intl_translation: ^0.17.7
   multicast_dns: ^0.2.2
   mqtt_client: ^5.6.0
+  permission_handler: ^3.2.2
   shared_preferences: ^0.5.4
   smartconfig: ^0.0.1
 

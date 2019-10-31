@@ -3,40 +3,146 @@ import 'dart:math';
 import 'package:bavartec_stc/common.dart';
 import 'package:flutter/material.dart';
 
+typedef ValueChangedEx<T> = void Function(T value, int isH);
+
 class BigSlider extends StatefulWidget {
   BigSlider({
     @required this.min,
     @required this.max,
-    @required this.oldValue,
-    @required this.newValue,
+    //H
+    @required this.oldValueH,
+    @required this.newValueH,
+    //L
+    @required this.oldValueL,
+    @required this.newValueL,
+
     @required this.onChanged,
   });
+
+  //绘图区域
+  //final Rect drawRect;
 
   final double min;
   final double max;
 
-  final double oldValue;
-  final double newValue;
+  //High T
+  final double oldValueH;
+  final double newValueH;
 
-  final ValueChanged<double> onChanged;
+  //Low T
+  final double oldValueL;
+  final double newValueL;
+
+  final ValueChangedEx<double> onChanged;
 
   @override
   _BigSliderState createState() => _BigSliderState();
 }
 
+const START_ANGLE = -0.75 * pi;
+const END_ANGLE = 0.75 * pi;
+
 class _BigSliderState extends MyState<BigSlider> {
-  double value;
+  double valueH;
+  double valueL;
+
+  Rect rectHandleH;
+  Rect rectHandleL;
 
   bool valid;
+  int isH = -1;
+
   Offset pointer;
 
+  //从温度值计算出当前的角度弧度
+  double _calculateAngleFromValue(double val) {
+    // print("pointer update: " + pointer.dx.toString() + " " + pointer.dy.toString());
+    final double start = -0.75 * pi;
+    final double end = 0.75 * pi;
+
+    // final double angle = atan2(pointer.dx, -pointer.dy);
+    // print("angle: " + (angle * 180.0 / pi).toString());
+
+    final double min = widget.min;
+    final double max = widget.max;
+
+    double tVal = val;
+    if (val < min) {
+      tVal = min;
+    } else if (val > max) {
+      tVal = max;
+    }
+
+    final double angle = start + (end - start) * (tVal - min) / (max - min);
+    // print("calc angle: " + (angle * 180.0 / pi).toString());
+    return angle;
+  }
+
+  //从角度计算手柄点的位置
+  Offset _calHandlePosByAngleH(double angle) {
+    double radius = 1.0;
+
+    double dx = radius * sin(angle);
+    double dy = -radius * cos(angle);
+
+    // print("handle1 pos:" + dx.toString() + " " + dy.toString());
+    double r = 50;
+    rectHandleH = Rect.fromPoints(Offset(dx - r / 190.0, dy - r / 190.0),
+        Offset(dx + r / 190.0, dy + r / 190.0));
+    return Offset(dx, dy);
+  }
+
+  //从角度计算手柄点的位置
+  Offset _calHandlePosByAngleL(double angle) {
+    double radius = 0.55;
+    double r = 50;
+
+    double dx1 = radius * sin(angle);
+    double dy1 = -radius * cos(angle);
+
+    // print("handle2 pos:" + dx1.toString() + " " + dy1.toString());
+    rectHandleL = Rect.fromPoints(Offset(dx1 - r / 190.0, dy1 - r / 190.0),
+        Offset(dx1 + r / 190.0, dy1 + r / 190.0));
+    return Offset(dx1, dy1);
+  }
+
+  Offset _handlePos(final Size size, final double angle) {
+    return size.center(Offset.zero).translate(cos(angle) * size.width / 2, sin(angle) * size.width / 2);
+  }
+
   void _pointer(final PointerEvent event) {
+    // print("event.position: " + event.position.dx.toString() + " " + event.position.dy.toString());
     pointer = toLocal(event.position, true, true);
   }
 
   void _pointerDown(final PointerDownEvent event) {
     _pointer(event);
     valid = pointer.dx * pointer.dx + pointer.dy * pointer.dy <= 1.0;
+
+    if (valid) {
+      // consumePointer();
+      Scrollable.of(context).position.hold(null);
+    }
+
+    // print("Rect H:" + rectHandleH.center.dx.toString() + " " + rectHandleL.center.dy.toString());
+    // print("Rect L:" + rectHandleL.center.dx.toString() + " " + rectHandleL.center.dy.toString());
+    // print("pointer:" + pointer.dx.toString() + " " + pointer.dy.toString());
+
+    if (rectHandleH.contains(pointer)) {
+      // print("mike: yes in high");
+      valid = true;
+      isH = 1;
+    } else if (rectHandleL.contains(pointer)) {
+      // print("mike: yes in low");
+      valid = true;
+      isH = 0;
+    } else {
+      // print("mike: not in any");
+      isH = -1;
+      valid = false;
+    }
+
+    // print(pointer.dx.toString() + " " + pointer.dy.toString());
 
     if (valid) {
       _pointerUpdate(event);
@@ -53,10 +159,12 @@ class _BigSliderState extends MyState<BigSlider> {
   void _pointerUpdate(final PointerEvent event) {
     consumePointer();
 
+    // print("pointer update: " + pointer.dx.toString() + " " + pointer.dy.toString());
     final double start = -0.75 * pi;
     final double end = 0.75 * pi;
     final double angle = atan2(pointer.dx, -pointer.dy);
 
+    // print("angle: " + (angle * 180.0 / pi).toString());
     final double min = widget.min;
     final double max = widget.max;
 
@@ -70,21 +178,49 @@ class _BigSliderState extends MyState<BigSlider> {
 
     newValue = (newValue / 0.5).round() * 0.5;
 
+    //计算Handle Rect
+    double v = _calculateAngleFromValue(newValue);
+
+    if (isH == 1) {
+      // print("mike: cal H");
+      _calHandlePosByAngleH(v);
+    } else if (isH == 0) {
+      // print("mike: cal L");
+      _calHandlePosByAngleL(v);
+    }
+
     setState(() {
-      this.value = newValue;
+      if (isH == 1) {
+        // print("mike: setState H");
+        this.valueH = newValue;
+      } else if (isH == 0) {
+        // print("mike: setState L");
+        this.valueL = newValue;
+      }
     });
   }
 
   @override
   void initState() {
     super.initState();
-    value = widget.newValue;
+
+    valueH = widget.newValueH;
+    valueL = widget.newValueL;
+    // print("value H,L" + valueH.toString() + " " + valueL.toString());
+
+    double v = _calculateAngleFromValue(valueH);
+    _calHandlePosByAngleH(v);//update rectH
+
+    v = _calculateAngleFromValue(valueL);
+    _calHandlePosByAngleL(v);//update rectL
+
   }
 
   @override
   void didUpdateWidget(final BigSlider oldWidget) {
     super.didUpdateWidget(oldWidget);
-    value = widget.newValue;
+    valueH = widget.newValueH;
+    valueL = widget.newValueL;
   }
 
   @override
@@ -94,18 +230,27 @@ class _BigSliderState extends MyState<BigSlider> {
       onPointerDown: _pointerDown,
       onPointerMove: _pointerMove,
       onPointerUp: (event) {
-        widget.onChanged(value);
+        double val = 0;
+        if (isH == 1) {
+          val = valueH;
+        } else if (isH == 0) {
+          val = valueL;
+        }
+        widget.onChanged(val, isH);
       },
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 0.0),
+        padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 30.0),
         child: AspectRatio(
           aspectRatio: 1.0,
           child: CustomPaint(
             painter: BigSliderPainter(
+              context: context,
               min: widget.min,
               max: widget.max,
-              oldValue: widget.oldValue,
-              newValue: value,
+              oldValueH: widget.oldValueH,
+              newValueH: valueH,
+              oldValueL: widget.oldValueL,
+              newValueL: valueL,
             ),
           ),
         ),
@@ -116,16 +261,22 @@ class _BigSliderState extends MyState<BigSlider> {
 
 class BigSliderPainter extends CustomPainter {
   BigSliderPainter({
+    @required this.context,
     @required this.min,
     @required this.max,
-    @required this.oldValue,
-    @required this.newValue,
+    @required this.oldValueH,
+    @required this.newValueH,
+    @required this.oldValueL,
+    @required this.newValueL,
   });
 
+  final BuildContext context;
   final double min;
   final double max;
-  final double oldValue;
-  final double newValue;
+  final double oldValueH;
+  final double newValueH;
+  final double oldValueL;
+  final double newValueL;
 
   Size size;
 
@@ -133,67 +284,141 @@ class BigSliderPainter extends CustomPainter {
     return size.center(Offset.zero).translate(cos(angle) * size.width / 2, sin(angle) * size.width / 2);
   }
 
+  Offset _handlePosEx(final Size size, final double angle, final double rate) {
+    return size.center(Offset.zero).translate(cos(angle) * size.width * rate / 2, sin(angle) * size.width * rate / 2);
+  }
+
   @override
   void paint(final Canvas canvas, final Size size) {
     this.size = size;
 
+    // print(size.width.toString() + " " + size.height.toString());
+
+    //circle rect
     final Rect rect = Rect.fromCircle(center: size.center(Offset.zero), radius: size.width / 2.0);
 
-    final Paint coldLight = Paint()
-      ..color = Colors.blue.withOpacity(0.25)
+    final Paint lightgrey = Paint()
+      ..color = Colors.grey[200]
       ..style = PaintingStyle.fill;
-    final Paint warmLight = Paint()
-      ..color = Colors.red.withOpacity(0.25)
-      ..style = PaintingStyle.fill;
+
+    final Paint grey = Paint()
+      ..color = Colors.grey[300]
+      ..strokeWidth = 6.0
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke;
+
     final Paint cold = Paint()
-      ..color = Colors.blue
+      ..color = Colors.blue.withOpacity(0.5)
       ..strokeWidth = 6.0
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
     final Paint warm = Paint()
-      ..color = Colors.red
+      ..color = Colors.red.withOpacity(0.5)
       ..strokeWidth = 6.0
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
-    final Paint handle = Paint()
-      ..color = Colors.black
+
+    final Paint handleH = Paint()
+      ..color = Colors.red
       ..style = PaintingStyle.fill;
+    final Paint handleL = Paint()
+      ..color = Colors.blue
+      ..style = PaintingStyle.fill;
+    final Paint handleFill = Paint()
+      ..color = Colors.white.withOpacity(0.95)
+      ..style = PaintingStyle.fill;
+
     final Paint background = Paint()
       ..color = Colors.white
       ..style = PaintingStyle.fill;
 
     final double start = -1.25 * pi;
     final double end = 0.25 * pi;
-    final double oldProgress = (oldValue - min) / (max - min);
-    final double newProgress = (newValue - min) / (max - min);
-    final double oldAngle = start + 1.5 * pi * oldProgress;
-    final double newAngle = start + 1.5 * pi * newProgress;
 
-    canvas.drawArc(rect, start, newAngle - start, true, warmLight);
-    canvas.drawArc(rect, newAngle, end - newAngle, true, coldLight);
-    canvas.drawArc(rect, start, oldAngle - start, false, cold);
-    canvas.drawArc(rect, oldAngle, end - oldAngle, false, warm);
+    final double oldProgressH = (oldValueH - min) / (max - min);
+    final double newProgressH = (newValueH - min) / (max - min);
+    final double oldAngleH = start + 1.5 * pi * oldProgressH;
+    final double newAngleH = start + 1.5 * pi * newProgressH;
 
-    final Offset oldHandlePos = _handlePos(size, oldAngle);
-    final Offset newHandlePos = _handlePos(size, newAngle);
-    canvas.drawCircle(oldHandlePos, 6.0, handle);
-    canvas.drawCircle(newHandlePos, 12.0, handle);
+    final double oldProgressL = (oldValueL - min) / (max - min);
+    final double newProgressL = (newValueL - min) / (max - min);
+    final double oldAngleL = start + 1.5 * pi * oldProgressL;
+    final double newAngleL = start + 1.5 * pi * newProgressL;
 
+    canvas.drawArc(rect, start, newAngleH - start, true, lightgrey);
+    canvas.drawArc(rect, newAngleH, end - newAngleH, true, lightgrey);
+    //arc background
+    // canvas.drawArc(rect, start, end - start, true, lightgrey);
+
+    canvas.drawArc(rect, start, oldAngleH - start, false, warm);
+    canvas.drawArc(rect, oldAngleH, end - oldAngleH, false, grey);
+
+    //draw handleH
+    final Offset oldHandlePosH = _handlePos(size, oldAngleH);
+    final Offset newHandlePosH = _handlePos(size, newAngleH);
+    // print("newAngleH: " + newAngleH.toString());
+    // print("paint H: " + newHandlePosH.dx.toString() + " " + newHandlePosH.dy.toString());
+    canvas.drawCircle(oldHandlePosH, 6.0, handleH);
+    canvas.drawCircle(newHandlePosH, 12.0, handleH);
+    canvas.drawCircle(newHandlePosH, 10.0, handleFill);
+
+    //center white circle
     canvas.drawCircle(size.center(Offset.zero), 0.275 * size.width, background);
 
-    final Color textColor = Color.lerp(Colors.blue, Colors.red, newProgress);
-    final TextStyle textStyle = TextStyle(color: textColor, fontSize: 0.175 * size.width);
+    //inner rect
+    final Rect rectInner = Rect.fromCircle(center: size.center(Offset.zero), radius: size.width * 0.55 / 2.0);
 
-    final TextSpan span = TextSpan(style: textStyle, text: "$newValue°C");
-    final TextPainter tp = TextPainter(text: span, textDirection: TextDirection.ltr);
-    tp.layout();
+    //inner grey arc
+    canvas.drawArc(rectInner, start, oldAngleL - start, false, cold);
+    canvas.drawArc(rectInner, oldAngleL, end - oldAngleL, false, grey);
 
-    final Offset textPos = size.center(Offset.zero).translate(-tp.size.width / 2, -tp.size.height / 2);
-    tp.paint(canvas, textPos);
+    //draw handleL
+    final Offset oldHandlePosL = _handlePosEx(size, oldAngleL, 0.55);
+    final Offset newHandlePosL = _handlePosEx(size, newAngleL, 0.55);
+    // print("newAngleL: " + newAngleL.toString());
+    // print("paint L: " + newHandlePosL.dx.toString() + " " + newHandlePosL.dy.toString());
+
+    canvas.drawCircle(oldHandlePosL, 6.0, handleL);
+    canvas.drawCircle(newHandlePosL, 12.0, handleL);
+    canvas.drawCircle(newHandlePosL, 10.0, handleFill);
+
+    // H temperature
+    final Color textColorH = Color.lerp(Colors.red, Colors.red, newProgressH);
+    final TextStyle textStyleH = TextStyle(color: textColorH, fontSize: 0.08 * size.width);//0.175
+
+    final TextSpan spanH = TextSpan(style: textStyleH, text: "H $newValueH°C");
+    final TextPainter tpH = TextPainter(text: spanH, textDirection: TextDirection.ltr);
+    tpH.layout();
+
+    final Offset textPosH = size.center(Offset.zero).translate(-tpH.size.width / 2, -tpH.size.height-2);
+    tpH.paint(canvas, textPosH);
+
+    //draw line
+    final Paint pls = Paint()
+      ..color = Colors.grey[400]
+      ..strokeWidth = 1.0
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke;
+    final Offset pts = size.center(Offset.zero).translate(-tpH.size.width / 2, 0);
+    final Offset pte = size.center(Offset.zero).translate(tpH.size.width / 2, 0);
+    canvas.drawLine(pts, pte, pls);
+
+    //L temperature
+    final Color textColorL = Color.lerp(Colors.blue, Colors.blue, newProgressL);
+    final TextStyle textStyleL = TextStyle(color: textColorL, fontSize: 0.08 * size.width);//0.175
+
+    final TextSpan spanL = TextSpan(style: textStyleL, text: "L $newValueL°C");
+    final TextPainter tpL = TextPainter(text: spanL, textDirection: TextDirection.ltr);
+    tpL.layout();
+
+    final Offset textPosL = size.center(Offset.zero).translate(-tpL.size.width / 2, 2);
+    tpL.paint(canvas, textPosL);
   }
 
   @override
   bool shouldRepaint(final BigSliderPainter other) {
-    return min != other.min || max != other.max || oldValue != other.oldValue || newValue != other.newValue;
+    return min != other.min || max != other.max
+           || oldValueH != other.oldValueH || newValueH != other.newValueH
+           || oldValueL != other.oldValueL || newValueL != other.newValueL;
   }
 }

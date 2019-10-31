@@ -1,16 +1,16 @@
-import 'dart:async';
-
 import 'package:bavartec_stc/api.dart';
 import 'package:bavartec_stc/common.dart';
 import 'package:bavartec_stc/components/indicator.dart';
 import 'package:bavartec_stc/i18n.dart';
 import 'package:bavartec_stc/mqtt.dart';
+import 'package:bavartec_stc/pages/about.dart';
 import 'package:bavartec_stc/pages/config/mqtt.dart';
 import 'package:bavartec_stc/pages/config/sensor.dart';
 import 'package:bavartec_stc/pages/config/wifi.dart';
 import 'package:bavartec_stc/pages/control.dart';
 import 'package:bavartec_stc/pages/debug/listen.dart';
 import 'package:bavartec_stc/pages/debug/query.dart';
+import 'package:bavartec_stc/pages/feedback.dart';
 import 'package:bavartec_stc/pages/index.dart';
 import 'package:bavartec_stc/wifi.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +19,84 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  static bool doEspRestartConfirm(BuildContext context) {
+    showDialog<Null>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirmation'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Confirm to restart device?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Api.restart();
+              },
+            ),
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    ).then((val) {
+      print(val);
+    });
+
+    return true;
+  }
+
+  //restart confirm
+  static bool doEspUpdateConfirm(BuildContext context) {
+    showDialog<Null>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirmation'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Confirm to update device programe?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+
+                Api.restart();
+              },
+            ),
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    ).then((val) {
+      print(val);
+    });
+
+    return true;
+  }
+
   @override
   Widget build(final BuildContext context) {
     return MaterialApp(
@@ -115,18 +193,11 @@ class MyAppState<T extends StatefulWidget> extends MyBaseState<T> {
       MQTT.connect();
     }
 
-    periodic(Duration(seconds: 5), () async {
+    periodicSafe(Duration(seconds: 5), () async {
       final bool localLink = (await Api.mdnsQuery()) != null;
       final bool remoteLink = MQTT.connected();
       indicate(mdns: localLink ? Light.green : Light.red);
       indicate(mqtt: remoteLink ? Light.green : Light.red);
-    });
-  }
-
-  void periodic(final Duration duration, Future<void> callback()) {
-    Timer.run(() async {
-      await callback();
-      Timer(duration, () => periodic(duration, callback));
     });
   }
 
@@ -213,9 +284,11 @@ class MyAppState<T extends StatefulWidget> extends MyBaseState<T> {
 
 Map<String, Widget> routes = {
   '/': MyIndexPage([
+    MyIndex(label: "About Us", route: '/about'),
     MyIndex(label: "Config", route: '/config'),
     MyIndex(label: "Control", route: '/control'),
     MyIndex(label: "Debug", route: '/debug'),
+    MyIndex(label: "Feedback", route: '/feedback'),
   ]),
   '/config': MyIndexPage([
     MyIndex(label: "WiFi", route: '/config/wifi'),
@@ -229,9 +302,18 @@ Map<String, Widget> routes = {
   '/debug': MyIndexPage([
     MyIndex(label: "Listen", route: '/debug/listen'),
     MyIndex(label: "Query", route: '/debug/query'),
-    MyIndex(label: "Restart", action: Api.restart),
-    MyIndex(label: "Update", action: Api.update),
+    MyIndex(
+      label: "Restart",
+      // action: this.restartConfirm,
+      actionEx: MyApp.doEspRestartConfirm,
+    ),
+    MyIndex(
+      label: "Update",
+      actionEx: MyApp.doEspUpdateConfirm,
+    ),
   ]),
   '/debug/listen': MyListenPage(),
   '/debug/query': MyQueryPage(),
+  '/about': MyAboutPage(),
+  '/feedback': MyFeedbackPage(),
 };

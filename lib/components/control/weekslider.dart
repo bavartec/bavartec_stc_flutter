@@ -117,7 +117,7 @@ class _WeekSliderState extends MyState<WeekSlider> {
         widget.onChanged(times);
       },
       child: CustomPaint(
-        size: Size(double.infinity, 350.0),
+        size: Size(double.infinity, 330.0),
         painter: WeekSliderPainter(
           times: times,
           locale: locale(),
@@ -155,48 +155,69 @@ class WeekSliderPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
 
-    for (int v = 1; v <= 14; v++) {
-      final double x1 = size.width * 0 / 24;
-      final double x2 = size.width * 24 / 24;
-      final double y = size.height / 14 * v;
+    final xOffset = 15;
+    final Size size1 = Size(size.width - xOffset * 2 - 2, size.height);
 
-      canvas.drawLine(Offset(x1, y), Offset(x2, y), raster);
+    for (int v = 1; v <= 14; v++) {
+      final double x1 = size1.width * 0 / 24;
+      final double x2 = size1.width * 24 / 24;
+      final double y = size1.height / 14 * v;
+
+      canvas.drawLine(Offset(x1 + xOffset, y), Offset(x2 + xOffset, y), raster);
     }
 
     for (int d = 0; d < 7; d++) {
       for (int h = 0; h <= 24; h++) {
-        final double x = size.width * h / 24;
-        final double y1 = size.height / 14 * (d * 2 + 1);
-        final double y2 = size.height / 14 * (d * 2 + 2);
+        final double x = size1.width * h / 24;
+        final double y1 = size1.height / 14 * (d * 2 + 1);
+        final double y2 = size1.height / 14 * (d * 2 + 2);
 
-        canvas.drawLine(Offset(x, y1), Offset(x, y2), h % 6 == 0 ? rasterT : raster);
+        canvas.drawLine(Offset(x + xOffset, y1), Offset(x + xOffset, y2), h % 6 == 0 ? rasterT : raster);
       }
     }
 
     for (int d = 0; d < 7; d++) {
       final List<String> labels = [locale.weekdays[d], "06:00", "12:00", "18:00", "24:00"];
-      final TextStyle textStyle = TextStyle(color: Colors.black, fontSize: 0.05 * size.height);
+      final TextStyle textStyle = TextStyle(color: Colors.black, fontSize: 0.05 * size1.height);
 
       for (int i = 0; i < (d == 0 ? 5 : 1); i++) {
         final TextSpan span = TextSpan(style: textStyle, text: labels[i]);
         final TextPainter tp = TextPainter(text: span, textDirection: TextDirection.ltr);
         tp.layout();
 
-        final double px = size.width * i / 4 - (i == 0 ? 0 : tp.size.width / 2);
-        final double py = size.height * (d * 2 + 0.5) / 14 - tp.size.height / 2;
-        tp.paint(canvas, Offset(px, py));
+        final double px = size1.width * i / 4 - (i == 0 ? 0 : tp.size.width / 2);
+        final double py = size1.height * (d * 2 + 0.5) / 14 - tp.size.height / 2;
+        tp.paint(canvas, Offset(px + xOffset, py));
       }
 
       for (int h = 0; h <= 24; h++) {
-        final double x1 = size.width * h / 24;
-        final double y1 = size.height / 14 * (d * 2 + (times[d][h % 24] ? 1 : 2));
+        final double x1 = size1.width * h / 24;
+        final double y1 = size1.height / 14 * (d * 2 + (times[d][h % 24] ? 1 : 2));
 
         if (h < 24) {
-          final double x2 = size.width * (h + 1) / 24;
-          final double y2 = size.height / 14 * (d * 2 + (times[d][(h + 1) % 24] ? 1 : 2));
-          canvas.drawLine(Offset(x1, y1), Offset(x2, y2), stroke);
+          final double x2 = size1.width * (h + 1) / 24;
+          final double y2 = size1.height / 14 * (d * 2 + (times[d][(h + 1) % 24] ? 1 : 2));
+          canvas.drawLine(Offset(x1 + xOffset, y1), Offset(x2 + xOffset, y2), stroke);
         }
       }
+
+      //draw H
+      final TextStyle textStyleH = TextStyle(color: Colors.red, fontSize: 0.03 * size1.height);
+      final TextSpan spanH = TextSpan(style: textStyleH, text: "H");
+      final TextPainter tpH = TextPainter(text: spanH, textDirection: TextDirection.ltr);
+      tpH.layout();
+      final double pxH =  5.0;
+      final double pyH = size1.height * (d * 2 + 0.5) / 14 + tpH.size.height;
+      tpH.paint(canvas, Offset(pxH, pyH));
+
+      //draw L
+      final TextStyle textStyleL = TextStyle(color: Colors.blue, fontSize: 0.03 * size1.height);
+      final TextSpan spanL = TextSpan(style: textStyleL, text: "L");
+      final TextPainter tpL = TextPainter(text: spanL, textDirection: TextDirection.ltr);
+      tpL.layout();
+      final double pxL =  5.0;
+      final double pyL = size1.height * (d * 2 + 0.5) / 14 + tpL.size.height*2;
+      tpL.paint(canvas, Offset(pxL, pyL));
     }
   }
 
