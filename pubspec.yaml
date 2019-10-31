@@ -14,8 +14,8 @@ dependencies:
   #fluttertoast: ^2.1.1
   #flutter_mdns_plugin: ^0.0.1
   #mdns2: ^0.0.1
-  flutter_mdns_plugin:
-    git: https://github.com/terrabythia/flutter_mdns_plugin.git
+  #flutter_mdns_plugin:
+  #  git: https://github.com/terrabythia/flutter_mdns_plugin.git
 
   #多语言插件
   flutter_localizations:

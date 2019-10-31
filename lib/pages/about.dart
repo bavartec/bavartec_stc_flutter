@@ -25,9 +25,9 @@ class _MyAboutPageState extends MyState<MyAboutPage> {
   String firmWareVer = 'FirmWare Version: V1.0.1';
 
 
-  void _onLoad() async {
+  //void _onLoad() async {
     //indicate(null);
-  }
+  //}
 
 
   @override
@@ -64,11 +64,11 @@ class _MyAboutPageState extends MyState<MyAboutPage> {
             ),
             Container(
               padding: const EdgeInsets.all(5.0),
-              color: const Color(0xffffffff),
+              //color: const Color(0xffffffff),
               width: 550,
               height: 130,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: const Color(0xffffffff),
                 //设置四周圆角 角度
                 borderRadius: BorderRadius.all(Radius.circular(4.0)),
                 //设置四周边框

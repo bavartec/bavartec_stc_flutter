@@ -109,7 +109,7 @@ abstract class MyState<T extends StatefulWidget> extends State<T> {
         child: Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
-            children: const <String>["Config", "Control", "Debug", "About Us", "Feedback"]
+            children: const <String>["Config", "Control", "Debug", "About Us"]//, "Feedback"
                 .map((label) => ListTile(
                       title: Text(label),
                       onTap: () {
@@ -158,7 +158,7 @@ abstract class MyState<T extends StatefulWidget> extends State<T> {
         child: Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
-            children: const <String>["Config", "Control", "Debug", "About Us", "Feedback"]
+            children: const <String>["Config", "Control", "Debug", "About Us"]//, "Feedback"
                 .map((label) => ListTile(
               title: Text(label),
               onTap: () {
@@ -201,7 +201,7 @@ abstract class MyState<T extends StatefulWidget> extends State<T> {
     //print(box.toString());
 
     final Offset local = box.globalToLocal(global);
-    print("locatl pos:"+local.dx.toString()+" "+local.dy.toString());
+    //print("local pos:"+local.dx.toString()+" "+local.dy.toString());
     double dx = local.dx;
     double dy = local.dy;
 

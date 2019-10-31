@@ -4,7 +4,7 @@ import 'package:http/http.dart';
 import 'package:multicast_dns/multicast_dns.dart';
 
 
-import 'package:flutter_mdns_plugin/flutter_mdns_plugin.dart';
+//import 'package:flutter_mdns_plugin/flutter_mdns_plugin.dart';
 //import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -17,20 +17,20 @@ class Api {
       return await Platform.discoverWifi();
     //}
 
-    final String name = "smart-thermo-control._http._tcp.local";
-
-    final ResourceRecordQuery query = ResourceRecordQuery.addressIPv4(name);
-
-    final MDnsClient client = MDnsClient();
-    await client.start();
-
-    await for (final IPAddressResourceRecord record in client.lookup<IPAddressResourceRecord>(query)) {
-      client.stop();
-      print("111");
-      return "http://" + record.address.address;
-    }
-    print("222");
-    client.stop();
+//    final String name = "smart-thermo-control._http._tcp.local";
+//
+//    final ResourceRecordQuery query = ResourceRecordQuery.addressIPv4(name);
+//
+//    final MDnsClient client = MDnsClient();
+//    await client.start();
+//
+//    await for (final IPAddressResourceRecord record in client.lookup<IPAddressResourceRecord>(query)) {
+//      client.stop();
+//      print("111");
+//      return "http://" + record.address.address;
+//    }
+//    print("222");
+//    client.stop();
 //    final String name1 = "smart-thermo-control._http._tcp";
 //    if (discoveryCallbacks == null) {
 //      discoveryCallbacks = new DiscoveryCallbacks(

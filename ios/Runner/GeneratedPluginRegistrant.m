@@ -4,7 +4,6 @@
 
 #import "GeneratedPluginRegistrant.h"
 #import <connectivity/ConnectivityPlugin.h>
-#import <flutter_mdns_plugin/FlutterMdnsPlugin.h>
 #import <permission_handler/PermissionHandlerPlugin.h>
 #import <shared_preferences/SharedPreferencesPlugin.h>
 #import <smartconfig/SmartconfigPlugin.h>
@@ -13,7 +12,6 @@
 
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
   [FLTConnectivityPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTConnectivityPlugin"]];
-  [FlutterMdnsPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterMdnsPlugin"]];
   [PermissionHandlerPlugin registerWithRegistrar:[registry registrarForPlugin:@"PermissionHandlerPlugin"]];
   [FLTSharedPreferencesPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTSharedPreferencesPlugin"]];
   [SmartconfigPlugin registerWithRegistrar:[registry registrarForPlugin:@"SmartconfigPlugin"]];

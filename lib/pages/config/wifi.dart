@@ -100,7 +100,7 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
 
 
   Future<bool> smartConfig(final String ssid, final String bssid, final String pass) async {
-    return (await Smartconfig.start(ssid, bssid, pass)) || (await Api.mdnsQuery()) != null;
+    return ((await Smartconfig.start(ssid, bssid, pass))!=null || (await Api.mdnsQuery()) != null);
   }
 
   Future<bool> _requestPermissions() async {
@@ -142,7 +142,7 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
         print(e.toString());
       }
 
-      print("[mike][ios...]");
+      //print("[mike][ios...]");
       LocationAuthorizationStatus status = await connectivity.getLocationServiceAuthorization();
 
       //for(var i=0; i<10; i++) {
@@ -154,7 +154,7 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
        //   break;
        // }
       }
-      print("[mike][" + status.toString() + "]");
+      //print("[mike][" + status.toString() + "]");
       if (status != LocationAuthorizationStatus.authorizedAlways &&
           status != LocationAuthorizationStatus.authorizedWhenInUse) {
         return false;
@@ -177,10 +177,10 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
     if (result != ConnectivityResult.wifi) {
       return [null, null];
     }
-    print("1111");
+    //print("1111");
     final String wifiName = await connectivity.getWifiName();
     final String wifiBSSID = await connectivity.getWifiBSSID();
-    print("2222");
+    //print("2222");
     print(wifiName.toString());
     print(wifiBSSID.toString());
     return [wifiName, wifiBSSID];

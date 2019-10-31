@@ -56,7 +56,7 @@ packages:
       name: connectivity
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.4.4"
+    version: "0.4.5+2"
   convert:
     dependency: transitive
     description:
@@ -103,21 +103,12 @@ packages:
       name: flutter_launcher_icons
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.7.3"
+    version: "0.7.4"
   flutter_localizations:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_mdns_plugin:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: d08fc4db13d1d2100a25fca228411156cd174f33
-      url: "https://github.com/terrabythia/flutter_mdns_plugin.git"
-    source: git
-    version: "0.0.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -164,7 +155,7 @@ packages:
       name: image
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.1.4"
+    version: "2.1.6"
   intl:
     dependency: "direct main"
     description:
@@ -213,7 +204,7 @@ packages:
       name: mqtt_client
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "5.5.4"
+    version: "5.6.1"
   multicast_dns:
     dependency: "direct main"
     description:
@@ -262,7 +253,7 @@ packages:
       name: permission_handler
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "3.2.2"
+    version: "3.3.0"
   petitparser:
     dependency: transitive
     description:
@@ -290,7 +281,7 @@ packages:
       name: shared_preferences
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.5.3+4"
+    version: "0.5.4+3"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -382,4 +373,4 @@ packages:
     version: "2.2.0"
 sdks:
   dart: ">=2.4.0 <3.0.0"
-  flutter: ">=1.5.0 <2.0.0"
+  flutter: ">=1.6.7 <2.0.0"

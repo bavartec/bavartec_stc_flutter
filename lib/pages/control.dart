@@ -59,6 +59,7 @@ class _MyControlPageState extends MyState<MyControlPage> {
       enabled: true,
       controlValue: newValueH,
       weekly: printWeekly(weekly),
+      nightValue:newValueL,
     ));
   }
 
@@ -90,27 +91,48 @@ class _MyControlPageState extends MyState<MyControlPage> {
 //                ),
 //              ),
 //            ),
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 250.0),
-              child: BigSlider(
-                min: MIN_T,
-                max: MAX_T,
-                oldValueH: currentValueH,
-                newValueH: newValueH,
-                oldValueL: currentValueL,
-                newValueL: newValueL,
-                onChanged: (value, isH) {
-                  indicate(null);
-                  setState(() {
-                    if(isH == 1) {
-                      newValueH = value;
-                    }else if(isH == 0){
-                      newValueL = value;
-                    }
-                  });
-                },
-              ),
+          Row(
+            children: <Widget>[
+            Expanded(
+              child:BigSlider(
+                      isHType: false,
+                      min: MIN_T,
+                      max: MAX_T,
+                      oldValue: currentValueL,
+                      newValue: newValueL,
+                      onChanged: (value) {
+                        indicate(null);
+                        setState(() {
+                          if(value > newValueH){
+                            newValueH = value;
+                          }
+                          newValueL = value;
+                        });
+                      },
+                    ),
+              flex:1,
             ),
+            Expanded(
+              child: BigSlider(
+                  isHType: true,
+                  min: MIN_T,
+                  max: MAX_T,
+                  oldValue: currentValueH,
+                  newValue: newValueH,
+                  onChanged: (value) {
+                    indicate(null);
+                    setState(() {
+                      if(value < newValueL){
+                        newValueL = value;
+                      }
+                      newValueH = value;
+                    });
+                  },
+                ),
+              flex:1,
+            ),
+          ]),
+
             OutlineButton(
               borderSide: const BorderSide(),
               onPressed: _onSave,
