@@ -1,9 +1,6 @@
 import 'package:bavartec_stc/common.dart';
 import 'package:flutter/material.dart';
 
-
-
-
 class MyAboutPage extends StatefulWidget {
   MyAboutPage({Key key, this.title}) : super(key: key);
 
@@ -14,27 +11,14 @@ class MyAboutPage extends StatefulWidget {
 }
 
 class _MyAboutPageState extends MyState<MyAboutPage> {
-  //TextEditingController passController = TextEditingController();
-
-  String aboutContent = "Entwickelt und importiert durch\r\n"+
-  "BavarTec UG (haftungsbeschränkt), Kapellenweg 10d\r\n"+
-  "94575 Windorf, Deutschland\r\n"+
-  "E-Mail: bavartec@gmail.com\r\n"+
-  "https://www.bavartec.de";
-  String softWareVer  = 'SoftWare Version: V1.0.1';
-  String firmWareVer = 'FirmWare Version: V1.0.1';
-
-
-  void _onLoad() async {
-    //indicate(null);
-  }
-
-
-  @override
-  void initState() {
-    super.initState();
-    //_onLoad();
-  }
+  static const String aboutContent = """
+Entwickelt und importiert durch\n
+BavarTec UG (haftungsbeschränkt), Kapellenweg 10d\n
+94575 Windorf, Deutschland\n
+E-Mail: bavartec@gmail.com\n
+Web: https://www.bavartec.de""";
+  String softwareVer  = "Software Version: v1.0.1";
+  String firmwareVer = "Firmware Version: v1.0.1";
 
   @override
   Widget build(final BuildContext context) {
@@ -72,7 +56,7 @@ class _MyAboutPageState extends MyState<MyAboutPage> {
                 //设置四周圆角 角度
                 borderRadius: BorderRadius.all(Radius.circular(4.0)),
                 //设置四周边框
-                border: new Border.all(width: 1, color: Colors.grey),
+                border: Border.all(width: 1, color: Colors.grey),
               ),
               child: Text(
                   aboutContent,
@@ -80,20 +64,18 @@ class _MyAboutPageState extends MyState<MyAboutPage> {
                   style: TextStyle(
                     backgroundColor: const Color(0xffffffff),
                     fontWeight: FontWeight.normal,
-
                   ),
                 ),
             ),
-
             Padding(
               padding: const EdgeInsets.all(0.0),
               child: Text(" "),
             ),
             Container(
-                width: 550,
+              width: 550,
               padding: const EdgeInsets.all(2.0),
               child: Text(
-                softWareVer,
+                softwareVer,
                 textAlign: TextAlign.left,
                 style: TextStyle(
                 fontWeight: FontWeight.normal,
@@ -104,7 +86,7 @@ class _MyAboutPageState extends MyState<MyAboutPage> {
               width: 550,
               padding: const EdgeInsets.all(2.0),
               child: Text(
-                firmWareVer,
+                firmwareVer,
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   fontWeight: FontWeight.normal,

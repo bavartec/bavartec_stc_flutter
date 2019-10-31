@@ -3,22 +3,18 @@ import 'package:bavartec_stc/platform.dart';
 import 'package:http/http.dart';
 import 'package:multicast_dns/multicast_dns.dart';
 
-
 import 'package:flutter_mdns_plugin/flutter_mdns_plugin.dart';
-//import 'package:flutter/material.dart';
 import 'dart:async';
 
 const String discovery_service = "_googlecast._tcp";
 
 class Api {
-
   static Future<String> mdnsQuery() async {
-    //if (Platform.isAndroid) {
+    if (Platform.isAndroid || true) {
       return await Platform.discoverWifi();
-    //}
+    }
 
     final String name = "smart-thermo-control._http._tcp.local";
-
     final ResourceRecordQuery query = ResourceRecordQuery.addressIPv4(name);
 
     final MDnsClient client = MDnsClient();
@@ -26,61 +22,39 @@ class Api {
 
     await for (final IPAddressResourceRecord record in client.lookup<IPAddressResourceRecord>(query)) {
       client.stop();
-      print("111");
       return "http://" + record.address.address;
     }
-    print("222");
+
     client.stop();
-//    final String name1 = "smart-thermo-control._http._tcp";
-//    if (discoveryCallbacks == null) {
-//      discoveryCallbacks = new DiscoveryCallbacks(
-//        onDiscovered: (ServiceInfo info){
-//          print("Discovered ${info.toString()}");
-//        },
-//        onDiscoveryStarted: (){
-//          print("Discovery started");
-//        },
-//        onDiscoveryStopped: (){
-//          print("Discovery stopped");
-//        },
-//        onResolved: (ServiceInfo info){
-//          print("Resolved Service ${info.toString()}");
-//        },
-//      );
-//    }
-//
-//
-//    if (fmp == null){
-//      fmp = new FlutterMdnsPlugin(discoveryCallbacks: discoveryCallbacks);
-//      print("1111");
-//    }
-//
-//    // cannot directly start discovery, have to wait for ios to be ready first...
-//    Timer(Duration(seconds: 3), () => fmp.startDiscovery(name));
-    // mdns.startDiscovery(serviceType);
+
+    final DiscoveryCallbacks discoveryCallbacks = new DiscoveryCallbacks(
+      onDiscovered: (ServiceInfo info) {
+        print("Discovered ${info.toString()}");
+      },
+      onDiscoveryStarted: () {
+        print("Discovery started");
+      },
+      onDiscoveryStopped: () {
+        print("Discovery stopped");
+      },
+      onResolved: (ServiceInfo info) {
+        print("Resolved Service ${info.toString()}");
+      },
+    );
+
+    final FlutterMdnsPlugin fmp = new FlutterMdnsPlugin(discoveryCallbacks: discoveryCallbacks);
+
+    // cannot directly start discovery, have to wait for ios to be ready first...
+    Timer(Duration(seconds: 3), () => fmp.startDiscovery(name));
     return null;
   }
 
-//  FutureOr<bool> onTimeout(){
-//
-//    Fluttertoast.showToast(
-//        msg: "request time out...",
-//        toastLength: Toast.LENGTH_SHORT,
-//        gravity: ToastGravity.CENTER,
-//        timeInSecForIos: 1,
-//        backgroundColor: Color(0xe74c3c),
-//        textColor: Color(0xffffff)
-//    );
-//  }
   static Future<String> _request(final bool isPost, final String url, final Map<String, String> data) async {
     final String service = await mdnsQuery();
-    
+
     if (service == null) {
       return null;
     }
-    //else{
-    //  return service;
-    //}
 
     String dataEncoded = "";
 

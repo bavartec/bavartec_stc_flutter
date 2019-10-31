@@ -9,8 +9,6 @@ import 'package:smartconfig/smartconfig.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
-
-
 class MyConfigWifiPage extends StatefulWidget {
   MyConfigWifiPage({Key key, this.title}) : super(key: key);
 
@@ -55,7 +53,7 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
     }
 
     if (wifiName == null) {
-      toast("permission required god!");
+      toast("permission required");
       return;
     }
 
@@ -98,7 +96,6 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
     isSubmitting = false;
   }
 
-
   Future<bool> smartConfig(final String ssid, final String bssid, final String pass) async {
     return (await Smartconfig.start(ssid, bssid, pass)) || (await Api.mdnsQuery()) != null;
   }
@@ -116,28 +113,24 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
       return status == PermissionStatus.granted;
     }).toList();
 
-
     return !results.contains(false);
-
   }
 
   Future<bool> getConnectivityPermission() async {
-    //_requestPermissions();
+    // _requestPermissions();
 
-    print("platform is Android:["+Platform.isAndroid.toString()+"]");
+    // print("platform is Android: [" + Platform.isAndroid.toString() + "]");
+
     if (Platform.isAndroid) {
       return Platform.requireLocation();
     }
 
     if (Platform.isIOS) {
-
-      ConnectivityResult result;
       // Platform messages may fail, so we use a try/catch PlatformException.
-
 
       final Connectivity connectivity = Connectivity();
       try {
-        result = await connectivity.checkConnectivity();
+        await connectivity.checkConnectivity();
       } on PlatformException catch (e) {
         print(e.toString());
       }
@@ -145,16 +138,13 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
       print("[mike][ios...]");
       LocationAuthorizationStatus status = await connectivity.getLocationServiceAuthorization();
 
-      //for(var i=0; i<10; i++) {
-        if (status == LocationAuthorizationStatus.notDetermined ||
-            status == LocationAuthorizationStatus.denied) {
+      if (status == LocationAuthorizationStatus.notDetermined ||
+          status == LocationAuthorizationStatus.denied) {
           status = await connectivity.requestLocationServiceAuthorization();
-
-       // }else{
-       //   break;
-       // }
       }
+
       print("[mike][" + status.toString() + "]");
+
       if (status != LocationAuthorizationStatus.authorizedAlways &&
           status != LocationAuthorizationStatus.authorizedWhenInUse) {
         return false;
@@ -167,6 +157,7 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
   Future<List<String>> getConnectivity() async {
     final bool permission = await getConnectivityPermission();
     print(permission.toString());
+
     if (!permission) {
       return [null, null];
     }
@@ -177,12 +168,13 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
     if (result != ConnectivityResult.wifi) {
       return [null, null];
     }
-    print("1111");
+
     final String wifiName = await connectivity.getWifiName();
     final String wifiBSSID = await connectivity.getWifiBSSID();
-    print("2222");
+
     print(wifiName.toString());
     print(wifiBSSID.toString());
+
     return [wifiName, wifiBSSID];
   }
 
@@ -260,9 +252,9 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
             ),
             Padding(
               padding: const EdgeInsets.all(5.0),
-              child: Text("Please press the \'T1\' button of "+
-               "the device. When the LED1 is flashing,click \'Submit\'"+
-              " When the LED1 stop flashing, then network config is successful."),
+              child: Text("Please press the \'T1\' button of " +
+               "the device. When the LED1 is flashing, click \'Submit\'. " +
+               "When the LED1 stop flashing, then network config is successful."),
             ),
           ],
         ),

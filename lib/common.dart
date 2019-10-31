@@ -198,10 +198,10 @@ abstract class MyState<T extends StatefulWidget> extends State<T> {
 
   Offset toLocal(final Offset global, final bool normal, final bool center) {
     final RenderBox box = context.findRenderObject();
-    //print(box.toString());
-
     final Offset local = box.globalToLocal(global);
-    print("locatl pos:"+local.dx.toString()+" "+local.dy.toString());
+
+    // print("local pos: " + local.dx.toString() + " " + local.dy.toString());
+
     double dx = local.dx;
     double dy = local.dy;
 
@@ -210,6 +210,7 @@ abstract class MyState<T extends StatefulWidget> extends State<T> {
       dx /= box.size.width;
       dy /= box.size.height;
     }
+
     //以中心为原点
     if (center) {
       dx = 2 * dx - 1;

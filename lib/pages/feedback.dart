@@ -2,9 +2,6 @@ import 'package:bavartec_stc/common.dart';
 import 'package:flutter/material.dart';
 import 'package:bavartec_stc/api.dart';
 
-
-
-
 class MyFeedbackPage extends StatefulWidget {
   MyFeedbackPage({Key key, this.title}) : super(key: key);
 
@@ -15,19 +12,8 @@ class MyFeedbackPage extends StatefulWidget {
 }
 
 class _MyFeedbackPageState extends MyState<MyFeedbackPage> {
-  //TextEditingController passController = TextEditingController();
-  TextEditingController _msg = TextEditingController(text: 'Please input the content');
-  TextEditingController _contact = TextEditingController(text: '(optional)Your contact method');
-
-  void _onLoad() async {
-    indicate(null);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    //_onLoad();
-  }
+  TextEditingController _msg = TextEditingController(text: "Please input the content");
+  TextEditingController _contact = TextEditingController(text: "(optional) Your contact method");
 
   @override
   Widget build(final BuildContext context) {
@@ -89,14 +75,13 @@ class _MyFeedbackPageState extends MyState<MyFeedbackPage> {
               padding: const EdgeInsets.all(10.0),
               child: Text(""),
             ),
-            new Container(
+            Container(
                 margin: const EdgeInsets.only(top: 15.0),
                 height: 50.0,
-                child: new Row(
+                child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       OutlineButton(
-                        //borderSide: const BorderSide(),
                         onPressed: (){
                           Api.submitFeedback('http://localhost:8080/feedback', '['+_contact.toString()+'] '+_msg.toString());
                         },
@@ -105,7 +90,6 @@ class _MyFeedbackPageState extends MyState<MyFeedbackPage> {
                       ),
                       Padding(padding: const EdgeInsets.all(10.0)),
                       OutlineButton(
-                        //borderSide: const BorderSide(),
                         onPressed: (){},
                         child: const Text("Reset"),
                         color: Colors.white,

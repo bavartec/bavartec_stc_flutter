@@ -118,7 +118,7 @@ class _WeekSliderState extends MyState<WeekSlider> {
         widget.onChanged(times);
       },
       child: CustomPaint(
-        size: Size(double.infinity, 330.0),//350
+        size: Size(double.infinity, 330.0),
         painter: WeekSliderPainter(
           times: times,
         ),
@@ -152,17 +152,15 @@ class WeekSliderPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
 
-
     final xOffset = 15;
-    final Size size1 = Size(size.width-xOffset*2-2, size.height);
-
+    final Size size1 = Size(size.width - xOffset * 2 - 2, size.height);
 
     for (int v = 1; v <= 14; v++) {
       final double x1 = size1.width * 0 / 24;
       final double x2 = size1.width * 24 / 24;
       final double y = size1.height / 14 * v;
 
-      canvas.drawLine(Offset(x1+xOffset, y), Offset(x2+xOffset, y), raster);
+      canvas.drawLine(Offset(x1 + xOffset, y), Offset(x2 + xOffset, y), raster);
     }
 
     for (int d = 0; d < 7; d++) {
@@ -171,7 +169,7 @@ class WeekSliderPainter extends CustomPainter {
         final double y1 = size1.height / 14 * (d * 2 + 1);
         final double y2 = size1.height / 14 * (d * 2 + 2);
 
-        canvas.drawLine(Offset(x+xOffset, y1), Offset(x+xOffset, y2), h % 6 == 0 ? rasterT : raster);
+        canvas.drawLine(Offset(x + xOffset, y1), Offset(x + xOffset, y2), h % 6 == 0 ? rasterT : raster);
       }
     }
 
@@ -185,7 +183,7 @@ class WeekSliderPainter extends CustomPainter {
 
         final double px = size1.width * i / 4 - (i == 0 ? 0 : tp.size.width / 2);
         final double py = size1.height * (d * 2 + 0.5) / 14 - tp.size.height / 2;
-        tp.paint(canvas, Offset(px+xOffset, py));
+        tp.paint(canvas, Offset(px + xOffset, py));
       }
 
       for (int h = 0; h <= 24; h++) {
@@ -195,7 +193,7 @@ class WeekSliderPainter extends CustomPainter {
         if (h < 24) {
           final double x2 = size1.width * (h + 1) / 24;
           final double y2 = size1.height / 14 * (d * 2 + (times[d][(h + 1) % 24] ? 1 : 2));
-          canvas.drawLine(Offset(x1+xOffset, y1), Offset(x2+xOffset, y2), stroke);
+          canvas.drawLine(Offset(x1 + xOffset, y1), Offset(x2 + xOffset, y2), stroke);
         }
       }
 

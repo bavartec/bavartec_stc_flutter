@@ -41,8 +41,7 @@ class _MyIndexPageState extends MyState<MyIndexPage> {
                         indicateSuccess(widget.actions[label.toLowerCase()]());
                       } else if(widget.actionExs.containsKey(label.toLowerCase())) {
                         widget.actionExs[label.toLowerCase()](context);
-                      } else
-                      {
+                      } else {
                         navigate(widget.prefix + label.toLowerCase());
                       }
                     },

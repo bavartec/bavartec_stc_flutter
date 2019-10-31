@@ -1,5 +1,4 @@
 import 'package:bavartec_stc/api.dart';
-import 'package:bavartec_stc/components/indicator.dart';
 import 'package:bavartec_stc/pages/about.dart';
 import 'package:bavartec_stc/pages/config/mqtt.dart';
 import 'package:bavartec_stc/pages/config/sensor.dart';
@@ -10,41 +9,35 @@ import 'package:bavartec_stc/pages/debug/query.dart';
 import 'package:bavartec_stc/pages/feedback.dart';
 import 'package:bavartec_stc/pages/index.dart';
 import 'package:flutter/material.dart';
-import 'package:bavartec_stc/common.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-
-
-  //restart confirm
   bool doEspRestartConfirm(BuildContext context) {
-
     showDialog<Null>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return new AlertDialog(
-          title: new Text('Confirmation'),
-          content: new SingleChildScrollView(
-            child: new ListBody(
+        return AlertDialog(
+          title: Text('Confirmation'),
+          content: SingleChildScrollView(
+            child: ListBody(
               children: <Widget>[
-                new Text('Confirm to restart device?'),
+                Text('Confirm to restart device?'),
               ],
             ),
           ),
           actions: <Widget>[
-            new FlatButton(
-              child: new Text('OK'),
+            FlatButton(
+              child: Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
-
                 Api.restart();
               },
             ),
 
-            new FlatButton(
-            child: new Text('Cancel'),
+            FlatButton(
+            child: Text('Cancel'),
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -61,32 +54,30 @@ class MyApp extends StatelessWidget {
 
   //restart confirm
   bool doEspUpdateConfirm(BuildContext context) {
-
     showDialog<Null>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return new AlertDialog(
-          title: new Text('Confirmation'),
-          content: new SingleChildScrollView(
-            child: new ListBody(
+        return AlertDialog(
+          title: Text('Confirmation'),
+          content: SingleChildScrollView(
+            child: ListBody(
               children: <Widget>[
-                new Text('Confirm to update device programe?'),
+                Text('Confirm to update device programe?'),
               ],
             ),
           ),
           actions: <Widget>[
-            new FlatButton(
-              child: new Text('OK'),
+            FlatButton(
+              child: Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
 
                 Api.restart();
               },
             ),
-
-            new FlatButton(
-              child: new Text('Cancel'),
+            FlatButton(
+              child: Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -103,7 +94,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-
     return MaterialApp(
       title: 'Smart Thermo Control',
       theme: ThemeData(

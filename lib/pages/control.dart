@@ -77,19 +77,6 @@ class _MyControlPageState extends MyState<MyControlPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-//            Container(
-//              margin: EdgeInsets.all(50),
-//              color: Colors.orange[200],
-//              child: new Transform(
-//                alignment: Alignment.topLeft, //相对于坐标系原点的对齐方式
-//                transform: new Matrix4.rotationZ(-0.4),// 旋转
-//                child: new Container(
-//                  padding: const EdgeInsets.all(8.0),
-//                  color: Colors.deepOrange,
-//                  child: const Text('new Matrix4.rotationZ(-0.4)'),
-//                ),
-//              ),
-//            ),
             ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 250.0),
               child: BigSlider(
@@ -102,9 +89,9 @@ class _MyControlPageState extends MyState<MyControlPage> {
                 onChanged: (value, isH) {
                   indicate(null);
                   setState(() {
-                    if(isH == 1) {
+                    if (isH == 1) {
                       newValueH = value;
-                    }else if(isH == 0){
+                    } else if (isH == 0) {
                       newValueL = value;
                     }
                   });
