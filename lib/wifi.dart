@@ -45,7 +45,7 @@ class WiFi {
 
   static Future<bool> smartConfig(
       final String ssid, final String bssid, final String pass) async {
-    return (await Smartconfig.start(ssid, bssid, pass)) ||
+    return (await Smartconfig.start(ssid, bssid, pass)) != null ||
         (await Api.mdnsQuery()) != null;
   }
 

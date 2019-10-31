@@ -147,6 +147,7 @@ In what follows, you will be asked to set the switches below as shown in each ca
     'refresh': "Refresh",
     'routes': {
       '/': "STC Home",
+      '/about': "About Us",
       '/config': "STC Config",
       '/config/mqtt': "STC Config MQTT",
       '/config/sensor': "STC Config Sensor",
@@ -155,6 +156,7 @@ In what follows, you will be asked to set the switches below as shown in each ca
       '/debug': "STC Debug",
       '/debug/listen': "STC Listen",
       '/debug/query': "STC Query",
+      '/feedback': "Feedback",
     },
     'save': "Save",
     'sensor': "Sensor",
@@ -215,6 +217,7 @@ Im folgenden werden Sie aufgefordert, die untenstehenden Schalter wie jeweils ge
     'refresh': "Aktualisieren",
     'routes': {
       '/': "STC Start",
+      '/about': "Über Uns",
       '/config': "STC Konfiguration",
       '/config/mqtt': "STC Konfiguration MQTT",
       '/config/sensor': "STC Konfiguration Sensor",
@@ -223,6 +226,7 @@ Im folgenden werden Sie aufgefordert, die untenstehenden Schalter wie jeweils ge
       '/debug': "STC Debug",
       '/debug/listen': "STC Listen",
       '/debug/query': "STC Query",
+      '/feedback': "Feedback",
     },
     'save': "Speichern",
     'sensor': "Sensor",

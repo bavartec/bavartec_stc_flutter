@@ -6,8 +6,6 @@ dependencies:
   #多语言插件
   flutter_localizations:
     sdk: flutter
-  flutter_mdns_plugin:
-    git: https://github.com/terrabythia/flutter_mdns_plugin.git
 
   connectivity: ^0.4.5
   device_info: ^0.4.1

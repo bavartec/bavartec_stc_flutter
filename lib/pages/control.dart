@@ -67,6 +67,7 @@ class _MyControlPageState extends MyState<MyControlPage> {
     return Api.control(
       enabled: true,
       controlValue: newValueH,
+      nightValue: newValueL,
       weekly: printWeekly(weekly),
     );
   }
@@ -82,6 +83,7 @@ class _MyControlPageState extends MyState<MyControlPage> {
     }
 
     MQTT.publish('controlValue', currentValueH.toString());
+    MQTT.publish('nightValue', currentValueL.toString());
     MQTT.publish('weekly', printWeekly(weekly).join());
     return true;
   }
@@ -99,26 +101,47 @@ class _MyControlPageState extends MyState<MyControlPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 250.0),
-            child: BigSlider(
-              min: MIN_T,
-              max: MAX_T,
-              oldValueH: currentValueH,
-              newValueH: newValueH,
-              oldValueL: currentValueL,
-              newValueL: newValueL,
-              onChanged: (value, isH) {
-                indicate(null);
-                setState(() {
-                  if (isH == 1) {
-                    newValueH = value;
-                  } else if (isH == 0) {
-                    newValueL = value;
-                  }
-                });
-              },
-            ),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: BigSlider(
+                  isHType: false,
+                  min: MIN_T,
+                  max: MAX_T,
+                  oldValue: currentValueL,
+                  newValue: newValueL,
+                  onChanged: (value, done) {
+                    indicate(null);
+                    setState(() {
+                      if (value > newValueH) {
+                        newValueH = value;
+                      }
+                      newValueL = value;
+                    });
+                  },
+                ),
+                flex: 1,
+              ),
+              Expanded(
+                child: BigSlider(
+                  isHType: true,
+                  min: MIN_T,
+                  max: MAX_T,
+                  oldValue: currentValueH,
+                  newValue: newValueH,
+                  onChanged: (value, done) {
+                    indicate(null);
+                    setState(() {
+                      if (value < newValueL) {
+                        newValueL = value;
+                      }
+                      newValueH = value;
+                    });
+                  },
+                ),
+                flex: 1,
+              ),
+            ],
           ),
           OutlineButton(
             borderSide: const BorderSide(),

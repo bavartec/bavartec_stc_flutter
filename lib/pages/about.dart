@@ -29,7 +29,6 @@ Web: https://www.bavartec.de""";
         children: <Widget>[
           Container(
             padding: const EdgeInsets.all(25.0),
-            color: const Color(0xffffffff),
             width: 250,
             height: 280,
             child: Image.asset(
@@ -43,7 +42,6 @@ Web: https://www.bavartec.de""";
           const SizedBox(height: 20.0),
           Container(
             padding: const EdgeInsets.all(5.0),
-            color: const Color(0xffffffff),
             width: 550,
             height: 130,
             decoration: BoxDecoration(

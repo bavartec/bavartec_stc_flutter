@@ -116,15 +116,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_mdns_plugin:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: d08fc4db13d1d2100a25fca228411156cd174f33
-      url: "https://github.com/terrabythia/flutter_mdns_plugin.git"
-    source: git
-    version: "0.0.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
