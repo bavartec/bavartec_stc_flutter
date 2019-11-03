@@ -59,8 +59,7 @@ class Regex {
   static const String _domain = '$_domainComponent(.$_domainComponent)+';
   static RegExp domain = RegExp('^$_domain\$');
 
-  static const String _ipComponent =
-      '[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]';
+  static const String _ipComponent = '[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]';
   static const String _ip = '$_ipComponent(.$_ipComponent)+';
   static RegExp ip = RegExp('^$_ip\$');
 
@@ -85,8 +84,7 @@ abstract class MyBaseState<T extends StatefulWidget> extends State<T> {
 
 abstract class MyState<T extends StatefulWidget> extends MyBaseState<T> {
   MyAppState findRoot() {
-    return context.ancestorStateOfType(const TypeMatcher<MyAppState>())
-        as MyAppState;
+    return context.ancestorStateOfType(const TypeMatcher<MyAppState>()) as MyAppState;
   }
 
   void indicate(final Light light) {

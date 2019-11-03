@@ -5,7 +5,7 @@ import 'package:bavartec_stc/platform.dart';
 import 'package:http/http.dart';
 import 'package:multicast_dns/multicast_dns.dart';
 
-const String discovery_service = "_googlecast._tcp";
+const String discovery_service = '_googlecast._tcp';
 
 class Api {
   static Future<String> mdnsQuery() async {
@@ -155,10 +155,11 @@ class Api {
     return success;
   }
 
-  static Future<bool> submitFeedback(String url, String msg) async {
+  static Future<bool> submitFeedback(final String url, final String msg) async {
     print("submit feedback");
-
-    final String result = await _request(true, url, {'feedback':msg});
+    final String result = await _request(true, url, {
+      'feedback': msg,
+    });
     final bool success = result != null;
     print("submit -> $success");
     return success;

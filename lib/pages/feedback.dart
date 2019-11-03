@@ -12,10 +12,8 @@ class MyFeedbackPage extends StatefulWidget {
 }
 
 class _MyFeedbackPageState extends MyState<MyFeedbackPage> {
-  TextEditingController _msg =
-      TextEditingController(text: "Please input the content");
-  TextEditingController _contact =
-      TextEditingController(text: "(optional) Your contact method");
+  TextEditingController _msg = TextEditingController(text: "Please input the content");
+  TextEditingController _contact = TextEditingController(text: "(optional) Your contact method");
 
   @override
   Widget build(final BuildContext context) {
