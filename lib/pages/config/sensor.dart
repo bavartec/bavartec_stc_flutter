@@ -159,14 +159,10 @@ class _MyConfigSensorPageLoopState extends MyState<_MyConfigSensorPageLoop> {
   String dip;
   String selection;
 
-  _onLoad() async {
-    future = indicateResult(Api.configInput(dip));
-  }
-
   @override
   void initState() {
     super.initState();
-    _onLoad();
+    future = indicateResult(Api.configInput(dip));
   }
 
   @override
@@ -296,14 +292,10 @@ class _MyConfigSensorPageEnd extends StatefulWidget {
 class _MyConfigSensorPageEndState extends MyState<_MyConfigSensorPageEnd> {
   Future<String> future;
 
-  _onLoad() async {
-    future = indicateResult(Api.configSensor(widget.sensor));
-  }
-
   @override
   void initState() {
     super.initState();
-    _onLoad();
+    future = indicateResult(Api.configSensor(widget.sensor));
   }
 
   @override
