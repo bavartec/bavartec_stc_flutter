@@ -19,82 +19,60 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  static bool doEspRestartConfirm(BuildContext context) {
-    showDialog<Null>(
+  static Future<bool> confirm(final BuildContext context, final String text) {
+    final MyLocalizations locale = MyLocalizations.of(context);
+    return showDialog<bool>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirmation'),
+          title: Text(locale.confirmationRequired),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Confirm to restart device?'),
+                Text(text),
               ],
             ),
           ),
           actions: <Widget>[
             FlatButton(
-              child: Text('OK'),
+              child: Text(locale.ok),
               onPressed: () {
-                Navigator.of(context).pop();
-                Api.restart();
+                Navigator.of(context).pop(true);
               },
             ),
             FlatButton(
-              child: Text('Cancel'),
+              child: Text(locale.cancel),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(false);
               },
-            )
+            ),
           ],
         );
       },
-    ).then((val) {
-      print(val);
-    });
-
-    return true;
+    );
   }
 
-  //restart confirm
-  static bool doEspUpdateConfirm(BuildContext context) {
-    showDialog<Null>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Confirmation'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Confirm to update device programe?'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
+  static void doEspRestartConfirm(final BuildContext context) async {
+    final MyLocalizations locale = MyLocalizations.of(context);
+    final bool confirmed = await confirm(context, locale.confirmationRestart);
 
-                Api.restart();
-              },
-            ),
-            FlatButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            )
-          ],
-        );
-      },
-    ).then((val) {
-      print(val);
-    });
+    if (!confirmed) {
+      return;
+    }
 
-    return true;
+    Api.restart();
+  }
+
+  static void doEspUpdateConfirm(final BuildContext context) async {
+    final MyLocalizations locale = MyLocalizations.of(context);
+    final bool confirmed = await confirm(context, locale.confirmationUpdate);
+
+    if (!confirmed) {
+      return;
+    }
+
+    Api.update();
   }
 
   @override

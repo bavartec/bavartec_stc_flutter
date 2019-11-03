@@ -1,19 +1,16 @@
 import 'package:bavartec_stc/common.dart';
 import 'package:flutter/material.dart';
 
-typedef Future<bool> Action();
-typedef bool ActionEx(BuildContext context);
+typedef Action(BuildContext context);
 
 class MyIndex {
   MyIndex({
     @required this.route,
     this.action,
-    this.actionEx,
   });
 
   final String route;
   final Action action;
-  final ActionEx actionEx;
 }
 
 class MyIndexPage extends StatefulWidget {
@@ -40,16 +37,11 @@ class _MyIndexPageState extends MyState<MyIndexPage> {
                   borderSide: const BorderSide(),
                   onPressed: () {
                     if (index.action != null) {
-                      indicateSuccess(index.action());
+                      index.action(context);
+                      return;
                     }
 
-                    if (index.actionEx != null) {
-                      index.actionEx(context);
-                    }
-
-                    if (index.route != null) {
-                      navigate(index.route);
-                    }
+                    navigate(index.route);
                   },
                   child: Text(locale().routes[index.route]),
                 ),
