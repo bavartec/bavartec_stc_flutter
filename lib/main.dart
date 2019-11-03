@@ -264,12 +264,14 @@ class MyAppState<T extends StatefulWidget> extends MyBaseState<T> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              MyIndex(label: "Config", route: '/config'),
-              MyIndex(label: "Control", route: '/control'),
-              MyIndex(label: "Debug", route: '/debug'),
+              MyIndex(route: '/about'),
+              MyIndex(route: '/config'),
+              MyIndex(route: '/control'),
+              MyIndex(route: '/debug'),
+              MyIndex(route: '/feedback'),
             ]
                 .map((index) => ListTile(
-                      title: Text(index.label),
+                      title: Text(locale().routes[index.route]),
                       onTap: () {
                         navigator().popAndPushNamed(index.route);
                       },
@@ -284,32 +286,29 @@ class MyAppState<T extends StatefulWidget> extends MyBaseState<T> {
 
 Map<String, Widget> routes = {
   '/': MyIndexPage([
-    MyIndex(label: "About Us", route: '/about'),
-    MyIndex(label: "Config", route: '/config'),
-    MyIndex(label: "Control", route: '/control'),
-    MyIndex(label: "Debug", route: '/debug'),
-    MyIndex(label: "Feedback", route: '/feedback'),
+    MyIndex(route: '/config'),
+    MyIndex(route: '/control'),
+    MyIndex(route: '/debug'),
   ]),
   '/config': MyIndexPage([
-    MyIndex(label: "WiFi", route: '/config/wifi'),
-    MyIndex(label: "Sensor", route: '/config/sensor'),
-    MyIndex(label: "MQTT", route: '/config/mqtt'),
+    MyIndex(route: '/config/wifi'),
+    MyIndex(route: '/config/sensor'),
+    MyIndex(route: '/config/mqtt'),
   ]),
   '/config/mqtt': MyConfigMQTTPage(),
   '/config/sensor': MyConfigSensorPage(),
   '/config/wifi': MyConfigWifiPage(),
   '/control': MyControlPage(),
   '/debug': MyIndexPage([
-    MyIndex(label: "Listen", route: '/debug/listen'),
-    MyIndex(label: "Query", route: '/debug/query'),
+    MyIndex(route: '/debug/listen'),
+    MyIndex(route: '/debug/query'),
     MyIndex(
-      label: "Restart",
-      // action: this.restartConfirm,
-      actionEx: MyApp.doEspRestartConfirm,
+      route: '/restart',
+      action: MyApp.doEspRestartConfirm,
     ),
     MyIndex(
-      label: "Update",
-      actionEx: MyApp.doEspUpdateConfirm,
+      route: '/update',
+      action: MyApp.doEspUpdateConfirm,
     ),
   ]),
   '/debug/listen': MyListenPage(),

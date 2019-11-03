@@ -166,7 +166,7 @@ abstract class MyState<T extends StatefulWidget> extends MyBaseState<T> {
     scaffold.showSnackBar(SnackBar(
       content: Text(text),
       action: SnackBarAction(
-        label: "OK",
+        label: locale().ok,
         onPressed: scaffold.hideCurrentSnackBar,
       ),
       duration: duration ?? Duration(seconds: 5),

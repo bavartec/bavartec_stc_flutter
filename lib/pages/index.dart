@@ -6,16 +6,14 @@ typedef bool ActionEx(BuildContext context);
 
 class MyIndex {
   MyIndex({
-    @required this.label,
+    @required this.route,
     this.action,
     this.actionEx,
-    this.route,
   });
 
-  final String label;
+  final String route;
   final Action action;
   final ActionEx actionEx;
-  final String route;
 }
 
 class MyIndexPage extends StatefulWidget {
@@ -53,7 +51,7 @@ class _MyIndexPageState extends MyState<MyIndexPage> {
                       navigate(index.route);
                     }
                   },
-                  child: Text(index.label),
+                  child: Text(locale().routes[index.route]),
                 ),
               ))
           .toList(growable: false),

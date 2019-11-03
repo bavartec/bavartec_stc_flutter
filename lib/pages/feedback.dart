@@ -72,16 +72,21 @@ class _MyFeedbackPageState extends MyState<MyFeedbackPage> {
               children: <Widget>[
                 OutlineButton(
                   onPressed: () {
-                    Api.submitFeedback('http://localhost:8080/feedback',
-                        '[' + _contact.toString() + '] ' + _msg.toString());
+                    // TODO
+                    Api.submitFeedback(
+                      'http://localhost:8080/feedback',
+                      '[$_contact] $_msg',
+                    );
                   },
-                  child: const Text("Submit"),
+                  child: Text(locale().submit),
                   color: Colors.white,
                 ),
                 Padding(padding: const EdgeInsets.all(10.0)),
                 OutlineButton(
-                  onPressed: () {},
-                  child: const Text("Reset"),
+                  onPressed: () {
+                    // TODO
+                  },
+                  child: Text(locale().reset),
                   color: Colors.white,
                 ),
               ],

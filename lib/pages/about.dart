@@ -11,14 +11,8 @@ class MyAboutPage extends StatefulWidget {
 }
 
 class _MyAboutPageState extends MyState<MyAboutPage> {
-  static const String aboutContent = """
-Entwickelt und importiert durch\n
-BavarTec UG (haftungsbeschränkt), Kapellenweg 10d\n
-94575 Windorf, Deutschland\n
-E-Mail: bavartec@gmail.com\n
-Web: https://www.bavartec.de""";
-  String softwareVer = "Software Version: v1.0.1";
-  String firmwareVer = "Firmware Version: v1.0.1";
+  static const String softwareVer = "Software Version: v1.0.1";
+  static const String firmwareVer = "Firmware Version: v1.0.1";
 
   @override
   Widget build(final BuildContext context) {
@@ -52,7 +46,7 @@ Web: https://www.bavartec.de""";
               border: Border.all(width: 1, color: Colors.grey),
             ),
             child: Text(
-              aboutContent,
+              locale().aboutContent,
               textAlign: TextAlign.left,
               style: TextStyle(
                 backgroundColor: const Color(0xffffffff),

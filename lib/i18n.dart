@@ -31,6 +31,8 @@ class MyLocalizations {
     return _localizedValues[locale.languageCode];
   }
 
+  String get aboutContent => _get()['about']['content'];
+
   String get advanced => _get()['advanced'];
 
   String get again => _get()['again'];
@@ -38,6 +40,8 @@ class MyLocalizations {
   Map<String, String> get apiRegister => _get()['api']['register']['password-invalid'];
 
   String get back => _get()['back'];
+
+  String get cancel => _get()['cancel'];
 
   String get configSensorChoose => _get()['config']['sensor']['choose'];
 
@@ -48,6 +52,14 @@ class MyLocalizations {
   String get configSensorStart => _get()['config']['sensor']['start'];
 
   String get configSensorWait => _get()['config']['sensor']['wait'];
+
+  String get configWifiSmartconfig => _get()['config']['wifi']['smartconfig'];
+
+  String get confirmationRequired => _get()['confirmation']['required'];
+
+  String get confirmationRestart => _get()['confirmation']['restart'];
+
+  String get confirmationUpdate => _get()['confirmation']['update'];
 
   String get doContinue => _get()['continue'];
 
@@ -65,6 +77,8 @@ class MyLocalizations {
 
   String get finish => _get()['finish'];
 
+  String get ok => _get()['ok'];
+
   String get password => _get()['password'];
 
   String get port => _get()['port'];
@@ -72,6 +86,8 @@ class MyLocalizations {
   String get provider => _get()['provider'];
 
   String get refresh => _get()['refresh'];
+
+  String get reset => _get()['reset'];
 
   Map<String, String> get routes => _get()['routes'];
 
@@ -106,6 +122,14 @@ class MyLocalizations {
 
 const Map<String, Map<String, dynamic>> _localizedValues = {
   'en': {
+    'about': {
+      'content': """
+Developed and imported by
+BavarTec UG (haftungsbeschränkt),
+Kapellenweg 10 D, 94575 Windorf, Germany
+E-Mail: bavartec@gmail.com
+Web: https://www.bavartec.de""",
+    },
     'advanced': "Advanced",
     'again': "Again",
     'api': {
@@ -117,6 +141,7 @@ const Map<String, Map<String, dynamic>> _localizedValues = {
       },
     },
     'back': "Back",
+    'cancel': "Cancel",
     'config': {
       'sensor': {
         'choose': """
@@ -130,6 +155,15 @@ For the device to work properly, the exact type must first be determined.
 In what follows, you will be asked to set the switches below as shown in each case.""",
         'wait': "Please wait a moment ...",
       },
+      'wifi': {
+        'smartconfig': """
+Please press the button "T1" on the device. When the LED "LED1" is flashing, tap "Submit".""",
+      },
+    },
+    'confirmation': {
+      'required': "Confirmation required",
+      'restart': "Confirm to restart device firmware?",
+      'update': "Confirm to update device firmware?",
     },
     'continue': "Continue",
     'custom': "Custom",
@@ -141,22 +175,26 @@ In what follows, you will be asked to set the switches below as shown in each ca
       'permission-required': "permission required",
     },
     'finish': "Finish",
+    'ok': "OK",
     'password': "Password",
     'provider': "Provider",
     'port': "Port",
     'refresh': "Refresh",
+    'reset': "Reset",
     'routes': {
-      '/': "STC Home",
+      '/': "BavarTec STC",
       '/about': "About Us",
-      '/config': "STC Config",
-      '/config/mqtt': "STC Config MQTT",
-      '/config/sensor': "STC Config Sensor",
-      '/config/wifi': "STC Config WiFi",
-      '/control': "STC Control",
-      '/debug': "STC Debug",
-      '/debug/listen': "STC Listen",
-      '/debug/query': "STC Query",
+      '/config': "Config",
+      '/config/mqtt': "Config MQTT",
+      '/config/sensor': "Config Sensor",
+      '/config/wifi': "Config WiFi",
+      '/control': "Control",
+      '/debug': "Debug",
+      '/debug/listen': "Listen",
+      '/debug/query': "Query",
       '/feedback': "Feedback",
+      '/restart': "Restart",
+      '/update': "Update",
     },
     'save': "Save",
     'sensor': "Sensor",
@@ -176,6 +214,14 @@ In what follows, you will be asked to set the switches below as shown in each ca
     'weekdays': ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
   },
   'de': {
+    'about': {
+      'content': """
+Entwickelt und importiert durch
+BavarTec UG (haftungsbeschränkt),
+Kapellenweg 10 D, 94575 Windorf, Deutschland
+E-Mail: bavartec@gmail.com
+Web: https://www.bavartec.de""",
+    },
     'advanced': "Erweitert",
     'again': "Nochmal",
     'api': {
@@ -187,6 +233,7 @@ In what follows, you will be asked to set the switches below as shown in each ca
       },
     },
     'back': "Zurück",
+    'cancel': "Abbrechen",
     'config': {
       'sensor': {
         'choose': """
@@ -200,6 +247,15 @@ Damit das Gerät richtig arbeiten kann, muss zunächst der genaue Typ ermittelt 
 Im folgenden werden Sie aufgefordert, die untenstehenden Schalter wie jeweils gezeigt einzustellen.""",
         'wait': "Bitte einen kurzen Moment Geduld ...",
       },
+      'wifi': {
+        'smartconfig': """
+Bitte betätigen Sie den Knopf "T1" auf dem Gerät. Wenn die LED "LED1" leuchtet, tippen sie auf "Senden".""",
+      },
+    },
+    'confirmation': {
+      'required': "Bestätigung erforderlich",
+      'restart': "Bestätigen, die Geräte-Firmware neuzustarten?",
+      'update': "Bestätigen, die Geräte-Firmware zu aktualisieren?",
     },
     'continue': "Weiter",
     'custom': "Benutzerdefiniert",
@@ -211,22 +267,26 @@ Im folgenden werden Sie aufgefordert, die untenstehenden Schalter wie jeweils ge
       'permission-required': "Berechtigung erforderlich",
     },
     'finish': "Fertig",
+    'ok': "OK",
     'password': "Passwort",
     'provider': "Anbieter",
     'port': "Port",
     'refresh': "Aktualisieren",
+    'reset': "Zurücksetzen",
     'routes': {
-      '/': "STC Start",
+      '/': "BavarTec STC",
       '/about': "Über Uns",
-      '/config': "STC Konfiguration",
-      '/config/mqtt': "STC Konfiguration MQTT",
-      '/config/sensor': "STC Konfiguration Sensor",
-      '/config/wifi': "STC Konfiguration WiFi",
-      '/control': "STC Steuerung",
-      '/debug': "STC Debug",
-      '/debug/listen': "STC Listen",
-      '/debug/query': "STC Query",
+      '/config': "Konfiguration",
+      '/config/mqtt': "Konfiguration MQTT",
+      '/config/sensor': "Konfiguration Sensor",
+      '/config/wifi': "Konfiguration WiFi",
+      '/control': "Steuerung",
+      '/debug': "Debug",
+      '/debug/listen': "Listen",
+      '/debug/query': "Query",
       '/feedback': "Feedback",
+      '/restart': "Neustart",
+      '/update': "Update",
     },
     'save': "Speichern",
     'sensor': "Sensor",

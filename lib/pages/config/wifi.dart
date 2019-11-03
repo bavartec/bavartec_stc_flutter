@@ -143,10 +143,8 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
           child: Text(locale().submit),
         ),
         Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Text("Please press the \'T1\' button of " +
-            "the device. When the LED1 is flashing, click \'Submit\'. " +
-            "When the LED1 stop flashing, then network config is successful."),
+          padding: const EdgeInsets.all(20.0),
+          child: Text(locale().configWifiSmartconfig),
         ),
       ],
     );
