@@ -15,6 +15,7 @@ import 'package:bavartec_stc/pages/index.dart';
 import 'package:bavartec_stc/wifi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(MyApp());
 
@@ -171,11 +172,23 @@ class MyAppState<T extends StatefulWidget> extends MyBaseState<T> {
       MQTT.connect();
     }
 
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
     periodicSafe(Duration(seconds: 5), () async {
       final bool localLink = (await Api.mdnsQuery()) != null;
       final bool remoteLink = MQTT.connected();
       indicate(mdns: localLink ? Light.green : Light.red);
       indicate(mqtt: remoteLink ? Light.green : Light.red);
+
+      if (localLink) {
+        final Map<String, String> queryData = await Api.debugQuery();
+
+        if (queryData != null) {
+          queryData.entries.forEach((entry) {
+            prefs.setString('/debug/query/${entry.key}', entry.value);
+          });
+        }
+      }
     });
   }
 
