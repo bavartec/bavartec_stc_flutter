@@ -126,13 +126,14 @@ class Api {
     return success;
   }
 
-  static Future<bool> submitFeedback(final String url, final String msg) async {
-    print("submit feedback");
-    final String result = await _request(true, url, {
-      'feedback': msg,
+  static Future<bool> submitFeedback(final String message, final String contactMethod) async {
+    print("submitFeedback <- $message | $contactMethod");
+    final String result = await Http.requestPostJson('https://www.bavartec.de/php/feedback.php', {
+      'message': message,
+      'contactMethod': contactMethod,
     });
     final bool success = result != null;
-    print("submit -> $success");
+    print("submitFeedback -> $success");
     return success;
   }
 }

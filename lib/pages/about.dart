@@ -1,5 +1,6 @@
 import 'package:bavartec_stc/common.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyAboutPage extends StatefulWidget {
   MyAboutPage({Key key, this.title}) : super(key: key);
@@ -11,11 +12,27 @@ class MyAboutPage extends StatefulWidget {
 }
 
 class _MyAboutPageState extends MyState<MyAboutPage> {
-  static const String softwareVer = "Software Version: v1.0.1";
-  static const String firmwareVer = "Firmware Version: v1.0.1";
+  static const String appVersion = "v1.0.1";
+
+  String deviceFirmware;
+
+  void _onLoad() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      deviceFirmware = prefs.getString('/debug/query/version');
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _onLoad();
+  }
 
   @override
   Widget build(final BuildContext context) {
+    final String deviceFirmware = this.deviceFirmware ?? locale().unknown;
     return Padding(
       padding: const EdgeInsets.all(40.0),
       child: Column(
@@ -35,7 +52,7 @@ class _MyAboutPageState extends MyState<MyAboutPage> {
           ),
           const SizedBox(height: 20.0),
           Container(
-            padding: const EdgeInsets.all(5.0),
+            padding: const EdgeInsets.all(10.0),
             width: 550,
             height: 130,
             decoration: BoxDecoration(
@@ -59,7 +76,7 @@ class _MyAboutPageState extends MyState<MyAboutPage> {
             width: 550,
             padding: const EdgeInsets.all(2.0),
             child: Text(
-              softwareVer,
+              "App version: $appVersion",
               textAlign: TextAlign.left,
               style: TextStyle(
                 fontWeight: FontWeight.normal,
@@ -70,7 +87,7 @@ class _MyAboutPageState extends MyState<MyAboutPage> {
             width: 550,
             padding: const EdgeInsets.all(2.0),
             child: Text(
-              firmwareVer,
+              "Device firmware: $deviceFirmware",
               textAlign: TextAlign.left,
               style: TextStyle(
                 fontWeight: FontWeight.normal,

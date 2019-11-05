@@ -1,6 +1,6 @@
+import 'package:bavartec_stc/api.dart';
 import 'package:bavartec_stc/common.dart';
 import 'package:flutter/material.dart';
-import 'package:bavartec_stc/api.dart';
 
 class MyFeedbackPage extends StatefulWidget {
   MyFeedbackPage({Key key, this.title}) : super(key: key);
@@ -12,8 +12,28 @@ class MyFeedbackPage extends StatefulWidget {
 }
 
 class _MyFeedbackPageState extends MyState<MyFeedbackPage> {
-  TextEditingController _msg = TextEditingController(text: "Please input the content");
-  TextEditingController _contact = TextEditingController(text: "(optional) Your contact method");
+  TextEditingController messageController = TextEditingController();
+  TextEditingController contactMethodController = TextEditingController();
+
+  String message = '';
+  String contactMethod = '';
+
+  void _onSubmit() async {
+    final bool success = await indicateSuccess(Api.submitFeedback(message, contactMethod));
+
+    if (!success) {
+      return;
+    }
+
+    _onReset();
+  }
+
+  void _onReset() {
+    setState(() {
+      messageController.text = '';
+      contactMethodController.text = '';
+    });
+  }
 
   @override
   Widget build(final BuildContext context) {
@@ -34,18 +54,24 @@ class _MyFeedbackPageState extends MyState<MyFeedbackPage> {
           const SizedBox(height: 10.0),
           TextField(
             //设置为多行文本框：
-            minLines: 8,
-            maxLines: 8,
-            controller: _msg,
+            minLines: 4,
+            maxLines: 10,
+            controller: messageController,
             decoration: InputDecoration(
               hintText: "Please input the content",
               border: OutlineInputBorder(),
               fillColor: Colors.white,
               filled: true,
             ),
+            onChanged: (value) {
+              setState(() {
+                message = value;
+              });
+            },
           ),
           const SizedBox(height: 10.0),
           TextField(
+            controller: contactMethodController,
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.symmetric(vertical: 0.0),
               prefixIcon: Icon(Icons.mail),
@@ -54,10 +80,9 @@ class _MyFeedbackPageState extends MyState<MyFeedbackPage> {
               fillColor: Colors.white,
               filled: true,
             ),
-            controller: _contact,
             onChanged: (value) {
               setState(() {
-                _contact.text = value;
+                contactMethod = value;
               });
             },
           ),
@@ -69,21 +94,13 @@ class _MyFeedbackPageState extends MyState<MyFeedbackPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 OutlineButton(
-                  onPressed: () {
-                    // TODO
-                    Api.submitFeedback(
-                      'http://localhost:8080/feedback',
-                      '[$_contact] $_msg',
-                    );
-                  },
+                  onPressed: _onSubmit,
                   child: Text(locale().submit),
                   color: Colors.white,
                 ),
                 Padding(padding: const EdgeInsets.all(10.0)),
                 OutlineButton(
-                  onPressed: () {
-                    // TODO
-                  },
+                  onPressed: _onReset,
                   child: Text(locale().reset),
                   color: Colors.white,
                 ),

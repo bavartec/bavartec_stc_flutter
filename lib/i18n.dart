@@ -107,6 +107,8 @@ class MyLocalizations {
 
   String get submit => _get()['submit'];
 
+  String get unknown => _get()['unknown'];
+
   String get username => _get()['username'];
 
   String get validatePass => _get()['validate']['pass'];
@@ -204,6 +206,7 @@ Please press the button "T1" on the device. When the LED "LED1" is flashing, tap
     'start': "Start",
     'stop': "Stop",
     'submit': "Submit",
+    'unknown': "Unknown",
     'username': "Username",
     'validate': {
       'pass': "password must not be empty",
@@ -296,6 +299,7 @@ Bitte betätigen Sie den Knopf "T1" auf dem Gerät. Wenn die LED "LED1" leuchtet
     'start': "Start",
     'stop': "Stop",
     'submit': "Senden",
+    'unknown': "Unbekannt",
     'username': "Nutzername",
     'validate': {
       'pass': "Passwort darf nicht leer sein",
