@@ -1,5 +1,5 @@
-import 'package:bavartec_stc/api.dart';
 import 'package:bavartec_stc/common.dart';
+import 'package:bavartec_stc/http.dart';
 import 'package:bavartec_stc/i18n.dart';
 import 'package:bavartec_stc/platform.dart';
 import 'package:mqtt_client/mqtt_client.dart';
@@ -122,7 +122,7 @@ class MQTT {
   }
 
   static Future<String> register(final String user, final String pass) async {
-    return await Api.request(true, 'https://api.mqtt.bavartec.de/register', {
+    return await Http.requestPostJson('https://api.mqtt.bavartec.de/register', {
       'user': user,
       'pass': pass,
     });

@@ -36,8 +36,8 @@ class Lights {
   }
 }
 
-String formatQueryString(final String raw) {
-  return Uri.splitQueryString(raw).entries.map((entry) {
+String formatQueryString(final Map<String, String> data) {
+  return data.entries.map((entry) {
     return entry.key + ': ' + entry.value;
   }).join('\n');
 }

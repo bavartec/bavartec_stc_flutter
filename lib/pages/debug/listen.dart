@@ -25,7 +25,7 @@ class _MyListenPageState extends MyState<MyListenPage> {
 
     print("listenStart");
     setState(() {
-      this.text = "getting service...";
+      text = "getting service...";
     });
     indicate(Light.yellow);
 
@@ -34,13 +34,17 @@ class _MyListenPageState extends MyState<MyListenPage> {
     });
   }
 
-  void listening(final String text) {
-    indicate(text == null ? Light.red : Light.green);
+  void listening(final Map<String, String> data) {
+    indicate(data == null ? Light.red : Light.green);
     setState(() {
-      this.text = text == null ? null : formatQueryString(text);
+      if (data == null) {
+        text = locale().errorNoResponse;
+      } else {
+        text = formatQueryString(data);
+      }
     });
 
-    if (text == null) {
+    if (data == null) {
       listenStop();
     }
   }

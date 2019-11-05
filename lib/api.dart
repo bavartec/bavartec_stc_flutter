@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:bavartec_stc/common.dart';
+import 'package:bavartec_stc/http.dart';
 import 'package:bavartec_stc/platform.dart';
-import 'package:http/http.dart';
 import 'package:multicast_dns/multicast_dns.dart';
 
 const String discovery_service = '_googlecast._tcp';
@@ -35,41 +35,10 @@ class Api {
       return null;
     }
 
-    return request(isPost, service + path, data);
-  }
-
-  static Future<String> request(final bool isPost, final String url, final Map<String, String> data) async {
-    String dataEncoded = '';
-
-    if (data != null && data.isNotEmpty) {
-      dataEncoded = data.entries.map((entry) => entry.key + '=' + entry.value).join('&');
-    }
-
-    Response response;
-
     if (isPost) {
-      response = await post(url, body: dataEncoded, headers: {
-        'charset': 'utf-8',
-        'content-type': 'application/x-www-form-urlencoded',
-        'content-length': dataEncoded.length.toString(),
-      }).timeout(Duration(seconds: 5), onTimeout: () => null);
-    } else if (dataEncoded.isNotEmpty) {
-      response = await get(url + '?' + dataEncoded);
+      return Http.requestPostForm(service + path, data);
     } else {
-      response = await get(url);
-    }
-
-    if (response == null) {
-      return null;
-    }
-
-    switch (response.statusCode) {
-      case 200:
-        return response.body;
-      case 204:
-        return '';
-      default:
-        return null;
+      return Http.requestGet(service + path, data);
     }
   }
 
@@ -125,18 +94,20 @@ class Api {
     return success;
   }
 
-  static Future<String> debugListen() async {
+  static Future<Map<String, String>> debugListen() async {
     print("listen");
     final String result = await _request(false, '/debug/listen', null);
+    final bool success = result != null;
     print("listen -> $result");
-    return result;
+    return success ? Uri.splitQueryString(result) : null;
   }
 
-  static Future<String> debugQuery() async {
+  static Future<Map<String, String>> debugQuery() async {
     print("query");
     final String result = await _request(false, '/debug/query', null);
+    final bool success = result != null;
     print("query -> $result");
-    return result;
+    return success ? Uri.splitQueryString(result) : null;
   }
 
   static Future<bool> restart() async {

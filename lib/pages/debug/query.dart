@@ -15,13 +15,13 @@ class _MyQueryPageState extends MyState<MyQueryPage> {
   String text;
 
   void _onRefresh() async {
-    final String text = await indicateResult(Api.debugQuery());
+    final Map<String, String> data = await indicateResult(Api.debugQuery());
 
     setState(() {
-      if (text == null) {
-        this.text = locale().errorNoResponse;
+      if (data == null) {
+        text = locale().errorNoResponse;
       } else {
-        this.text = formatQueryString(text);
+        text = formatQueryString(data);
       }
     });
   }
