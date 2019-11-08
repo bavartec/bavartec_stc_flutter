@@ -59,10 +59,10 @@ class NSD(
             return
         }
 
-        timeout.stop()
+
         manager.stopServiceDiscovery(this)
         multicastLock.release()
-        running = false
+
     }
 
     override fun onDiscoveryStarted(regType: String) {
@@ -101,6 +101,8 @@ class NSD(
 
     override fun onDiscoveryStopped(serviceType: String) {
         Log.d(TAG, "Discovery stopped")
+        timeout.stop()
+        running = false
     }
 
     override fun onStartDiscoveryFailed(serviceType: String, errorCode: Int) {

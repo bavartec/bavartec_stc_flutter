@@ -113,8 +113,9 @@ class _MyConfigSensorPageStartState extends MyState<_MyConfigSensorPageStart> {
           padding: const EdgeInsets.all(15.0),
           child: OutlineButton(
             borderSide: const BorderSide(),
-            onPressed: () {
-              Api.control(enabled: false);
+            onPressed: () async {
+              bool rt = await Api.control(enabled: false);
+              print("current widget:"+widget.toString());
               widget.onStateChanged(
                 _MyConfigSensorPageLoop(
                   onStateChanged: widget.onStateChanged,
@@ -146,9 +147,11 @@ class _MyConfigSensorPageStartState extends MyState<_MyConfigSensorPageStart> {
 class _MyConfigSensorPageLoop extends StatefulWidget {
   _MyConfigSensorPageLoop({
     @required this.onStateChanged,
+    this.dip,
   });
 
   final StateCallback onStateChanged;
+  final String dip;
 
   @override
   _MyConfigSensorPageLoopState createState() => _MyConfigSensorPageLoopState();
@@ -162,12 +165,27 @@ class _MyConfigSensorPageLoopState extends MyState<_MyConfigSensorPageLoop> {
   @override
   void initState() {
     super.initState();
+    dip = widget.dip;
+    future = indicateResult(Api.configInput(dip));
+    print("initState");
+    print(dip);
+    print(future.hashCode);
+  }
+
+  @override
+  void didUpdateWidget(final _MyConfigSensorPageLoop oldWidget){
+    super.didUpdateWidget(oldWidget);
+    dip = widget.dip;
     future = indicateResult(Api.configInput(dip));
   }
 
   @override
   Widget build(final BuildContext context) {
+    print("build");
+    print(dip);
+    print(future.hashCode);
     return FutureBuilder(
+      key: ValueKey(future.hashCode),
       future: future,
       builder: (context, snap) {
         if (snap.connectionState == ConnectionState.waiting) {
@@ -183,12 +201,23 @@ class _MyConfigSensorPageLoopState extends MyState<_MyConfigSensorPageLoop> {
           );
         }
 
-        if (snap.hasData) {
+        if (snap.hasData && snap.data != null) {
+          print("builder");
+          print(dip);
+          print(future.hashCode);
+
           final String data = snap.data;
           final Map<String, String> dataMap = Uri.splitQueryString(data);
+          print("data="+data);
+          print("dip="+(dip??"null"));
+          if(dataMap == null){
+            print("dataMap=null");
+          }else {
+            print("dataMap=" + dataMap.toString());
+          }
 
           if (dataMap['type'] != dip) {
-            dip = dataMap['type'];
+            final String dip2 = dataMap['type'];
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -198,7 +227,7 @@ class _MyConfigSensorPageLoopState extends MyState<_MyConfigSensorPageLoop> {
                   child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 300.0),
                     child: Image.asset(
-                      'assets/manual/dip/${dip}X.png',
+                      'assets/manual/dip/${dip2}X.png',
                       alignment: Alignment.center,
                       repeat: ImageRepeat.noRepeat,
                       matchTextDirection: false,
@@ -208,19 +237,38 @@ class _MyConfigSensorPageLoopState extends MyState<_MyConfigSensorPageLoop> {
                 OutlineButton(
                   borderSide: const BorderSide(),
                   onPressed: () {
-                    setState(() {
+                    /*setState(() {
+                      dip = dip2;//dataMap['type'];
+                      print("outlineButton dip="+dip);
                       future = indicateResult(Api.configInput(dip));
+                      print("OutlineButton setState");
+                      print(dip);
+                      print(future.hashCode);
                       selection = null;
-                    });
+                    });*/
+                    widget.onStateChanged(
+                      _MyConfigSensorPageLoop(
+                        dip:dip2,
+                        onStateChanged: widget.onStateChanged,
+                      )
+                    );
                   },
                   child: Text(locale().done),
                 ),
               ],
             );
           } else {
-            print(dataMap.remove('value'));
-            print(dataMap.remove('type'));
+            //print("value="+(dataMap==null?"null":dataMap.remove('value')));
+            //print("type="+dataMap.remove('type'));
+            //print("mike dataMap:"+dataMap.toString());
+            //print("mike data:"+(data??"null"));
+
+            //print("dataMap remove value="+(dataMap==null?'null':dataMap.remove('value')));
+            //print("dataMap remove type="+(dataMap==null?'null':dataMap.remove('type')));
+            dataMap.remove('value');
+            dataMap.remove('type');
             return _buildChoose(dataMap.map((key, value) {
+              print("key,value="+(key??'null')+","+(value??'null'));
               final int temp = (double.parse(value) - KELVIN).round();
               return MapEntry(key, "$temp°C");
             }));
