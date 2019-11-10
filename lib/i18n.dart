@@ -47,7 +47,7 @@ class MyLocalizations {
 
   String get configSensorDIP => _get()['config']['sensor']['dip'];
 
-  String get configSensorRecognized => _get()['config']['sensor']['recognized'];
+  List<String> get configSensorRecognized => _get()['config']['sensor']['recognized'];
 
   String get configSensorStart => _get()['config']['sensor']['start'];
 

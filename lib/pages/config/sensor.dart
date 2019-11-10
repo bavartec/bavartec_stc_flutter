@@ -113,8 +113,8 @@ class _MyConfigSensorPageStartState extends MyState<_MyConfigSensorPageStart> {
           padding: const EdgeInsets.all(15.0),
           child: OutlineButton(
             borderSide: const BorderSide(),
-            onPressed: () {
-              Api.control(enabled: false);
+            onPressed: () async {
+              await Api.control(enabled: false);
               widget.onStateChanged(
                 _MyConfigSensorPageLoop(
                   onStateChanged: widget.onStateChanged,
@@ -170,7 +170,7 @@ class _MyConfigSensorPageLoopState extends MyState<_MyConfigSensorPageLoop> {
     return FutureBuilder(
       future: future,
       builder: (context, snap) {
-        if (snap.connectionState == ConnectionState.waiting) {
+        if (snap.connectionState != ConnectionState.done) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -183,51 +183,52 @@ class _MyConfigSensorPageLoopState extends MyState<_MyConfigSensorPageLoop> {
           );
         }
 
-        if (snap.hasData) {
-          final String data = snap.data;
-          final Map<String, String> dataMap = Uri.splitQueryString(data);
-
-          if (dataMap['type'] != dip) {
-            dip = dataMap['type'];
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(locale().configSensorDIP),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 30.0),
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 300.0),
-                    child: Image.asset(
-                      'assets/manual/dip/${dip}X.png',
-                      alignment: Alignment.center,
-                      repeat: ImageRepeat.noRepeat,
-                      matchTextDirection: false,
-                    ),
-                  ),
-                ),
-                OutlineButton(
-                  borderSide: const BorderSide(),
-                  onPressed: () {
-                    setState(() {
-                      future = indicateResult(Api.configInput(dip));
-                      selection = null;
-                    });
-                  },
-                  child: Text(locale().done),
-                ),
-              ],
-            );
-          } else {
-            print(dataMap.remove('value'));
-            print(dataMap.remove('type'));
-            return _buildChoose(dataMap.map((key, value) {
-              final int temp = (double.parse(value) - KELVIN).round();
-              return MapEntry(key, "$temp°C");
-            }));
-          }
+        if (!snap.hasData || snap.data == null) {
+          return Text(locale().errorConnectionFailed);
         }
 
-        return Text(locale().errorConnectionFailed);
+        final String data = snap.data;
+        final Map<String, String> dataMap = Uri.splitQueryString(data);
+
+        if (dataMap['type'] != dip) {
+          final String dip2 = dataMap['type'];
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(locale().configSensorDIP),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 30.0),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 300.0),
+                  child: Image.asset(
+                    'assets/manual/dip/${dip2}X.png',
+                    alignment: Alignment.center,
+                    repeat: ImageRepeat.noRepeat,
+                    matchTextDirection: false,
+                  ),
+                ),
+              ),
+              OutlineButton(
+                borderSide: const BorderSide(),
+                onPressed: () {
+                  setState(() {
+                    dip = dip2;
+                    future = indicateResult(Api.configInput(dip2));
+                    selection = null;
+                  });
+                },
+                child: Text(locale().done),
+              ),
+            ],
+          );
+        } else {
+          print(dataMap.remove('value'));
+          print(dataMap.remove('type'));
+          return _buildChoose(dataMap.map((key, value) {
+            final int temp = (double.parse(value) - KELVIN).round();
+            return MapEntry(key, "$temp°C");
+          }));
+        }
       },
     );
   }
@@ -318,24 +319,24 @@ class _MyConfigSensorPageEndState extends MyState<_MyConfigSensorPageEnd> {
           child: FutureBuilder(
             future: future,
             builder: (context, snap) {
-              if (snap.connectionState == ConnectionState.waiting) {
+              if (snap.connectionState != ConnectionState.done) {
                 return CircularProgressIndicator();
               }
 
-              if (snap.hasData) {
-                final String dip = snap.data;
-                return ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 300.0),
-                  child: Image.asset(
-                    'assets/manual/dip/$dip.png',
-                    alignment: Alignment.center,
-                    repeat: ImageRepeat.noRepeat,
-                    matchTextDirection: false,
-                  ),
-                );
+              if (!snap.hasData || snap.data == null) {
+                return Text(locale().errorConnectionFailed);
               }
 
-              return Text(locale().errorConnectionFailed);
+              final String dip = snap.data;
+              return ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 300.0),
+                child: Image.asset(
+                  'assets/manual/dip/$dip.png',
+                  alignment: Alignment.center,
+                  repeat: ImageRepeat.noRepeat,
+                  matchTextDirection: false,
+                ),
+              );
             },
           ),
         ),
