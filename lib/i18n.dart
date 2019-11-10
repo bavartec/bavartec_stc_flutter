@@ -47,7 +47,7 @@ class MyLocalizations {
 
   String get configSensorDIP => _get()['config']['sensor']['dip'];
 
-  String get configSensorRecognized => _get()['config']['sensor']['recognized'];
+  List<String> get configSensorRecognized => _get()['config']['sensor']['recognized'];
 
   String get configSensorStart => _get()['config']['sensor']['start'];
 
@@ -106,6 +106,10 @@ class MyLocalizations {
   String get stop => _get()['stop'];
 
   String get submit => _get()['submit'];
+
+  String get contowf => _get()['con-to-wifi-tip'];
+  String get submitok => _get()['submit-ok'];
+  String get submitfail => _get()['submit-fail'];
 
   String get unknown => _get()['unknown'];
 
@@ -187,9 +191,9 @@ Please press the button "T1" on the device. When the LED "LED1" is flashing, tap
       '/': "BavarTec STC",
       '/about': "About Us",
       '/config': "Config",
-      '/config/mqtt': "Config MQTT",
+      '/config/mqtt': " Config MQTT ",
       '/config/sensor': "Config Sensor",
-      '/config/wifi': "Config WiFi",
+      '/config/wifi': "  Config WiFi  ",
       '/control': "Control",
       '/debug': "Debug",
       '/debug/listen': "Listen",
@@ -206,6 +210,9 @@ Please press the button "T1" on the device. When the LED "LED1" is flashing, tap
     'start': "Start",
     'stop': "Stop",
     'submit': "Submit",
+    'con-to-wifi-tip': "please connect to wifi",
+    'submit-ok':"submit success.",
+    'submit-fail':"submit failed, please retry.",
     'unknown': "Unknown",
     'username': "Username",
     'validate': {
@@ -299,6 +306,9 @@ Bitte betätigen Sie den Knopf "T1" auf dem Gerät. Wenn die LED "LED1" leuchtet
     'start': "Start",
     'stop': "Stop",
     'submit': "Senden",
+    'con-to-wifi-tip': "bitte mit wifi verbinden",
+    'submit-ok':"einreichen Erfolg.",
+    'submit-fail':"Vorlage fehlgeschlagen, Bitte wiederholen.",
     'unknown': "Unbekannt",
     'username': "Nutzername",
     'validate': {

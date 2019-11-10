@@ -19,12 +19,19 @@ class _MyFeedbackPageState extends MyState<MyFeedbackPage> {
   String contactMethod = '';
 
   void _onSubmit() async {
+    if(message.isEmpty){
+      toast("please input content.");
+      return;
+    }
+    
     final bool success = await indicateSuccess(Api.submitFeedback(message, contactMethod));
 
     if (!success) {
+      toast(locale().submitfail);
       return;
     }
 
+    toast(locale().submitok);
     _onReset();
   }
 
@@ -37,12 +44,13 @@ class _MyFeedbackPageState extends MyState<MyFeedbackPage> {
 
   @override
   Widget build(final BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(5.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+    return Container(
+        padding: const EdgeInsets.all(15.0),
+        height: 550,
+        child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          const SizedBox(height: 30.0),
+          const SizedBox(height: 10.0),
           const Text(
             "Contact Us",
             style: TextStyle(
@@ -51,7 +59,7 @@ class _MyFeedbackPageState extends MyState<MyFeedbackPage> {
               fontWeight: FontWeight.normal,
             ),
           ),
-          const SizedBox(height: 10.0),
+          const SizedBox(height: 30.0),
           TextField(
             //设置为多行文本框：
             minLines: 4,

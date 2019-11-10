@@ -29,6 +29,7 @@ class _MyIndexPageState extends MyState<MyIndexPage> {
   @override
   Widget build(final BuildContext context) {
     return Column(
+      //mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
       children: widget.indexes
           .map((index) => Padding(

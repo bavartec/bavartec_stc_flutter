@@ -174,7 +174,7 @@ class MyAppState<T extends StatefulWidget> extends MyBaseState<T> {
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    periodicSafe(Duration(seconds: 5), () async {
+    periodicSafe(Duration(seconds: 10), () async {
       final bool localLink = (await Api.mdnsQuery()) != null;
       final bool remoteLink = MQTT.connected();
       indicate(mdns: localLink ? Light.green : Light.red);

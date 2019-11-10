@@ -39,7 +39,7 @@ class _MyConfigSensorPageState extends MyState<MyConfigSensorPage> {
   void _onLoad() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String sensor = prefs.getString('/config/sensor/sensor');
-
+    print("mike _onLoad:"+sensor??"");
     if (sensor == null || sensor == 'UNKNOWN') {
       setState(() {
         stateChild = _MyConfigSensorPageStart(
@@ -163,9 +163,10 @@ class _MyConfigSensorPageLoopState extends MyState<_MyConfigSensorPageLoop> {
   String selection;
 
   @override
-  void initState() {
+  void initState()async {
     super.initState();
     dip = widget.dip;
+    //bool rt = await Api.control(enabled: false);
     future = indicateResult(Api.configInput(dip));
     print("initState");
     print(dip);
@@ -288,8 +289,7 @@ class _MyConfigSensorPageLoopState extends MyState<_MyConfigSensorPageLoop> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 30.0),
           child: dropdownMap(
-            selection,
-            options.keys.toList(growable: false),
+            selection, options.keys.toList(growable: false),
             onChanged: (selection) {
               setState(() {
                 this.selection = selection;
@@ -343,7 +343,12 @@ class _MyConfigSensorPageEndState extends MyState<_MyConfigSensorPageEnd> {
   @override
   void initState() {
     super.initState();
-    future = indicateResult(Api.configSensor(widget.sensor));
+    //print("mike kk1");
+    Future<String> rt = Api.configSensor(widget.sensor);
+    //print(rt);
+    //print("mike kk2");
+    future = indicateResult(rt);
+    //print("mike kk2");
   }
 
   @override
@@ -391,7 +396,7 @@ class _MyConfigSensorPageEndState extends MyState<_MyConfigSensorPageEnd> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding: const EdgeInsets.all(10.0),
               child: OutlineButton(
                 borderSide: const BorderSide(),
                 onPressed: () {
@@ -405,7 +410,7 @@ class _MyConfigSensorPageEndState extends MyState<_MyConfigSensorPageEnd> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding: const EdgeInsets.all(10.0),
               child: OutlineButton(
                 borderSide: const BorderSide(),
                 onPressed: () {

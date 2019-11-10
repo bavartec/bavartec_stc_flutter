@@ -59,6 +59,8 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
     indicateNull();
 
     if (ssid == null) {
+      print("wifi submit tip:"+locale().contowf??"null");
+      toast(locale().contowf);
       return;
     }
 
@@ -142,6 +144,7 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
           onPressed: _onSubmit,
           child: Text(locale().submit),
         ),
+        new SizedBox(height: 20),
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: Text(locale().configWifiSmartconfig),

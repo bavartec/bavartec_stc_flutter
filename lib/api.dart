@@ -65,11 +65,16 @@ class Api {
   }
 
   static Future<String> configSensor(final String sensor) async {
-    print("configSensor <- $sensor");
+    print("configSensor mike00");
+    print("configSensor -> $sensor");
+    print("configSensor mike11");
     final String result = await _request(true, '/config/sensor', {
       'sensor': sensor,
     });
+    //$sensor
+    print("configSensor mike1");
     print("configSensor -> $result");
+    print("configSensor mike2");
     return result;
   }
 

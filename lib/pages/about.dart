@@ -34,14 +34,14 @@ class _MyAboutPageState extends MyState<MyAboutPage> {
   Widget build(final BuildContext context) {
     final String deviceFirmware = this.deviceFirmware ?? locale().unknown;
     return Padding(
-      padding: const EdgeInsets.all(40.0),
+      padding: const EdgeInsets.all(30.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Container(
             padding: const EdgeInsets.all(25.0),
             width: 250,
-            height: 280,
+            height: 250,
             child: Image.asset(
               'assets/logo.png',
               width: 200,
@@ -50,11 +50,11 @@ class _MyAboutPageState extends MyState<MyAboutPage> {
               fit: BoxFit.contain,
             ),
           ),
-          const SizedBox(height: 20.0),
+          const SizedBox(height: 10.0),
           Container(
             padding: const EdgeInsets.all(10.0),
             width: 550,
-            height: 130,
+            height: 170,
             decoration: BoxDecoration(
               color: Colors.white,
               //设置四周圆角 角度
