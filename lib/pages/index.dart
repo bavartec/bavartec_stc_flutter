@@ -28,25 +28,28 @@ class MyIndexPage extends StatefulWidget {
 class _MyIndexPageState extends MyState<MyIndexPage> {
   @override
   Widget build(final BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: widget.indexes
-          .map((index) => Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: OutlineButton(
-                  borderSide: const BorderSide(),
-                  onPressed: () {
-                    if (index.action != null) {
-                      index.action(context);
-                      return;
-                    }
+    return IntrinsicWidth(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: widget.indexes
+            .map((index) => Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: OutlineButton(
+                    borderSide: const BorderSide(),
+                    onPressed: () {
+                      if (index.action != null) {
+                        index.action(context);
+                        return;
+                      }
 
-                    navigate(index.route);
-                  },
-                  child: Text(locale().routes[index.route]),
-                ),
-              ))
-          .toList(growable: false),
+                      navigate(index.route);
+                    },
+                    child: Text(locale().routes[index.route]),
+                  ),
+                ))
+            .toList(growable: false),
+      ),
     );
   }
 }
