@@ -65,6 +65,7 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
     }
 
     if (isSubmitting) {
+      // TODO: toast
       return;
     }
 
