@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:math';
+
 import 'package:bavartec_stc/common.dart';
 import 'package:bavartec_stc/http.dart';
 import 'package:bavartec_stc/i18n.dart';
@@ -15,6 +18,10 @@ class MQTT {
   static String pass;
 
   static MqttClient _client;
+
+  static int lastConnect = 0;
+  static int retryCount = 0;
+  static int retryWait = 0;
 
   static Future<void> load() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -68,7 +75,7 @@ class MQTT {
     MQTT.server = server;
     MQTT.port = port;
     MQTT.user = user;
-    MQTT.port = port;
+    MQTT.pass = pass;
 
     disconnect();
   }
@@ -85,31 +92,67 @@ class MQTT {
     return _client != null;
   }
 
+  static bool maybeConnect() {
+    if (connected()) {
+      return true;
+    }
+
+    if (!MQTT.valid()) {
+      return false;
+    }
+
+    final int now = DateTime.now().millisecondsSinceEpoch;
+
+    if (now - lastConnect >= retryWait) {
+      MQTT.connect();
+    }
+
+    return false;
+  }
+
   static Future<bool> connect() async {
     if (connected()) {
       return true;
     }
 
+    lastConnect = DateTime.now().millisecondsSinceEpoch;
+
     final String clientId = await Platform.deviceIdentifier();
     _client = MqttClient.withPort(server, clientId, port);
     _client.secure = [443, 8883].contains(port);
     _client.onDisconnected = () {
+      print(_client.connectionStatus.state);
       _client = null;
     };
 
-    await _client.connect(user, pass);
+    try {
+      await _client.connect(user, pass);
+    } on Exception {
+      // MqttConnectionState.faulted
+    }
+
     print(_client.connectionStatus.state);
 
     if (_client.connectionStatus.state != MqttConnectionState.connected) {
       _client = null;
+      retryWait = 1 << (10 + min(retryCount, 5));
+      retryWait += Random().nextInt(retryWait);
+      retryCount++;
       return false;
     }
 
+    retryCount = 0;
+    retryWait = 0;
     return true;
   }
 
   static void disconnect() async {
-    _client.disconnect();
+    if (connected()) {
+      _client.disconnect();
+    }
+
+    retryCount = 0;
+    retryWait = 0;
   }
 
   static void publish(final String topic, final String payload) async {
@@ -122,9 +165,10 @@ class MQTT {
   }
 
   static Future<String> register(final String user, final String pass) async {
-    return await Http.requestPostJson('https://api.mqtt.bavartec.de/register', {
+    final String registration = await Http.requestPostJson('https://api.mqtt.bavartec.de/register', {
       'user': user,
       'pass': pass,
     });
+    return registration ?? 'no-response';
   }
 }

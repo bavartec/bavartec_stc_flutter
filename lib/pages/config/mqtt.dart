@@ -30,6 +30,7 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
     await MQTT.load();
 
     setState(() {
+      provider = MQTT.server == MQTT.SERVER;
       server = MQTT.server;
       port = MQTT.port;
       user = MQTT.user;

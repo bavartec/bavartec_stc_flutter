@@ -37,7 +37,7 @@ class MyLocalizations {
 
   String get again => _get()['again'];
 
-  Map<String, String> get apiRegister => _get()['api']['register']['password-invalid'];
+  Map<String, String> get apiRegister => _get()['api']['register'];
 
   String get back => _get()['back'];
 
@@ -136,6 +136,7 @@ Web: https://www.bavartec.de""",
     'again': "Again",
     'api': {
       'register': {
+        'no-response': "no response",
         'password-invalid': "password invalid",
         'success': "registration completed",
         'username-conflict': "username already taken",
@@ -229,6 +230,7 @@ Web: https://www.bavartec.de""",
     'again': "Nochmal",
     'api': {
       'register': {
+        'no-response': "Keine Antwort",
         'password-invalid': "Passwort ungültig",
         'success': "Registrierung abgeschlossen",
         'username-conflict': "Nutzername bereits vergeben",

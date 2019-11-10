@@ -1,4 +1,5 @@
 import 'package:bavartec_stc/common.dart';
+import 'package:bavartec_stc/main.dart';
 import 'package:bavartec_stc/platform.dart';
 import 'package:bavartec_stc/wifi.dart';
 import 'package:flutter/material.dart';
@@ -70,8 +71,14 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
     await WiFi.save();
 
     isSubmitting = true;
-    await indicateSuccess(WiFi.submit(legacy: legacy));
+    final bool success = await indicateSuccess(WiFi.submit(legacy: legacy));
     isSubmitting = false;
+
+    if (!success) {
+      return;
+    }
+
+    await MyAppState.saveDebugQuery();
   }
 
   @override

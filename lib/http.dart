@@ -16,7 +16,6 @@ class Http {
     return post(url, body: data, headers: {
       'charset': 'utf-8',
       'content-type': type,
-      'content-length': data.length.toString(),
     });
   }
 
