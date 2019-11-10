@@ -14,9 +14,9 @@ enum Light { blue, red, yellow, green }
 
 class Lights {
   Lights({
-    this.mdns,
-    this.mqtt,
-    this.sync,
+    @required this.mdns,
+    @required this.mqtt,
+    @required this.sync,
   });
 
   Light mdns;

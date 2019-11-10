@@ -168,27 +168,29 @@ class MyAppState<T extends StatefulWidget> extends MyBaseState<T> {
     await MQTT.load();
     await WiFi.load();
 
-    if (MQTT.valid()) {
-      MQTT.connect();
+    periodicSafe(Duration(seconds: 1), () async {
+      indicate(mdns: (await Api.mdnsQuery()) != null ? Light.green : Light.red);
+    });
+    periodic(Duration(seconds: 1), () {
+      indicate(mqtt: MQTT.maybeConnect() ? Light.green : Light.red);
+    });
+    periodicSafe(Duration(seconds: 30), () async {
+      if (lights.mdns == Light.green) {
+        await saveDebugQuery();
+      }
+    });
+  }
+
+  static Future<void> saveDebugQuery() async {
+    final Map<String, String> queryData = await Api.debugQuery();
+
+    if (queryData == null) {
+      return;
     }
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    periodicSafe(Duration(seconds: 5), () async {
-      final bool localLink = (await Api.mdnsQuery()) != null;
-      final bool remoteLink = MQTT.connected();
-      indicate(mdns: localLink ? Light.green : Light.red);
-      indicate(mqtt: remoteLink ? Light.green : Light.red);
-
-      if (localLink) {
-        final Map<String, String> queryData = await Api.debugQuery();
-
-        if (queryData != null) {
-          queryData.entries.forEach((entry) {
-            prefs.setString('/debug/query/${entry.key}', entry.value);
-          });
-        }
-      }
+    queryData.entries.forEach((entry) {
+      prefs.setString('/debug/query/${entry.key}', entry.value);
     });
   }
 
