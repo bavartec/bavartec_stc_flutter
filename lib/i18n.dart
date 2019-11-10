@@ -53,6 +53,8 @@ class MyLocalizations {
 
   String get configSensorWait => _get()['config']['sensor']['wait'];
 
+  String get configWifiConnect => _get()['config']['wifi']['connect'];
+
   String get configWifiSmartconfig => _get()['config']['wifi']['smartconfig'];
 
   String get confirmationRequired => _get()['confirmation']['required'];
@@ -107,6 +109,10 @@ class MyLocalizations {
 
   String get submit => _get()['submit'];
 
+  String get submitOk => _get()['submit-ok'];
+
+  String get submitFail => _get()['submit-fail'];
+
   String get unknown => _get()['unknown'];
 
   String get username => _get()['username'];
@@ -159,6 +165,7 @@ In what follows, you will be asked to set the switches below as shown in each ca
         'wait': "Please wait a moment ...",
       },
       'wifi': {
+        'connect': "please connect to Wifi",
         'smartconfig': """
 Please press the button "T1" on the device. When the LED "LED1" is flashing, tap "Submit".""",
       },
@@ -207,6 +214,8 @@ Please press the button "T1" on the device. When the LED "LED1" is flashing, tap
     'start': "Start",
     'stop': "Stop",
     'submit': "Submit",
+    'submit-ok': "submit successful",
+    'submit-fail': "submit failed, please retry",
     'unknown': "Unknown",
     'username': "Username",
     'validate': {
@@ -253,6 +262,7 @@ Im folgenden werden Sie aufgefordert, die untenstehenden Schalter wie jeweils ge
         'wait': "Bitte einen kurzen Moment Geduld ...",
       },
       'wifi': {
+        'connect': "Bitte mit WLAN verbinden",
         'smartconfig': """
 Bitte betätigen Sie den Knopf "T1" auf dem Gerät. Wenn die LED "LED1" leuchtet, tippen sie auf "Senden".""",
       },
@@ -284,7 +294,7 @@ Bitte betätigen Sie den Knopf "T1" auf dem Gerät. Wenn die LED "LED1" leuchtet
       '/config': "Konfiguration",
       '/config/mqtt': "Konfiguration MQTT",
       '/config/sensor': "Konfiguration Sensor",
-      '/config/wifi': "Konfiguration WiFi",
+      '/config/wifi': "Konfiguration WLAN",
       '/control': "Steuerung",
       '/debug': "Debug",
       '/debug/listen': "Listen",
@@ -301,6 +311,8 @@ Bitte betätigen Sie den Knopf "T1" auf dem Gerät. Wenn die LED "LED1" leuchtet
     'start': "Start",
     'stop': "Stop",
     'submit': "Senden",
+    'submit-ok': "Senden erfolgreich",
+    'submit-fail': "Senden fehlgeschlagen, bitte erneut versuchen",
     'unknown': "Unbekannt",
     'username': "Nutzername",
     'validate': {

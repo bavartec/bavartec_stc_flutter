@@ -60,6 +60,7 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
     indicateNull();
 
     if (ssid == null) {
+      toast(locale().configWifiConnect);
       return;
     }
 
@@ -149,6 +150,7 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
           onPressed: _onSubmit,
           child: Text(locale().submit),
         ),
+        SizedBox(height: 20),
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: Text(locale().configWifiSmartconfig),

@@ -344,7 +344,7 @@ class _MyConfigSensorPageEndState extends MyState<_MyConfigSensorPageEnd> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding: const EdgeInsets.all(10.0),
               child: OutlineButton(
                 borderSide: const BorderSide(),
                 onPressed: () {
@@ -358,7 +358,7 @@ class _MyConfigSensorPageEndState extends MyState<_MyConfigSensorPageEnd> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding: const EdgeInsets.all(10.0),
               child: OutlineButton(
                 borderSide: const BorderSide(),
                 onPressed: () {
