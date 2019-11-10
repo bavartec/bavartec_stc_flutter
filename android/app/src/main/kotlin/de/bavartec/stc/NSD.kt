@@ -1,13 +1,15 @@
 package de.bavartec.stc
 
-import android.net.nsd.*
+import android.net.nsd.NsdManager
 import android.net.nsd.NsdManager.*
-import android.net.wifi.*
-import android.util.*
+import android.net.nsd.NsdServiceInfo
+import android.net.wifi.WifiManager
+import android.util.Log
+import java.util.*
 
 class NSD(
-    private val manager: NsdManager,
-    wifi: WifiManager
+        private val manager: NsdManager,
+        wifi: WifiManager
 ) : DiscoveryListener {
     companion object {
         const val TAG = "NSD"
@@ -17,23 +19,13 @@ class NSD(
 
     private val multicastLock = wifi.createMulticastLock("nsd")
 
-    private val discoveryRequests = ArrayList<(String?) -> Unit>()
-
     private var running = false
-    private val timeout = Timeout(5000) {
-        broadcast(null)
-    }
+
+    private val cached: MutableList<NsdServiceInfo> = ArrayList()
 
     fun discoverWifi(callback: (String?) -> Unit) {
-        discoveryRequests += callback
+        callback(cached.firstOrNull()?.let(this::format))
         startDiscovery()
-    }
-
-    private fun broadcast(service: NsdServiceInfo?) {
-        val value = service?.let(this::format)
-        Log.d(TAG, "broadcast: $value")
-        discoveryRequests.forEach { it(value) }
-        discoveryRequests.clear()
     }
 
     private fun format(service: NsdServiceInfo): String {
@@ -51,7 +43,6 @@ class NSD(
         running = true
         multicastLock.acquire()
         manager.discoverServices(SERVICE_TYPE, PROTOCOL_DNS_SD, this)
-        timeout.restart()
     }
 
     private fun stopDiscovery() {
@@ -59,10 +50,9 @@ class NSD(
             return
         }
 
-        timeout.stop()
-        manager.stopServiceDiscovery(this)
-        multicastLock.release()
         running = false
+        multicastLock.release()
+        manager.stopServiceDiscovery(this)
     }
 
     override fun onDiscoveryStarted(regType: String) {
@@ -83,8 +73,7 @@ class NSD(
 
             override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
                 Log.i(TAG, "Resolve Succeeded: $serviceInfo")
-                broadcast(serviceInfo)
-                stopDiscovery()
+                cached += serviceInfo
             }
         })
     }
@@ -96,7 +85,7 @@ class NSD(
             return
         }
 
-        broadcast(null)
+        cached -= service
     }
 
     override fun onDiscoveryStopped(serviceType: String) {

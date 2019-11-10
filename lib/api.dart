@@ -3,29 +3,12 @@ import 'dart:async';
 import 'package:bavartec_stc/common.dart';
 import 'package:bavartec_stc/http.dart';
 import 'package:bavartec_stc/platform.dart';
-import 'package:multicast_dns/multicast_dns.dart';
 
 const String discovery_service = '_googlecast._tcp';
 
 class Api {
   static Future<String> mdnsQuery() async {
-    if (Platform.isAndroid || true) {
-      return await Platform.discoverWifi();
-    }
-
-    final String name = 'smart-thermo-control._http._tcp.local';
-    final ResourceRecordQuery query = ResourceRecordQuery.addressIPv4(name);
-
-    final MDnsClient client = MDnsClient();
-    await client.start();
-
-    await for (final IPAddressResourceRecord record in client.lookup<IPAddressResourceRecord>(query)) {
-      client.stop();
-      return 'http://${record.address.address}';
-    }
-
-    client.stop();
-    return null;
+    return await Platform.discoverWifi();
   }
 
   static Future<String> _request(final bool isPost, final String path, final Map<String, String> data) async {
