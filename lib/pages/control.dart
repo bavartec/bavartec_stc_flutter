@@ -2,6 +2,7 @@ import 'package:bavartec_stc/api.dart';
 import 'package:bavartec_stc/common.dart';
 import 'package:bavartec_stc/components/control/bigslider.dart';
 import 'package:bavartec_stc/components/control/weekslider.dart';
+import 'package:bavartec_stc/main.dart';
 import 'package:bavartec_stc/mqtt.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,7 +46,7 @@ class _MyControlPageState extends MyState<MyControlPage> {
     });
   }
 
-  void _onSave() async {
+  Future<void> _save() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setDouble(KEY_H, newValueH);
     await prefs.setDouble(KEY_L, newValueL);
@@ -58,9 +59,27 @@ class _MyControlPageState extends MyState<MyControlPage> {
   }
 
   void _onSync() async {
-    await indicateSuccess(() async {
-      return (await _syncLocal()) || (await _syncRemote());
-    }());
+    await _save();
+    await indicateSuccess(_sync());
+  }
+
+  Future<bool> _sync() async {
+    final bool local = await _syncLocal();
+    final bool remote = await _syncRemote();
+
+    if (local) {
+      toast(locale().submitOkLocal);
+    }
+
+    if (remote) {
+      toast(locale().submitOkRemote);
+    }
+
+    if (!local && !remote) {
+      toast(locale().submitFail);
+    }
+
+    return local || remote;
   }
 
   Future<bool> _syncLocal() {
@@ -82,6 +101,13 @@ class _MyControlPageState extends MyState<MyControlPage> {
       return false;
     }
 
+    if ((await MQTT.seed()) == null) {
+      toast(locale().errorMQTTNotSeeded);
+      MyAppState.saveDebugQuery();
+      return false;
+    }
+
+    MQTT.publish('enabled', 'true');
     MQTT.publish('controlValue', currentValueH.toString());
     MQTT.publish('nightValue', currentValueL.toString());
     MQTT.publish('weekly', printWeekly(weekly).join());
@@ -145,10 +171,7 @@ class _MyControlPageState extends MyState<MyControlPage> {
           ),
           OutlineButton(
             borderSide: const BorderSide(),
-            onPressed: () {
-              _onSave();
-              _onSync();
-            },
+            onPressed: _onSync,
             child: Text(locale().save),
           ),
           const SizedBox(height: 10.0),

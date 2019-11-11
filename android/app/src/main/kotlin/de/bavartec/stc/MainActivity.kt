@@ -70,16 +70,8 @@ class MainActivity : FlutterActivity(), MethodCallHandler {
         }
 
         when (call.method) {
-            "apConfig" -> {
-                val ssid = call.argument<String>("ssid")!!
-                val pass = call.argument<String>("pass")!!
-                apConfig.run(ssid, pass, safeSuccess)
-            }
             "discoverWifi" -> {
                 mnsd.discoverWifi(safeSuccess)
-            }
-            "homeSSID" -> {
-                result.success(apConfig.homeSSID())
             }
             "requireLocation" -> {
                 permissions.require(Manifest.permission.ACCESS_FINE_LOCATION, result::success)

@@ -20,7 +20,6 @@ class _MyFeedbackPageState extends MyState<MyFeedbackPage> {
 
   void _onSubmit() async {
     if (message.isEmpty) {
-      // TODO: toast
       return;
     }
 

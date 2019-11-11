@@ -257,7 +257,6 @@ class _MyConfigSensorPageLoopState extends MyState<_MyConfigSensorPageLoop> {
           borderSide: const BorderSide(),
           onPressed: () async {
             if (selection == null) {
-              // TODO: toast
               return;
             }
 

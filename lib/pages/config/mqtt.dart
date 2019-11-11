@@ -30,20 +30,20 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
     await MQTT.load();
 
     setState(() {
-      provider = MQTT.server == MQTT.SERVER;
+      provider = [null, MQTT.SERVER].contains(MQTT.server);
       server = MQTT.server;
       port = MQTT.port;
       user = MQTT.user;
       pass = MQTT.pass;
 
       serverController.value = new TextEditingValue(text: server ?? '');
-      portController.value = new TextEditingValue(text: port == null ? '' : port.toString());
+      portController.value = new TextEditingValue(text: port?.toString() ?? '');
       userController.value = new TextEditingValue(text: user ?? '');
       passController.value = new TextEditingValue(text: pass ?? '');
     });
   }
 
-  void _onSubmit() async {
+  Future<bool> _save() async {
     indicateNull();
 
     final String server = provider ? MQTT.SERVER : this.server;
@@ -53,22 +53,39 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
 
     if (validation != null) {
       toast(validation);
-      return;
-    }
-
-    if (provider) {
-      final String registration = await MQTT.register(user, pass);
-      toast(locale().apiRegister[registration]);
-
-      if (registration != 'success') {
-        return;
-      }
+      return false;
     }
 
     MQTT.set(server, port, user, pass);
     MQTT.save();
+    return true;
+  }
 
-    await indicateSuccess(Api.configMQTT(server, port, user, pass));
+  void _onSubmit() async {
+    if (!await _save()) {
+      return;
+    }
+
+    if (provider) {
+      indicate(Light.yellow);
+
+      final String registration = await MQTT.register();
+      toast(locale().apiRegister[registration]);
+
+      if (registration != 'success') {
+        indicate(Light.red);
+        return;
+      }
+    }
+
+    final bool success = await indicateSuccess(Api.configMQTT(server, port, user, pass));
+
+    if (!success) {
+      toast(locale().configWifiFail);
+      return;
+    }
+
+    toast(locale().configWifiOk);
   }
 
   @override

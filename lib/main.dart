@@ -170,28 +170,34 @@ class MyAppState<T extends StatefulWidget> extends MyBaseState<T> {
 
     periodicSafe(Duration(seconds: 1), () async {
       indicate(mdns: (await Api.mdnsQuery()) != null ? Light.green : Light.red);
+      return true;
     });
-    periodic(Duration(seconds: 1), () {
+    periodicSafe(Duration(seconds: 1), () async {
       indicate(mqtt: MQTT.maybeConnect() ? Light.green : Light.red);
+      return true;
     });
     periodicSafe(Duration(seconds: 30), () async {
       if (lights.mdns == Light.green) {
         await saveDebugQuery();
       }
+
+      return true;
     });
   }
 
-  static Future<void> saveDebugQuery() async {
+  static Future<bool> saveDebugQuery() async {
     final Map<String, String> queryData = await Api.debugQuery();
 
     if (queryData == null) {
-      return;
+      return false;
     }
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setStringList('/debug/query/keys', queryData.keys);
     queryData.entries.forEach((entry) {
       prefs.setString('/debug/query/${entry.key}', entry.value);
     });
+    return true;
   }
 
   @override
@@ -266,6 +272,7 @@ class MyAppState<T extends StatefulWidget> extends MyBaseState<T> {
                 .map((index) => ListTile(
                       title: Text(locale().routes[index.route]),
                       onTap: () {
+                        indicate(sync: Light.blue);
                         navigator().popAndPushNamed(index.route);
                       },
                     ))

@@ -155,16 +155,20 @@ class MQTT {
     retryWait = 0;
   }
 
-  static void publish(final String topic, final String payload) async {
+  static Future<String> seed() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String device = prefs.getString('/debug/query/macSTA');
+    return prefs.getString('/debug/query/macSTA');
+  }
+
+  static void publish(final String topic, final String payload) async {
+    final String device = await seed();
 
     final MqttClientPayloadBuilder builder = MqttClientPayloadBuilder();
     builder.addString(payload);
     _client.publishMessage('/user/$user/device/$device/$topic', MqttQos.atLeastOnce, builder.payload);
   }
 
-  static Future<String> register(final String user, final String pass) async {
+  static Future<String> register() async {
     final String registration = await Http.requestPostJson('https://api.mqtt.bavartec.de/register', {
       'user': user,
       'pass': pass,

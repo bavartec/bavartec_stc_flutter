@@ -55,6 +55,10 @@ class MyLocalizations {
 
   String get configWifiConnect => _get()['config']['wifi']['connect'];
 
+  String get configWifiFail => _get()['config']['wifi']['fail'];
+
+  String get configWifiOk => _get()['config']['wifi']['ok'];
+
   String get configWifiSmartconfig => _get()['config']['wifi']['smartconfig'];
 
   String get confirmationRequired => _get()['confirmation']['required'];
@@ -72,6 +76,8 @@ class MyLocalizations {
   String get errorConnectionFailed => _get()['error']['connection-failed'];
 
   String get errorMQTTConnectionFailed => _get()['error']['mqtt-connection-failed'];
+
+  String get errorMQTTNotSeeded => _get()['error']['mqtt-not-seeded'];
 
   String get errorNoResponse => _get()['error']['no-response'];
 
@@ -107,11 +113,15 @@ class MyLocalizations {
 
   String get stop => _get()['stop'];
 
-  String get submit => _get()['submit'];
+  String get submit => _get()['submit'][''];
 
-  String get submitOk => _get()['submit-ok'];
+  String get submitFail => _get()['submit']['fail'];
 
-  String get submitFail => _get()['submit-fail'];
+  String get submitOk => _get()['submit']['ok'][''];
+
+  String get submitOkLocal => _get()['submit']['ok']['local'];
+
+  String get submitOkRemote => _get()['submit']['ok']['remote'];
 
   String get unknown => _get()['unknown'];
 
@@ -166,6 +176,8 @@ In what follows, you will be asked to set the switches below as shown in each ca
       },
       'wifi': {
         'connect': "please connect to Wifi",
+        'fail': "Wifi config failed, please try again",
+        'ok': "Wifi config successful",
         'smartconfig': """
 Please press the button "T1" on the device. When the LED "LED1" is flashing, tap "Submit".""",
       },
@@ -181,6 +193,7 @@ Please press the button "T1" on the device. When the LED "LED1" is flashing, tap
     'error': {
       'connection-failed': "connection failed",
       'mqtt-connection-failed': "connection to MQTT server failed",
+      'mqtt-not-seeded': "MQTT did not synchronize the device MAC yet",
       'no-response': "no response",
       'permission-required': "permission required",
     },
@@ -213,9 +226,15 @@ Please press the button "T1" on the device. When the LED "LED1" is flashing, tap
     'ssid': "SSID",
     'start': "Start",
     'stop': "Stop",
-    'submit': "Submit",
-    'submit-ok': "submit successful",
-    'submit-fail': "submit failed, please retry",
+    'submit': {
+      '': "Submit",
+      'fail': "submit failed, please try again",
+      'ok': {
+        '': "submit successful",
+        'local': "local submit successful",
+        'remote': "MQTT submit successful",
+      },
+    },
     'unknown': "Unknown",
     'username': "Username",
     'validate': {
@@ -263,6 +282,8 @@ Im folgenden werden Sie aufgefordert, die untenstehenden Schalter wie jeweils ge
       },
       'wifi': {
         'connect': "Bitte mit WLAN verbinden",
+        'fail': "Konfiguration Wifi fehlgeschlagen, bitte erneut versuchen",
+        'ok': "Konfiguration Wifi erfolgreich",
         'smartconfig': """
 Bitte betätigen Sie den Knopf "T1" auf dem Gerät. Wenn die LED "LED1" leuchtet, tippen sie auf "Senden".""",
       },
@@ -278,6 +299,7 @@ Bitte betätigen Sie den Knopf "T1" auf dem Gerät. Wenn die LED "LED1" leuchtet
     'error': {
       'connection-failed': "Verbindung fehlgeschlagen",
       'mqtt-connection-failed': "Verbindung zum MQTT-Server fehlgeschlagen",
+      'mqtt-not-seeded': "MQTT hat die Geräte-MAC noch nicht synchronisiert",
       'no-response': "Keine Antwort",
       'permission-required': "Berechtigung erforderlich",
     },
@@ -310,9 +332,15 @@ Bitte betätigen Sie den Knopf "T1" auf dem Gerät. Wenn die LED "LED1" leuchtet
     'ssid': "SSID",
     'start': "Start",
     'stop': "Stop",
-    'submit': "Senden",
-    'submit-ok': "Senden erfolgreich",
-    'submit-fail': "Senden fehlgeschlagen, bitte erneut versuchen",
+    'submit': {
+      '': "Senden",
+      'fail': "Senden fehlgeschlagen, bitte erneut versuchen",
+      'ok': {
+        '': "Senden erfolgreich",
+        'local': "Senden lokal erfolgreich",
+        'remote': "Senden über MQTT erfolgreich",
+      },
+    },
     'unknown': "Unbekannt",
     'username': "Nutzername",
     'validate': {

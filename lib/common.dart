@@ -43,14 +43,15 @@ String formatQueryString(final Map<String, String> data) {
 }
 
 Timer periodic(final Duration duration, void callback()) {
-  callback();
+  Timer.run(callback);
   return Timer.periodic(duration, (timer) => callback());
 }
 
-void periodicSafe(final Duration duration, Future<void> callback()) {
+void periodicSafe(final Duration duration, Future<bool> callback()) {
   Timer.run(() async {
-    await callback();
-    Timer(duration, () => periodicSafe(duration, callback));
+    if (await callback()) {
+      Timer(duration, () => periodicSafe(duration, callback));
+    }
   });
 }
 
@@ -114,7 +115,12 @@ abstract class MyState<T extends StatefulWidget> extends MyBaseState<T> {
 
   void navigate(final String route) {
     indicateNull();
-    navigator().pushNamed(route);
+
+    if (route == null) {
+      navigator().pop();
+    } else {
+      navigator().pushNamed(route);
+    }
   }
 
   NavigatorState navigator() => Navigator.of(context);
@@ -160,6 +166,8 @@ abstract class MyState<T extends StatefulWidget> extends MyBaseState<T> {
     final String text, {
     final Duration duration,
   }) {
+    print("showing toast: $text");
+
     final ScaffoldState scaffold = Scaffold.of(context);
     scaffold.showSnackBar(SnackBar(
       content: Text(text),

@@ -1,6 +1,5 @@
 import 'package:bavartec_stc/common.dart';
 import 'package:bavartec_stc/main.dart';
-import 'package:bavartec_stc/platform.dart';
 import 'package:bavartec_stc/wifi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,31 +28,44 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
   void _onLoad() async {
     await WiFi.load();
 
+    periodicSafe(Duration(seconds: 1), () async {
+      if (!await _refreshWifi()) {
+        navigate(null);
+        return false;
+      }
+
+      return true;
+    });
+  }
+
+  Future<bool> _refreshWifi() async {
     String wifiName;
     String wifiBSSID;
 
-    if (legacy) {
-      wifiName = await Platform.homeSSID();
-    } else {
-      final List<String> connectivity = await WiFi.getConnectivity();
-      wifiName = connectivity[0];
-      wifiBSSID = connectivity[1];
+    final List<String> connectivity = await WiFi.getConnectivity();
+
+    if (connectivity == null) {
+      toast(locale().errorPermissionRequired);
+      return false;
     }
 
-    if (wifiName == null) {
-      toast(locale().errorPermissionRequired);
-      return;
-    }
+    wifiName = connectivity[0];
+    wifiBSSID = connectivity[1];
 
     setState(() {
       ssid = wifiName;
       bssid = wifiBSSID;
+
+      if (wifiName == null) {
+        return;
+      }
 
       if (WiFi.ssid == wifiName) {
         pass = WiFi.pass;
         passController.value = new TextEditingValue(text: pass);
       }
     });
+    return true;
   }
 
   void _onSubmit() async {
@@ -65,7 +77,6 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
     }
 
     if (isSubmitting) {
-      // TODO: toast
       return;
     }
 
@@ -73,13 +84,15 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
     await WiFi.save();
 
     isSubmitting = true;
-    final bool success = await indicateSuccess(WiFi.submit(legacy: legacy));
+    final bool success = await indicateSuccess(WiFi.submit());
     isSubmitting = false;
 
     if (!success) {
+      toast(locale().configWifiFail);
       return;
     }
 
+    toast(locale().configWifiOk);
     await MyAppState.saveDebugQuery();
   }
 
