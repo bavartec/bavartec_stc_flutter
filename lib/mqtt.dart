@@ -165,7 +165,7 @@ class MQTT {
 
     final MqttClientPayloadBuilder builder = MqttClientPayloadBuilder();
     builder.addString(payload);
-    _client.publishMessage('/user/$user/device/$device/$topic', MqttQos.atLeastOnce, builder.payload);
+    _client.publishMessage('user/$user/device/$device/$topic', MqttQos.atLeastOnce, builder.payload);
   }
 
   static Future<String> register() async {

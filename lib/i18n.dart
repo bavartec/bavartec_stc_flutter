@@ -43,6 +43,10 @@ class MyLocalizations {
 
   String get cancel => _get()['cancel'];
 
+  String get configMQTTFail => _get()['config']['mqtt']['fail'];
+
+  String get configMQTTOk => _get()['config']['mqtt']['ok'];
+
   String get configSensorChoose => _get()['config']['sensor']['choose'];
 
   String get configSensorDIP => _get()['config']['sensor']['dip'];
@@ -162,6 +166,10 @@ Web: https://www.bavartec.de""",
     'back': "Back",
     'cancel': "Cancel",
     'config': {
+      'mqtt': {
+        'fail': "MQTT config failed, please try again",
+        'ok': "MQTT config successful",
+      },
       'sensor': {
         'choose': """
 What is the outside temperature?
@@ -268,6 +276,10 @@ Web: https://www.bavartec.de""",
     'back': "Zurück",
     'cancel': "Abbrechen",
     'config': {
+      'mqtt': {
+        'fail': "Konfiguration MQTT fehlgeschlagen, bitte erneut versuchen",
+        'ok': "Konfiguration MQTT erfolgreich",
+      },
       'sensor': {
         'choose': """
 Welche Temperatur hat es gerade draußen?

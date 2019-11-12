@@ -1,5 +1,6 @@
 import 'package:bavartec_stc/api.dart';
 import 'package:bavartec_stc/common.dart';
+import 'package:bavartec_stc/main.dart';
 import 'package:bavartec_stc/mqtt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -81,11 +82,12 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
     final bool success = await indicateSuccess(Api.configMQTT(server, port, user, pass));
 
     if (!success) {
-      toast(locale().configWifiFail);
+      toast(locale().configMQTTFail);
       return;
     }
 
-    toast(locale().configWifiOk);
+    toast(locale().configMQTTOk);
+    await MyAppState.saveDebugQuery();
   }
 
   @override

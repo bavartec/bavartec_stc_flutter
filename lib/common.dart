@@ -164,7 +164,7 @@ abstract class MyState<T extends StatefulWidget> extends MyBaseState<T> {
 
   void toast(
     final String text, {
-    final Duration duration,
+    final Duration duration = const Duration(seconds: 4),
   }) {
     print("showing toast: $text");
 
@@ -175,7 +175,7 @@ abstract class MyState<T extends StatefulWidget> extends MyBaseState<T> {
         label: locale().ok,
         onPressed: scaffold.hideCurrentSnackBar,
       ),
-      duration: duration ?? Duration(seconds: 5),
+      duration: duration,
     ));
   }
 

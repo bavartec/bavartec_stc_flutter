@@ -92,7 +92,7 @@ class _MyControlPageState extends MyState<MyControlPage> {
   }
 
   Future<bool> _syncRemote() async {
-    if (MQTT.valid()) {
+    if (!MQTT.valid()) {
       return false;
     }
 
