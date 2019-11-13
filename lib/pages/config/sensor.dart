@@ -167,7 +167,7 @@ class _MyConfigSensorPageLoopState extends MyState<_MyConfigSensorPageLoop> {
 
   @override
   Widget build(final BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<String>(
       future: future,
       builder: (context, snap) {
         if (snap.connectionState != ConnectionState.done) {
@@ -240,7 +240,7 @@ class _MyConfigSensorPageLoopState extends MyState<_MyConfigSensorPageLoop> {
         Text(locale().configSensorChoose),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 30.0),
-          child: dropdownMap(
+          child: dropdownMap<String>(
             selection,
             options.keys.toList(growable: false),
             onChanged: (selection) {
@@ -316,7 +316,7 @@ class _MyConfigSensorPageEndState extends MyState<_MyConfigSensorPageEnd> {
         Text(locale().configSensorDIP),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 30.0),
-          child: FutureBuilder(
+          child: FutureBuilder<String>(
             future: future,
             builder: (context, snap) {
               if (snap.connectionState != ConnectionState.done) {

@@ -135,7 +135,7 @@ class MQTT {
 
     if (_client.connectionStatus.state != MqttConnectionState.connected) {
       _client = null;
-      retryWait = 1 << (10 + min(retryCount, 5));
+      retryWait = 1 << (10 + min(retryCount, 5) as int);
       retryWait += Random().nextInt(retryWait);
       retryCount++;
       return false;

@@ -180,7 +180,7 @@ abstract class MyState<T extends StatefulWidget> extends MyBaseState<T> {
   }
 
   Offset toLocal(final Offset global, final bool normal, final bool center) {
-    final RenderBox box = context.findRenderObject();
+    final RenderBox box = context.findRenderObject() as RenderBox;
     final Offset local = box.globalToLocal(global);
 
     // print("local pos: " + local.dx.toString() + " " + local.dy.toString());

@@ -193,7 +193,7 @@ class MyAppState<T extends StatefulWidget> extends MyBaseState<T> {
     }
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setStringList('/debug/query/keys', queryData.keys);
+    prefs.setStringList('/debug/query/keys', queryData.keys.toList(growable: false));
     queryData.entries.forEach((entry) {
       prefs.setString('/debug/query/${entry.key}', entry.value);
     });

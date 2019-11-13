@@ -107,7 +107,7 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        dropdownMap(
+        dropdownMap<bool>(
           provider,
           [true, false],
           onChanged: (provider) {

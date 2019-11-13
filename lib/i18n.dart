@@ -27,8 +27,8 @@ class MyLocalizations {
     return Localizations.of<MyLocalizations>(context, MyLocalizations);
   }
 
-  Map<String, dynamic> _get() {
-    return _localizedValues[locale.languageCode];
+  Map<String, T> _get<T>() {
+    return _localizedValues[locale.languageCode] as Map<String, T>;
   }
 
   String get aboutContent => _get()['about']['content'];
