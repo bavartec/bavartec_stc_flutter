@@ -44,7 +44,7 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
     });
   }
 
-  Future<bool> _save() async {
+  void _onSubmit() async {
     indicateNull();
 
     final String server = provider ? MQTT.SERVER : this.server;
@@ -54,16 +54,6 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
 
     if (validation != null) {
       toast(validation);
-      return false;
-    }
-
-    MQTT.set(server, port, user, pass);
-    MQTT.save();
-    return true;
-  }
-
-  void _onSubmit() async {
-    if (!await _save()) {
       return;
     }
 
@@ -85,6 +75,9 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
       toast(locale().configMQTTFail);
       return;
     }
+
+    MQTT.set(server, port, user, pass);
+    MQTT.save();
 
     toast(locale().configMQTTOk);
     await MyAppState.saveDebugQuery();
