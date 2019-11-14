@@ -81,6 +81,24 @@ abstract class MyBaseState<T extends StatefulWidget> extends State<T> {
       fn();
     }
   }
+
+  void toast(
+    final String text, {
+    final Duration duration = const Duration(seconds: 3),
+    final BuildContext innerContext,
+  }) {
+    print("showing toast: $text");
+
+    final ScaffoldState scaffold = Scaffold.of(innerContext ?? context);
+    scaffold.showSnackBar(SnackBar(
+      content: Text(text),
+      action: SnackBarAction(
+        label: locale().ok,
+        onPressed: scaffold.hideCurrentSnackBar,
+      ),
+      duration: duration,
+    ));
+  }
 }
 
 abstract class MyState<T extends StatefulWidget> extends MyBaseState<T> {
@@ -160,23 +178,6 @@ abstract class MyState<T extends StatefulWidget> extends MyBaseState<T> {
         );
       }).toList(),
     );
-  }
-
-  void toast(
-    final String text, {
-    final Duration duration = const Duration(seconds: 4),
-  }) {
-    print("showing toast: $text");
-
-    final ScaffoldState scaffold = Scaffold.of(context);
-    scaffold.showSnackBar(SnackBar(
-      content: Text(text),
-      action: SnackBarAction(
-        label: locale().ok,
-        onPressed: scaffold.hideCurrentSnackBar,
-      ),
-      duration: duration,
-    ));
   }
 
   Offset toLocal(final Offset global, final bool normal, final bool center) {

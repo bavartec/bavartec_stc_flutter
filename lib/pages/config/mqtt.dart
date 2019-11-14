@@ -57,6 +57,8 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
       return;
     }
 
+    MQTT.set(server, port, user, pass);
+
     if (provider) {
       indicate(Light.yellow);
 
@@ -65,6 +67,7 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
 
       if (registration != 'success') {
         indicate(Light.red);
+        MQTT.reset();
         return;
       }
     }
@@ -72,12 +75,12 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
     final bool success = await indicateSuccess(Api.configMQTT(server, port, user, pass));
 
     if (!success) {
+      MQTT.reset();
       toast(locale().configMQTTFail);
       return;
     }
 
-    MQTT.set(server, port, user, pass);
-    MQTT.save();
+    await MQTT.save();
 
     toast(locale().configMQTTOk);
     await MyAppState.saveDebugQuery();

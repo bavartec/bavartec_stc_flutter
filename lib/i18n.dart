@@ -105,6 +105,8 @@ class MyLocalizations {
 
   String get save => _get()['save'];
 
+  String get seeded => _get()['seeded'];
+
   String get sensor => _get()['sensor'];
 
   String get server => _get()['server'];
@@ -228,6 +230,7 @@ Please press the button "T1" on the device. When the LED "LED1" is flashing, tap
       '/update': "Update",
     },
     'save': "Save",
+    'seeded': "device data synced",
     'sensor': "Sensor",
     'server': "Server",
     'show-password': "Show password",
@@ -338,6 +341,7 @@ Bitte betätigen Sie den Knopf "T1" auf dem Gerät. Wenn die LED "LED1" leuchtet
       '/update': "Update",
     },
     'save': "Speichern",
+    'seeded': "Geräte-Daten synchronisiert",
     'sensor': "Sensor",
     'server': "Server",
     'show-password': "Passwort anzeigen",

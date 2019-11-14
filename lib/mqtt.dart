@@ -66,6 +66,13 @@ class MQTT {
     return null;
   }
 
+  static void reset() {
+    MQTT.server = null;
+    MQTT.port = null;
+    MQTT.user = null;
+    MQTT.pass = null;
+  }
+
   static void set(
     final String server,
     final int port,

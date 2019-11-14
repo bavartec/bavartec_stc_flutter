@@ -176,9 +176,14 @@ class MyAppState<T extends StatefulWidget> extends MyBaseState<T> {
       indicate(mqtt: MQTT.maybeConnect() ? Light.green : Light.red);
       return true;
     });
-    periodicSafe(Duration(seconds: 30), () async {
+    periodicSafe(Duration(seconds: 10), () async {
       if (lights.mdns == Light.green) {
-        await saveDebugQuery();
+        if (await saveDebugQuery()) {
+          toast(locale().seeded,
+            innerContext: innerContext,
+          );
+          return false;
+        }
       }
 
       return true;
