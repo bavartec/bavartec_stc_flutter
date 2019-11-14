@@ -41,7 +41,14 @@ class Http {
 
   static Future<String> response(final Future<Response> request,
       {final Duration timeout = const Duration(seconds: 5)}) async {
-    final Response response = await request.timeout(timeout, onTimeout: () => null);
+    final Response response = await request
+        .catchError(
+          (e) => null,
+        )
+        .timeout(
+          timeout,
+          onTimeout: () => null,
+        );
 
     if (response == null) {
       return null;

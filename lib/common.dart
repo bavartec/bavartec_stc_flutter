@@ -118,7 +118,15 @@ abstract class MyState<T extends StatefulWidget> extends MyBaseState<T> {
 
   Future<T> indicateResult<T>(final Future<T> call) async {
     indicate(Light.yellow);
-    final T result = await call;
+    T result;
+
+    try {
+      result = await call;
+    } catch (Exception) {
+      indicate(Light.red);
+      rethrow;
+    }
+
     final bool success = result != null;
     indicate(success ? Light.green : Light.red);
     return result;
@@ -126,7 +134,15 @@ abstract class MyState<T extends StatefulWidget> extends MyBaseState<T> {
 
   Future<bool> indicateSuccess(final Future<bool> call) async {
     indicate(Light.yellow);
-    final bool success = await call;
+    bool success;
+
+    try {
+      success = await call;
+    } catch (Exception) {
+      indicate(Light.red);
+      rethrow;
+    }
+
     indicate(success ? Light.green : Light.red);
     return success;
   }
