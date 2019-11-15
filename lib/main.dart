@@ -179,7 +179,8 @@ class MyAppState<T extends StatefulWidget> extends MyBaseState<T> {
     periodicSafe(Duration(seconds: 10), () async {
       if (lights.mdns == Light.green) {
         if (await saveDebugQuery()) {
-          toast(locale().seeded,
+          toast(
+            locale().seeded,
             innerContext: innerContext,
           );
           return false;

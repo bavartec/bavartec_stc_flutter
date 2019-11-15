@@ -73,6 +73,10 @@ class MyLocalizations {
 
   String get doContinue => _get()['continue'];
 
+  String get controlNoLocal => _get()['control']['no-local'];
+
+  String get controlNoRemote => _get()['control']['no-remote'];
+
   String get custom => _get()['custom'];
 
   String get done => _get()['done'];
@@ -198,6 +202,10 @@ Please press the button "T1" on the device. When the LED "LED1" is flashing, tap
       'update': "Confirm to update device firmware?",
     },
     'continue': "Continue",
+    'control': {
+      'no-local': "Wifi not configured",
+      'no-remote': "MQTT not configured",
+    },
     'custom': "Custom",
     'done': "Done",
     'error': {
@@ -309,6 +317,10 @@ Bitte betätigen Sie den Knopf "T1" auf dem Gerät. Wenn die LED "LED1" leuchtet
       'update': "Bestätigen, die Geräte-Firmware zu aktualisieren?",
     },
     'continue': "Weiter",
+    'control': {
+      'no-local': "WLAN nicht eingerichtet",
+      'no-remote': "MQTT nicht eingerichtet",
+    },
     'custom': "Benutzerdefiniert",
     'done': "Erledigt",
     'error': {

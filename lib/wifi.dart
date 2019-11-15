@@ -16,6 +16,16 @@ class WiFi {
     pass = prefs.getString('/config/wifi/pass');
   }
 
+  static bool valid() {
+    return WiFi.ssid != null;
+  }
+
+  static void reset() {
+    WiFi.ssid = null;
+    WiFi.bssid = null;
+    WiFi.pass = null;
+  }
+
   static void set(
     final String ssid,
     final String bssid,

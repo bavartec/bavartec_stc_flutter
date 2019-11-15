@@ -37,9 +37,6 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
   }
 
   Future<bool> _refreshWifi() async {
-    String wifiName;
-    String wifiBSSID;
-
     final List<String> connectivity = await WiFi.getConnectivity();
 
     if (connectivity == null) {
@@ -47,8 +44,8 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
       return false;
     }
 
-    wifiName = connectivity[0];
-    wifiBSSID = connectivity[1];
+    final String wifiName = connectivity[0];
+    final String wifiBSSID = connectivity[1];
 
     setState(() {
       if (wifiName == WiFi.ssid && wifiName != ssid && wifiName != null) {
@@ -75,16 +72,18 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
     }
 
     WiFi.set(ssid, bssid, pass);
-    await WiFi.save();
 
     isSubmitting = true;
     final bool success = await indicateSuccess(WiFi.submit());
     isSubmitting = false;
 
     if (!success) {
+      WiFi.reset();
       toast(locale().configWifiFail);
       return;
     }
+
+    await WiFi.save();
 
     toast(locale().configWifiOk);
     await MyAppState.saveDebugQuery();

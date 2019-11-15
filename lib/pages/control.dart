@@ -4,6 +4,7 @@ import 'package:bavartec_stc/components/control/bigslider.dart';
 import 'package:bavartec_stc/components/control/weekslider.dart';
 import 'package:bavartec_stc/main.dart';
 import 'package:bavartec_stc/mqtt.dart';
+import 'package:bavartec_stc/wifi.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -64,26 +65,41 @@ class _MyControlPageState extends MyState<MyControlPage> {
   }
 
   Future<bool> _sync() async {
-    final bool local = await _syncLocal();
-    final bool remote = await _syncRemote();
+    final Future<bool> localFuture = _syncLocal();
+    final Future<bool> remoteFuture = _syncRemote();
 
-    if (local) {
-      toast(locale().submitOkLocal);
-    }
+    final bool local = await localFuture.then((success) {
+      if (success) {
+        toast(locale().submitOkLocal);
+      }
 
-    if (remote) {
-      toast(locale().submitOkRemote);
-    }
+      return success;
+    });
+    final bool remote = await remoteFuture.then((success) {
+      if (success) {
+        toast(locale().submitOkRemote);
+      }
+
+      return success;
+    });
 
     if (!local && !remote) {
       toast(locale().submitFail);
     }
 
+    if (!WiFi.valid()) {
+      toast(locale().controlNoLocal);
+    }
+
+    if (!MQTT.valid()) {
+      toast(locale().controlNoRemote);
+    }
+
     return local || remote;
   }
 
-  Future<bool> _syncLocal() {
-    return Api.control(
+  Future<bool> _syncLocal() async {
+    return await Api.control(
       enabled: true,
       controlValue: newValueH,
       nightValue: newValueL,

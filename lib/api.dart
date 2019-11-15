@@ -3,11 +3,27 @@ import 'dart:async';
 import 'package:bavartec_stc/common.dart';
 import 'package:bavartec_stc/http.dart';
 import 'package:bavartec_stc/platform.dart';
+import 'package:bavartec_stc/wifi.dart';
 
 const String discovery_service = '_googlecast._tcp';
 
 class Api {
+  static Future<bool> earlyAbort() async {
+    final List<String> connectivity = await WiFi.getConnectivity();
+
+    if (connectivity == null) {
+      return false;
+    }
+
+    final String wifiName = connectivity[0];
+    return wifiName != WiFi.ssid;
+  }
+
   static Future<String> mdnsQuery() async {
+    if (await earlyAbort()) {
+      return null;
+    }
+
     return await Platform.discoverWifi();
   }
 
