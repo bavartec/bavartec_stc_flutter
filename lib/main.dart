@@ -217,7 +217,7 @@ class MyAppState<T extends StatefulWidget> extends MyBaseState<T> {
     return WillPopScope(
       child: Navigator(
         onGenerateRoute: (settings) {
-          return MaterialPageRoute(
+          return MaterialPageRoute<dynamic>(
             builder: (BuildContext context) {
               return scaffold(context, settings.name);
             },

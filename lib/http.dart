@@ -43,7 +43,7 @@ class Http {
       {final Duration timeout = const Duration(seconds: 5)}) async {
     final Response response = await request
         .catchError(
-          (e) => null,
+          (dynamic e) => null,
         )
         .timeout(
           timeout,

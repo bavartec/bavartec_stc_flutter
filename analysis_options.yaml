@@ -1,0 +1,6 @@
+analyzer:
+  exclude:
+    - lib/i18n.dart
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false

@@ -223,6 +223,6 @@ class WeekSliderPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(final WeekSliderPainter other) {
-    return !ListEquality().equals(times, other.times);
+    return !ListEquality(ListEquality<bool>()).equals(times, other.times);
   }
 }
