@@ -16,8 +16,6 @@ class MyConfigWifiPage extends StatefulWidget {
 class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
   TextEditingController passController = TextEditingController();
 
-  bool legacy = false;
-
   String ssid;
   String bssid;
   String pass = '';
@@ -53,17 +51,13 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
     wifiBSSID = connectivity[1];
 
     setState(() {
-      ssid = wifiName;
-      bssid = wifiBSSID;
-
-      if (wifiName == null) {
-        return;
-      }
-
-      if (WiFi.ssid == wifiName) {
+      if (wifiName == WiFi.ssid && wifiName != ssid && wifiName != null) {
         pass = WiFi.pass;
         passController.value = new TextEditingValue(text: pass);
       }
+
+      ssid = wifiName;
+      bssid = wifiBSSID;
     });
     return true;
   }
