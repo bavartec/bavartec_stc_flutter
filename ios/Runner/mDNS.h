@@ -16,6 +16,8 @@
 
 -(void)discoverWifi:(Boolean)cache result:(FlutterResult)result;
 
+-(void)startDiscovery;
+-(void)stopDiscovery;
 @end
 
 #endif /* mDNS_h */

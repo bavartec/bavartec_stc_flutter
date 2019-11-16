@@ -83,10 +83,6 @@ class _MyControlPageState extends MyState<MyControlPage> {
       return success;
     });
 
-    if (!local && !remote) {
-      toast(locale().submitFail);
-    }
-
     if (!WiFi.valid()) {
       toast(locale().controlNoLocal);
     }
@@ -122,11 +118,13 @@ class _MyControlPageState extends MyState<MyControlPage> {
       MyAppState.saveDebugQuery();
       return false;
     }
+    print("sync remote success 1");
 
     MQTT.publish('enabled', 'true');
     MQTT.publish('controlValue', currentValueH.toString());
     MQTT.publish('nightValue', currentValueL.toString());
     MQTT.publish('weekly', printWeekly(weekly).join());
+    print("sync remote success 2");
     return true;
   }
 

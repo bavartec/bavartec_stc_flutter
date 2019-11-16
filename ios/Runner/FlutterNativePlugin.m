@@ -27,10 +27,16 @@
     {
         _mdns = [[mDNS alloc] init];
     }
+    [_mdns startDiscovery];
     
     return self;
 }
-
+- (void)dealloc
+{
+    if (_mdns!=nil) {
+        [_mdns stopDiscovery];
+    }
+}
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
     FlutterMethodChannel *channel = [FlutterMethodChannel methodChannelWithName:@"bavartec" binaryMessenger:[registrar messenger]];
     FlutterNativePlugin *instance = [[FlutterNativePlugin alloc]init];
