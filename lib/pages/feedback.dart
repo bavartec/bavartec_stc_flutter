@@ -1,6 +1,8 @@
 import 'package:bavartec_stc/api.dart';
 import 'package:bavartec_stc/common.dart';
+import 'package:bavartec_stc/components/linktext.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MyFeedbackPage extends StatefulWidget {
   MyFeedbackPage({Key key, this.title}) : super(key: key);
@@ -90,6 +92,31 @@ class _MyFeedbackPageState extends MyState<MyFeedbackPage> {
               setState(() {
                 contactMethod = value;
               });
+            },
+          ),
+          const SizedBox(height: 30.0),
+          LinkText(
+            builder: (context, recognizer) {
+              return Text.rich(
+                TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: locale().feedbackGDPR[0],
+                    ),
+                    TextSpan(
+                      text: locale().feedbackGDPR[1],
+                      style: TextStyle(color: Colors.blue),
+                      recognizer: recognizer,
+                    ),
+                    TextSpan(
+                      text: locale().feedbackGDPR[2],
+                    ),
+                  ],
+                ),
+              );
+            },
+            onTap: () {
+              launch('https://www.bavartec.de/privacy/');
             },
           ),
           const SizedBox(height: 30.0),

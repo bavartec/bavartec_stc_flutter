@@ -39,11 +39,19 @@ class MyLocalizations {
 
   Map<String, String> get apiRegister => _get()['api']['register'] as Map<String, String>;
 
+  Map<String, String> get apiUnregister => _get()['api']['unregister'] as Map<String, String>;
+
   String get back => _get()['back'] as String;
 
   String get cancel => _get()['cancel'] as String;
 
   String get configMQTTFail => _get()['config']['mqtt']['fail'] as String;
+
+  String get configMQTT_GDPR_Cancel => _get()['config']['mqtt']['gdpr']['cancel'] as String;
+
+  String get configMQTT_GDPR_Reset => _get()['config']['mqtt']['gdpr']['reset'] as String;
+
+  List<String> get configMQTT_GDPR_Submit => _get()['config']['mqtt']['gdpr']['submit'] as List<String>;
 
   String get configMQTTOk => _get()['config']['mqtt']['ok'] as String;
 
@@ -90,6 +98,8 @@ class MyLocalizations {
   String get errorNoResponse => _get()['error']['no-response'] as String;
 
   String get errorPermissionRequired => _get()['error']['permission-required'] as String;
+
+  List<String> get feedbackGDPR => _get()['feedback']['gdpr'] as List<String>;
 
   String get finish => _get()['finish'] as String;
 
@@ -165,8 +175,14 @@ Web: https://www.bavartec.de""",
         'no-response': "no response",
         'password-invalid': "password invalid; must be 8-32 ASCII characters (letters, digits, special symbols)",
         'success': "registration completed",
-        'username-conflict': "username already taken",
+        'username-conflict': "username already taken or password wrong",
         'username-invalid': "username invalid; must be 8-32 letters and/or digits",
+      },
+      'unregister': {
+        'no-response': "no response",
+        'success': "registration canceled",
+        'unknown-username': "username not registered",
+        'wrong-password': "wrong password",
       },
     },
     'back': "Back",
@@ -174,6 +190,22 @@ Web: https://www.bavartec.de""",
     'config': {
       'mqtt': {
         'fail': "MQTT config failed, please try again",
+        'gdpr': {
+          'cancel': """
+Do you wish to withdraw your consent and cancel your MQTT registration?
+Due to caching, our server might still accept your credentials for some time.""",
+          'reset': """
+When resetting this form, you can withdraw your consent to the processing of your data,
+in the context of the usage of our MQTT server, if such was previously given.""",
+          'submit': [
+            """
+By submitting this form, you're giving your consent to the processing of your data,
+in the context of the usage of our MQTT server, on the basis of Art. 6 para. 1 lit. a GDPR.
+Please refer to our """,
+            "data privacy declaration",
+            " for more information on how we process data.",
+          ],
+        },
         'ok': "MQTT config successful",
       },
       'sensor': {
@@ -215,6 +247,16 @@ Please press the button "T1" on the device. When the LED "LED1" is flashing, tap
       'no-response': "no response",
       'permission-required': "permission required",
     },
+    'feedback': {
+      'gdpr': [
+        """
+By submitting this form, you're giving your consent to the processing of your data,
+so that we can process your request, on the basis of Art. 6 para. 1 lit. a GDPR.
+Please refer to our """,
+        "data privacy declaration",
+        " for more information on how we process data.",
+      ],
+    },
     'finish': "Finish",
     'ok': "OK",
     'password': "Password",
@@ -234,6 +276,7 @@ Please press the button "T1" on the device. When the LED "LED1" is flashing, tap
       '/debug/listen': "Listen",
       '/debug/query': "Query",
       '/feedback': "Feedback",
+      '/privacy': "Privacy",
       '/restart': "Restart",
       '/update': "Update",
     },
@@ -280,8 +323,14 @@ Web: https://www.bavartec.de""",
         'no-response': "Keine Antwort",
         'password-invalid': "Passwort ungültig; muss 8-32 ASCII Zeichen sein (Buchstaben, Ziffern, Sonderzeichen)",
         'success': "Registrierung abgeschlossen",
-        'username-conflict': "Nutzername bereits vergeben",
+        'username-conflict': "Nutzername bereits vergeben oder Passwort falsch",
         'username-invalid': "Nutzername ungültig; muss 8-32 Buchstaben und/oder Ziffern sein",
+      },
+      'unregister': {
+        'no-response': "Keine Antwort",
+        'success': "Registrierung aufgehoben",
+        'unknown-username': "Nutzername nicht registriert",
+        'wrong-password': "Falsches Passwort",
       },
     },
     'back': "Zurück",
@@ -289,6 +338,22 @@ Web: https://www.bavartec.de""",
     'config': {
       'mqtt': {
         'fail': "Konfiguration MQTT fehlgeschlagen, bitte erneut versuchen",
+        'gdpr': {
+          'cancel': """
+Wünschen Sie, ihre Einwilligung zu widerrufen und ihre MQTT-Registrierung aufzuheben?
+Aufgrund von Caching akzeptiert unser Server möglicherweise noch für eine Weile ihre Zugangsdaten.""",
+          'reset': """
+Beim Zurücksetzen dieses Formulars können Sie ihre Einwilligung zur Verarbeitung ihrer Daten widerrufen,
+im Rahmen der Nutzung unseres MQTT-Servers, falls eine solche zuvor abgegeben wurde.""",
+          'submit': [
+            """
+Durch das Absenden dieses Formulars geben Sie ihre Einwilligung zur Verarbeitung ihrer Daten ab,
+im Rahmen der Nutzung unseres MQTT-Servers, auf der Grundlage von Art. 6 Abs. 1 lit. 1 DSGVO.
+Bitte entnehmen sie unserer """,
+            "Datenschutzerklärung",
+            " weitere Informationen dazu, wie wir Daten verarbeiten.",
+          ],
+        },
         'ok': "Konfiguration MQTT erfolgreich",
       },
       'sensor': {
@@ -330,6 +395,16 @@ Bitte betätigen Sie den Knopf "T1" auf dem Gerät. Wenn die LED "LED1" leuchtet
       'no-response': "Keine Antwort",
       'permission-required': "Berechtigung erforderlich",
     },
+    'feedback': {
+      'gdpr': [
+        """
+Durch das Absenden dieses Formulars geben Sie ihre Einwilligung zur Verarbeitung ihrer Daten,
+damit wir Ihre Anfrage bearbeiten können, auf der Grundlage von Art. 6 Abs. 1 lit. 1 DSGVO.
+Bitte entnehmen sie unserer """,
+        "Datenschutzerklärung",
+        " weitere Informationen dazu, wie wir Daten verarbeiten.",
+      ],
+    },
     'finish': "Fertig",
     'ok': "OK",
     'password': "Passwort",
@@ -349,6 +424,7 @@ Bitte betätigen Sie den Knopf "T1" auf dem Gerät. Wenn die LED "LED1" leuchtet
       '/debug/listen': "Listen",
       '/debug/query': "Query",
       '/feedback': "Feedback",
+      '/privacy': "Datenschutz",
       '/restart': "Neustart",
       '/update': "Update",
     },

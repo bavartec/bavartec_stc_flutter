@@ -15,6 +15,7 @@ import 'package:bavartec_stc/pages/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() => runApp(MyApp());
 
@@ -270,6 +271,12 @@ class MyAppState<T extends StatefulWidget> extends MyBaseState<T> {
               MyIndex(route: '/control'),
               MyIndex(route: '/debug'),
               MyIndex(route: '/feedback'),
+              MyIndex(
+                route: '/privacy',
+                action: (context) {
+                  launch("https://www.bavartec.de/privacy/");
+                },
+              ),
             ]
                 .map((index) => ListTile(
                       title: Text(locale().routes[index.route]),

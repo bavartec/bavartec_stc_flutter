@@ -164,4 +164,12 @@ class MQTT {
     });
     return registration ?? 'no-response';
   }
+
+  Future<String> unregister() async {
+    final String unregistration = await Http.requestPostJson('https://api.mqtt.bavartec.de/unregister', {
+      'user': user,
+      'pass': pass,
+    });
+    return unregistration ?? 'no-response';
+  }
 }

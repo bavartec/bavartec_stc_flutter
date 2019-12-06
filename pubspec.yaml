@@ -13,6 +13,7 @@ dependencies:
   intl: ">=0.15.8"
   intl_translation: ^0.17.7
   mqtt_client: ^5.6.2
+  url_launcher: ^5.2.7
   shared_preferences: ^0.5.4
   smartconfig: ^0.0.1
 

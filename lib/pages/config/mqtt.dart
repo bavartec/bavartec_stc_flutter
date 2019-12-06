@@ -1,9 +1,11 @@
 import 'package:bavartec_stc/api.dart';
 import 'package:bavartec_stc/common.dart';
+import 'package:bavartec_stc/components/linktext.dart';
 import 'package:bavartec_stc/main.dart';
 import 'package:bavartec_stc/mqtt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MyConfigMQTTPage extends StatefulWidget {
   MyConfigMQTTPage({Key key, this.title}) : super(key: key);
@@ -78,6 +80,38 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
     await MyAppState.saveDebugQuery();
   }
 
+  void _onReset() async {
+    if (provider && await MyApp.confirm(context, locale().configMQTT_GDPR_Cancel)) {
+      indicate(Light.yellow);
+
+      final String unregistration = await config.unregister();
+      toast(locale().apiUnregister[unregistration]);
+
+      if (unregistration != 'success') {
+        indicate(Light.red);
+        return;
+      }
+    }
+
+    MQTT.save(null);
+
+    final bool success = await indicateSuccess(Api.configMQTT(null));
+
+    if (!success) {
+      toast(locale().configMQTTFail);
+      return;
+    }
+
+    toast(locale().configMQTTOk);
+
+    setState(() {
+      serverController.text = '';
+      portController.text = '';
+      userController.text = '';
+      passController.text = '';
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -107,11 +141,11 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
             return provider ? "BavarTec" : locale().custom;
           },
         ),
-        const SizedBox(height: 15.0),
         Visibility(
           visible: !provider,
           child: Column(
             children: <Widget>[
+              const SizedBox(height: 15.0),
               Text(
                 locale().server,
                 style: TextStyle(
@@ -174,10 +208,10 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
                   ],
                 ),
               ),
-              const SizedBox(height: 15.0),
             ],
           ),
         ),
+        const SizedBox(height: 15.0),
         Text(
           locale().username,
           style: TextStyle(
@@ -251,11 +285,64 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
             ],
           ),
         ),
+        Visibility(
+          visible: provider,
+          child: Column(
+            children: <Widget>[
+              const SizedBox(height: 15.0),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15.0),
+                child: LinkText(
+                  builder: (context, recognizer) {
+                    return Text.rich(
+                      TextSpan(
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: locale().configMQTT_GDPR_Submit[0],
+                          ),
+                          TextSpan(
+                            text: locale().configMQTT_GDPR_Submit[1],
+                            style: TextStyle(color: Colors.blue),
+                            recognizer: recognizer,
+                          ),
+                          TextSpan(
+                            text: locale().configMQTT_GDPR_Submit[2],
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  onTap: () {
+                    launch('https://www.bavartec.de/privacy/');
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
         const SizedBox(height: 15.0),
         OutlineButton(
           borderSide: const BorderSide(),
           onPressed: _onSubmit,
           child: Text(locale().submit),
+        ),
+        Visibility(
+          visible: provider,
+          child: Column(
+            children: <Widget>[
+              const SizedBox(height: 15.0),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15.0),
+                child: Text(locale().configMQTT_GDPR_Reset),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 15.0),
+        OutlineButton(
+          borderSide: const BorderSide(),
+          onPressed: _onReset,
+          child: Text(locale().reset),
         ),
       ],
     );
