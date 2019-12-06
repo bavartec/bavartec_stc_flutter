@@ -103,7 +103,7 @@ abstract class MyBaseState<T extends StatefulWidget> extends State<T> {
 
 abstract class MyState<T extends StatefulWidget> extends MyBaseState<T> {
   MyAppState findRoot() {
-    return context.ancestorStateOfType(const TypeMatcher<MyAppState>()) as MyAppState;
+    return context.findAncestorStateOfType<MyAppState>();
   }
 
   void indicate(final Light light) {

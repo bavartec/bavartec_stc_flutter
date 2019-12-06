@@ -170,11 +170,11 @@ class MyAppState<T extends StatefulWidget> extends MyBaseState<T> {
 
     periodicSafe(Duration(seconds: 1), () async {
       indicate(mdns: (await Api.mdnsQuery()) != null ? Light.green : Light.red);
-      return true;
+      return mounted;
     });
     periodicSafe(Duration(seconds: 1), () async {
       indicate(mqtt: MQTT.maybeConnect() ? Light.green : Light.red);
-      return true;
+      return mounted;
     });
     periodicSafe(Duration(seconds: 10), () async {
       if (lights.mdns == Light.green) {
@@ -187,7 +187,7 @@ class MyAppState<T extends StatefulWidget> extends MyBaseState<T> {
         }
       }
 
-      return true;
+      return mounted;
     });
   }
 
@@ -278,6 +278,12 @@ class MyAppState<T extends StatefulWidget> extends MyBaseState<T> {
                 .map((index) => ListTile(
                       title: Text(locale().routes[index.route]),
                       onTap: () {
+                        if (index.action != null) {
+                          navigator().pop();
+                          index.action(context);
+                          return;
+                        }
+
                         indicate(sync: Light.blue);
                         navigator().popAndPushNamed(index.route);
                       },
@@ -296,6 +302,7 @@ Map<String, Widget> routes = {
     MyIndex(route: '/control'),
     MyIndex(route: '/debug'),
   ]),
+  '/about': MyAboutPage(),
   '/config': MyIndexPage([
     MyIndex(route: '/config/wifi'),
     MyIndex(route: '/config/sensor'),
@@ -319,6 +326,5 @@ Map<String, Widget> routes = {
   ]),
   '/debug/listen': MyListenPage(),
   '/debug/query': MyQueryPage(),
-  '/about': MyAboutPage(),
   '/feedback': MyFeedbackPage(),
 };

@@ -27,128 +27,128 @@ class MyLocalizations {
     return Localizations.of<MyLocalizations>(context, MyLocalizations);
   }
 
-  Map<String, T> _get<T>() {
-    return _localizedValues[locale.languageCode] as Map<String, T>;
+  dynamic _get() {
+    return _localizedValues[locale.languageCode];
   }
 
-  String get aboutContent => _get()['about']['content'];
+  String get aboutContent => _get()['about']['content'] as String;
 
-  String get advanced => _get()['advanced'];
+  String get advanced => _get()['advanced'] as String;
 
-  String get again => _get()['again'];
+  String get again => _get()['again'] as String;
 
-  Map<String, String> get apiRegister => _get()['api']['register'];
+  Map<String, String> get apiRegister => _get()['api']['register'] as Map<String, String>;
 
-  String get back => _get()['back'];
+  String get back => _get()['back'] as String;
 
-  String get cancel => _get()['cancel'];
+  String get cancel => _get()['cancel'] as String;
 
-  String get configMQTTFail => _get()['config']['mqtt']['fail'];
+  String get configMQTTFail => _get()['config']['mqtt']['fail'] as String;
 
-  String get configMQTTOk => _get()['config']['mqtt']['ok'];
+  String get configMQTTOk => _get()['config']['mqtt']['ok'] as String;
 
-  String get configSensorChoose => _get()['config']['sensor']['choose'];
+  String get configSensorChoose => _get()['config']['sensor']['choose'] as String;
 
-  String get configSensorDIP => _get()['config']['sensor']['dip'];
+  String get configSensorDIP => _get()['config']['sensor']['dip'] as String;
 
-  List<String> get configSensorRecognized => _get()['config']['sensor']['recognized'];
+  List<String> get configSensorRecognized => _get()['config']['sensor']['recognized'] as List<String>;
 
-  String get configSensorStart => _get()['config']['sensor']['start'];
+  String get configSensorStart => _get()['config']['sensor']['start'] as String;
 
-  String get configSensorWait => _get()['config']['sensor']['wait'];
+  String get configSensorWait => _get()['config']['sensor']['wait'] as String;
 
-  String get configWifiConnect => _get()['config']['wifi']['connect'];
+  String get configWifiConnect => _get()['config']['wifi']['connect'] as String;
 
-  String get configWifiFail => _get()['config']['wifi']['fail'];
+  String get configWifiFail => _get()['config']['wifi']['fail'] as String;
 
-  String get configWifiOk => _get()['config']['wifi']['ok'];
+  String get configWifiOk => _get()['config']['wifi']['ok'] as String;
 
-  String get configWifiSmartconfig => _get()['config']['wifi']['smartconfig'];
+  String get configWifiSmartconfig => _get()['config']['wifi']['smartconfig'] as String;
 
-  String get confirmationRequired => _get()['confirmation']['required'];
+  String get confirmationRequired => _get()['confirmation']['required'] as String;
 
-  String get confirmationRestart => _get()['confirmation']['restart'];
+  String get confirmationRestart => _get()['confirmation']['restart'] as String;
 
-  String get confirmationUpdate => _get()['confirmation']['update'];
+  String get confirmationUpdate => _get()['confirmation']['update'] as String;
 
-  String get doContinue => _get()['continue'];
+  String get doContinue => _get()['continue'] as String;
 
-  String get controlNoLocal => _get()['control']['no-local'];
+  String get controlNoLocal => _get()['control']['no-local'] as String;
 
-  String get controlNoRemote => _get()['control']['no-remote'];
+  String get controlNoRemote => _get()['control']['no-remote'] as String;
 
-  String get custom => _get()['custom'];
+  String get custom => _get()['custom'] as String;
 
-  String get done => _get()['done'];
+  String get done => _get()['done'] as String;
 
-  String get errorConnectionFailed => _get()['error']['connection-failed'];
+  String get errorConnectionFailed => _get()['error']['connection-failed'] as String;
 
-  String get errorMQTTConnectionFailed => _get()['error']['mqtt-connection-failed'];
+  String get errorMQTTConnectionFailed => _get()['error']['mqtt-connection-failed'] as String;
 
-  String get errorMQTTNotSeeded => _get()['error']['mqtt-not-seeded'];
+  String get errorMQTTNotSeeded => _get()['error']['mqtt-not-seeded'] as String;
 
-  String get errorNoResponse => _get()['error']['no-response'];
+  String get errorNoResponse => _get()['error']['no-response'] as String;
 
-  String get errorPermissionRequired => _get()['error']['permission-required'];
+  String get errorPermissionRequired => _get()['error']['permission-required'] as String;
 
-  String get finish => _get()['finish'];
+  String get finish => _get()['finish'] as String;
 
-  String get ok => _get()['ok'];
+  String get ok => _get()['ok'] as String;
 
-  String get password => _get()['password'];
+  String get password => _get()['password'] as String;
 
-  String get port => _get()['port'];
+  String get port => _get()['port'] as String;
 
-  String get provider => _get()['provider'];
+  String get provider => _get()['provider'] as String;
 
-  String get refresh => _get()['refresh'];
+  String get refresh => _get()['refresh'] as String;
 
-  String get reset => _get()['reset'];
+  String get reset => _get()['reset'] as String;
 
-  Map<String, String> get routes => _get()['routes'];
+  Map<String, String> get routes => _get()['routes'] as Map<String, String>;
 
-  String get save => _get()['save'];
+  String get save => _get()['save'] as String;
 
-  String get seeded => _get()['seeded'];
+  String get seeded => _get()['seeded'] as String;
 
-  String get sensor => _get()['sensor'];
+  String get sensor => _get()['sensor'] as String;
 
-  String get server => _get()['server'];
+  String get server => _get()['server'] as String;
 
-  String get showPassword => _get()['show-password'];
+  String get showPassword => _get()['show-password'] as String;
 
-  String get ssid => _get()['ssid'];
+  String get ssid => _get()['ssid'] as String;
 
-  String get start => _get()['start'];
+  String get start => _get()['start'] as String;
 
-  String get stop => _get()['stop'];
+  String get stop => _get()['stop'] as String;
 
-  String get submit => _get()['submit'][''];
+  String get submit => _get()['submit'][''] as String;
 
-  String get submitFail => _get()['submit']['fail'];
+  String get submitFail => _get()['submit']['fail'] as String;
 
-  String get submitOk => _get()['submit']['ok'][''];
+  String get submitOk => _get()['submit']['ok'][''] as String;
 
-  String get submitOkLocal => _get()['submit']['ok']['local'];
+  String get submitOkLocal => _get()['submit']['ok']['local'] as String;
 
-  String get submitOkRemote => _get()['submit']['ok']['remote'];
+  String get submitOkRemote => _get()['submit']['ok']['remote'] as String;
 
-  String get unknown => _get()['unknown'];
+  String get unknown => _get()['unknown'] as String;
 
-  String get username => _get()['username'];
+  String get username => _get()['username'] as String;
 
-  String get validatePass => _get()['validate']['pass'];
+  String get validatePass => _get()['validate']['pass'] as String;
 
-  String get validatePort => _get()['validate']['port'];
+  String get validatePort => _get()['validate']['port'] as String;
 
-  String get validateServer => _get()['validate']['server'];
+  String get validateServer => _get()['validate']['server'] as String;
 
-  String get validateUser => _get()['validate']['user'];
+  String get validateUser => _get()['validate']['user'] as String;
 
-  List<String> get weekdays => _get()['weekdays'];
+  List<String> get weekdays => _get()['weekdays'] as List<String>;
 }
 
-const Map<String, Map<String, dynamic>> _localizedValues = {
+const Map<String, dynamic> _localizedValues = <String, dynamic>{
   'en': {
     'about': {
       'content': """

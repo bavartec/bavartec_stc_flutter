@@ -43,9 +43,8 @@ class _MyFeedbackPageState extends MyState<MyFeedbackPage> {
 
   @override
   Widget build(final BuildContext context) {
-    return Container(
+    return Padding(
       padding: const EdgeInsets.all(15.0),
-      height: 550,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
