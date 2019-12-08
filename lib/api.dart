@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bavartec_stc/common.dart';
 import 'package:bavartec_stc/http.dart';
+import 'package:bavartec_stc/mqtt.dart';
 import 'package:bavartec_stc/platform.dart';
 import 'package:bavartec_stc/wifi.dart';
 
@@ -16,7 +17,7 @@ class Api {
     }
 
     final String wifiName = connectivity[0];
-    return wifiName != WiFi.ssid;
+    return wifiName != (await WiFi.load())?.ssid;
   }
 
   static Future<String> mdnsQuery() async {
@@ -44,19 +45,19 @@ class Api {
   static Future<String> configInput(final String type) async {
     print("configInput <- $type");
     final String result = await _request(true, '/config/input', {
-      'type': type == null ? '' : type.toString(),
+      'type': type?.toString(),
     });
     print("configInput -> $result");
     return result;
   }
 
-  static Future<bool> configMQTT(final String server, final int port, final String user, final String pass) async {
-    print("configMQTT <- $server | $port | $user | $pass");
+  static Future<bool> configMQTT(final MQTT config) async {
+    print("configMQTT <- ${config?.server} | ${config?.port} | ${config?.user} | ${config?.pass}");
     final String result = await _request(true, '/config/mqtt', {
-      'server': server,
-      'port': port.toString(),
-      'user': user,
-      'pass': pass,
+      'server': config?.server,
+      'port': config?.port?.toString(),
+      'user': config?.user,
+      'pass': config?.pass,
     });
     final bool success = result != null;
     print("configMQTT -> $success");
@@ -81,12 +82,12 @@ class Api {
       final double nightValue}) async {
     print("control <- $enabled | $noControlValue | $controlValue | $weekly | $nightly | $nightValue");
     final String result = await _request(true, '/control', {
-      'enabled': enabled == null ? '' : enabled.toString(),
-      'noControlValue': noControlValue == null ? '' : (noControlValue + KELVIN).toString(),
-      'controlValue': controlValue == null ? '' : (controlValue + KELVIN).toString(),
-      'weekly': weekly == null ? '' : weekly.join(),
-      'nightly': nightly == null ? '' : nightly.join(),
-      'nightValue': nightValue == null ? '' : (nightValue + KELVIN).toString(),
+      'enabled': enabled?.toString(),
+      'noControlValue': noControlValue == null ? null : (noControlValue + KELVIN).toString(),
+      'controlValue': controlValue == null ? null : (controlValue + KELVIN).toString(),
+      'weekly': weekly?.join(),
+      'nightly': nightly?.join(),
+      'nightValue': nightValue == null ? null : (nightValue + KELVIN).toString(),
     });
     final bool success = result != null;
     print("control -> $success");

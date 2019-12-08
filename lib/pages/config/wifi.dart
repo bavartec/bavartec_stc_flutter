@@ -24,8 +24,6 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
   bool isSubmitting = false;
 
   void _onLoad() async {
-    await WiFi.load();
-
     periodicSafe(Duration(seconds: 1), () async {
       if (!await _refreshWifi()) {
         navigate(null);
@@ -47,9 +45,11 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
     final String wifiName = connectivity[0];
     final String wifiBSSID = connectivity[1];
 
+    final WiFi config = await WiFi.load() ?? WiFi();
+
     setState(() {
-      if (wifiName == WiFi.ssid && wifiName != ssid && wifiName != null) {
-        pass = WiFi.pass;
+      if (wifiName == config.ssid && wifiName != ssid && wifiName != null) {
+        pass = config.pass;
         passController.value = new TextEditingValue(text: pass);
       }
 
@@ -71,19 +71,22 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
       return;
     }
 
-    WiFi.set(ssid, bssid, pass);
+    final WiFi config = WiFi(
+      ssid: ssid,
+      bssid: bssid,
+      pass: pass,
+    );
 
     isSubmitting = true;
-    final bool success = await indicateSuccess(WiFi.submit());
+    final bool success = await indicateSuccess(config.submit());
     isSubmitting = false;
 
     if (!success) {
-      WiFi.reset();
       toast(locale().configWifiFail);
       return;
     }
 
-    await WiFi.save();
+    await WiFi.save(config);
 
     toast(locale().configWifiOk);
     await MyAppState.saveDebugQuery();

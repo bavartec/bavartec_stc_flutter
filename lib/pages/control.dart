@@ -87,18 +87,15 @@ class _MyControlPageState extends MyState<MyControlPage> {
       toast(locale().submitFail);
     }
 
-    if (!WiFi.valid()) {
-      toast(locale().controlNoLocal);
-    }
-
-    if (!MQTT.valid()) {
-      toast(locale().controlNoRemote);
-    }
-
     return local || remote;
   }
 
   Future<bool> _syncLocal() async {
+    if (WiFi.load() == null) {
+      toast(locale().controlNoLocal);
+      return false;
+    }
+
     return await Api.control(
       enabled: true,
       controlValue: newValueH,
@@ -108,7 +105,8 @@ class _MyControlPageState extends MyState<MyControlPage> {
   }
 
   Future<bool> _syncRemote() async {
-    if (!MQTT.valid()) {
+    if (MQTT.load() == null) {
+      toast(locale().controlNoRemote);
       return false;
     }
 

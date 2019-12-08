@@ -12,37 +12,37 @@ class MQTT {
   static const String SERVER = 'mqtt.bavartec.de';
   static const int PORT = 8883;
 
-  static String server;
-  static int port;
-  static String user;
-  static String pass;
-
   static MqttClient _client;
 
   static int lastConnect = 0;
   static int retryCount = 0;
   static int retryWait = 0;
 
-  static Future<void> load() async {
+  MQTT({
+    this.server,
+    this.port,
+    this.user,
+    this.pass,
+  });
+
+  String server = '';
+  int port;
+  String user = '';
+  String pass = '';
+
+  static Future<MQTT> load() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final MQTT config = MQTT();
 
-    server = prefs.getString('/config/mqtt/server');
-    port = prefs.getInt('/config/mqtt/port');
-    user = prefs.getString('/config/mqtt/user');
-    pass = prefs.getString('/config/mqtt/pass');
+    config.server = prefs.getString('/config/mqtt/server');
+    config.port = prefs.getInt('/config/mqtt/port');
+    config.user = prefs.getString('/config/mqtt/user');
+    config.pass = prefs.getString('/config/mqtt/pass');
+
+    return config.server == null ? null : config;
   }
 
-  static bool valid() {
-    return server != null;
-  }
-
-  static String validate(
-    final String server,
-    final int port,
-    final String user,
-    final String pass, {
-    final MyLocalizations locale,
-  }) {
+  String validate(final MyLocalizations locale) {
     if (!Regex.server.hasMatch(server)) {
       return locale.validateServer;
     }
@@ -66,37 +66,19 @@ class MQTT {
     return null;
   }
 
-  static void reset() {
-    MQTT.server = null;
-    MQTT.port = null;
-    MQTT.user = null;
-    MQTT.pass = null;
-  }
+  static Future<void> save(final MQTT config) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  static void set(
-    final String server,
-    final int port,
-    final String user,
-    final String pass,
-  ) {
-    MQTT.server = server;
-    MQTT.port = port;
-    MQTT.user = user;
-    MQTT.pass = pass;
+    prefs.setString('/config/mqtt/server', config?.server);
+    prefs.setInt('/config/mqtt/port', config?.port);
+    prefs.setString('/config/mqtt/user', config?.user);
+    prefs.setString('/config/mqtt/pass', config?.pass);
 
     disconnect();
   }
 
-  static Future<void> save() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('/config/mqtt/server', server);
-    prefs.setInt('/config/mqtt/port', port);
-    prefs.setString('/config/mqtt/user', user);
-    prefs.setString('/config/mqtt/pass', pass);
-  }
-
   static bool connected() {
-    return _client != null;
+    return _client != null && _client.connectionStatus.state == MqttConnectionState.connected;
   }
 
   static bool maybeConnect() {
@@ -104,36 +86,34 @@ class MQTT {
       return true;
     }
 
-    if (!MQTT.valid()) {
-      return false;
-    }
-
     final int now = DateTime.now().millisecondsSinceEpoch;
 
     if (now - lastConnect >= retryWait) {
-      MQTT.connect();
+      connect();
     }
 
     return false;
   }
 
   static Future<bool> connect() async {
-    if (connected()) {
-      return true;
+    if (_client != null) {
+      return _client.connectionStatus.state == MqttConnectionState.connected;
     }
 
     lastConnect = DateTime.now().millisecondsSinceEpoch;
 
+    final MQTT config = await load();
     final String clientId = await Platform.deviceIdentifier();
-    _client = MqttClient.withPort(server, clientId, port);
-    _client.secure = [443, 8883].contains(port);
+
+    _client = MqttClient.withPort(config.server, clientId, config.port);
+    _client.secure = [443, 8883].contains(config.port);
     _client.onDisconnected = () {
       print(_client.connectionStatus.state);
       _client = null;
     };
 
     try {
-      await _client.connect(user, pass);
+      await _client.connect(config.user, config.pass);
     } on Exception {
       // MqttConnectionState.faulted
     }
@@ -168,15 +148,16 @@ class MQTT {
   }
 
   static void publish(final String topic, final String payload) async {
+    final MQTT config = await load();
     final String device = await seed();
 
     final MqttClientPayloadBuilder builder = MqttClientPayloadBuilder();
     builder.addString(payload);
 
-    _client.publishMessage('user/$user/device/$device/$topic', MqttQos.atLeastOnce, builder.payload);
+    _client.publishMessage('user/${config.user}/device/$device/$topic', MqttQos.atLeastOnce, builder.payload);
   }
 
-  static Future<String> register() async {
+  Future<String> register() async {
     final String registration = await Http.requestPostJson('https://api.mqtt.bavartec.de/register', {
       'user': user,
       'pass': pass,

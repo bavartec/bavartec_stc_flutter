@@ -12,7 +12,6 @@ import 'package:bavartec_stc/pages/debug/listen.dart';
 import 'package:bavartec_stc/pages/debug/query.dart';
 import 'package:bavartec_stc/pages/feedback.dart';
 import 'package:bavartec_stc/pages/index.dart';
-import 'package:bavartec_stc/wifi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -165,9 +164,6 @@ class MyAppState<T extends StatefulWidget> extends MyBaseState<T> {
   }
 
   void _onLoad() async {
-    await MQTT.load();
-    await WiFi.load();
-
     periodicSafe(Duration(seconds: 1), () async {
       indicate(mdns: (await Api.mdnsQuery()) != null ? Light.green : Light.red);
       return mounted;

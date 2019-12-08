@@ -21,66 +21,58 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
   TextEditingController passController = TextEditingController();
 
   bool provider = true;
-  String server;
-  int port;
-  String user;
-  String pass;
+  MQTT config;
   bool showPass = false;
 
   void _onLoad() async {
-    await MQTT.load();
+    final MQTT config = await MQTT.load() ?? MQTT();
 
     setState(() {
-      provider = [null, MQTT.SERVER].contains(MQTT.server);
-      server = MQTT.server;
-      port = MQTT.port;
-      user = MQTT.user;
-      pass = MQTT.pass;
+      provider = [null, MQTT.SERVER].contains(config.server);
+      this.config = config;
 
-      serverController.value = new TextEditingValue(text: server ?? '');
-      portController.value = new TextEditingValue(text: port?.toString() ?? '');
-      userController.value = new TextEditingValue(text: user ?? '');
-      passController.value = new TextEditingValue(text: pass ?? '');
+      serverController.value = new TextEditingValue(text: config.server);
+      portController.value = new TextEditingValue(text: config.port?.toString() ?? '');
+      userController.value = new TextEditingValue(text: config.user);
+      passController.value = new TextEditingValue(text: config.pass);
     });
   }
 
   void _onSubmit() async {
     indicateNull();
 
-    final String server = provider ? MQTT.SERVER : this.server;
-    final int port = provider ? MQTT.PORT : this.port;
+    if (provider) {
+      config.server = MQTT.SERVER;
+      config.port = MQTT.PORT;
+    }
 
-    final String validation = MQTT.validate(server, port, user, pass);
+    final String validation = config.validate(locale());
 
     if (validation != null) {
       toast(validation);
       return;
     }
 
-    MQTT.set(server, port, user, pass);
-
     if (provider) {
       indicate(Light.yellow);
 
-      final String registration = await MQTT.register();
+      final String registration = await config.register();
       toast(locale().apiRegister[registration]);
 
       if (registration != 'success') {
         indicate(Light.red);
-        MQTT.reset();
         return;
       }
     }
 
-    final bool success = await indicateSuccess(Api.configMQTT(server, port, user, pass));
+    final bool success = await indicateSuccess(Api.configMQTT(config));
 
     if (!success) {
-      MQTT.reset();
       toast(locale().configMQTTFail);
       return;
     }
 
-    await MQTT.save();
+    await MQTT.save(config);
 
     toast(locale().configMQTTOk);
     await MyAppState.saveDebugQuery();
@@ -142,7 +134,7 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
                       onChanged: (server) {
                         indicateNull();
                         setState(() {
-                          this.server = server;
+                          config.server = server;
                         });
                       },
                       textAlign: TextAlign.center,
@@ -174,7 +166,7 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
                       onChanged: (port) {
                         indicateNull();
                         setState(() {
-                          this.port = int.tryParse(port);
+                          config.port = int.tryParse(port);
                         });
                       },
                       textAlign: TextAlign.center,
@@ -208,7 +200,7 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
                 onChanged: (user) {
                   indicateNull();
                   setState(() {
-                    this.user = user;
+                    config.user = user;
                   });
                 },
                 textAlign: TextAlign.center,
@@ -240,7 +232,7 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
                 onChanged: (password) {
                   indicateNull();
                   setState(() {
-                    this.pass = password;
+                    config.pass = password;
                   });
                 },
                 textAlign: TextAlign.center,

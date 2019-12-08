@@ -6,44 +6,43 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smartconfig/smartconfig.dart';
 
 class WiFi {
-  static String ssid;
-  static String bssid;
-  static String pass;
+  WiFi({
+    this.ssid,
+    this.bssid,
+    this.pass,
+  });
 
-  static Future<void> load() async {
+  String ssid;
+  String bssid;
+  String pass;
+
+  static Future<WiFi> load() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    ssid = prefs.getString('/config/wifi/ssid');
-    pass = prefs.getString('/config/wifi/pass');
+    final WiFi config = WiFi();
+
+    config.ssid = prefs.getString('/config/wifi/ssid');
+    config.pass = prefs.getString('/config/wifi/pass');
+
+    return config.ssid == null ? null : config;
   }
 
-  static bool valid() {
-    return WiFi.ssid != null;
-  }
-
-  static void reset() {
-    WiFi.ssid = null;
-    WiFi.bssid = null;
-    WiFi.pass = null;
-  }
-
-  static void set(
-    final String ssid,
-    final String bssid,
-    final String pass,
-  ) async {
-    WiFi.ssid = ssid;
-    WiFi.bssid = bssid;
-    WiFi.pass = pass;
-  }
-
-  static Future<void> save() async {
+  static Future<void> save(final WiFi config) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('/config/wifi/ssid', ssid);
-    prefs.setString('/config/wifi/pass', pass);
+
+    prefs.setString('/config/wifi/ssid', config?.ssid);
+    prefs.setString('/config/wifi/pass', config?.pass);
   }
 
-  static Future<bool> submit() async {
-    return (await Smartconfig.start(ssid, bssid, pass)) != null || (await Api.mdnsQuery()) != null;
+  Future<bool> submit() async {
+    if ((await Smartconfig.start(ssid, bssid, pass)) != null) {
+      return true;
+    }
+
+    if ((await Api.mdnsQuery()) != null) {
+      return true;
+    }
+
+    return false;
   }
 
   static Future<bool> getConnectivityPermission() async {

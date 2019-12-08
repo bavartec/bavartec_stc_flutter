@@ -5,7 +5,7 @@ import 'package:http/http.dart';
 
 class Http {
   static String urlEncode(final Map<String, String> data) {
-    return data.entries.map((entry) => entry.key + '=' + entry.value).join('&');
+    return data.entries.where((entry) => entry.value != null).map((entry) => entry.key + '=' + entry.value).join('&');
   }
 
   static Future<Response> getRequest(final String url, final Map<String, String> data) {
