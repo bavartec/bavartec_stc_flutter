@@ -113,7 +113,7 @@ class _WeekSliderState extends MyState<WeekSlider> {
       behavior: HitTestBehavior.opaque,
       onPointerDown: _pointerDown,
       onPointerMove: _pointerMove,
-      onPointerUp: (event) {
+      onPointerUp: (final PointerUpEvent event) {
         widget.onChanged(times);
       },
       child: CustomPaint(

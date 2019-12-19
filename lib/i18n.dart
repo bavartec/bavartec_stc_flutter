@@ -202,7 +202,7 @@ in the context of the usage of our MQTT server, if such was previously given."""
 By submitting this form, you're giving your consent to the processing of your data,
 in the context of the usage of our MQTT server, on the basis of Art. 6 para. 1 lit. a GDPR.
 Please refer to our """,
-            "data privacy declaration",
+            "privacy policy",
             " for more information on how we process data.",
           ],
         },
@@ -253,7 +253,7 @@ Please press the button "T1" on the device. When the LED "LED1" is flashing, tap
 By submitting this form, you're giving your consent to the processing of your data,
 so that we can process your request, on the basis of Art. 6 para. 1 lit. a GDPR.
 Please refer to our """,
-        "data privacy declaration",
+        "privacy policy",
         " for more information on how we process data.",
       ],
     },

@@ -24,9 +24,7 @@ const List<String> sensors = <String>[
 typedef StateCallback = void Function(Widget stateChild);
 
 class MyConfigSensorPage extends StatefulWidget {
-  MyConfigSensorPage({Key key, this.title}) : super(key: key);
-
-  final String title;
+  MyConfigSensorPage({Key key}) : super(key: key);
 
   @override
   _MyConfigSensorPageState createState() => _MyConfigSensorPageState();
@@ -169,7 +167,7 @@ class _MyConfigSensorPageLoopState extends MyState<_MyConfigSensorPageLoop> {
   Widget build(final BuildContext context) {
     return FutureBuilder<String>(
       future: future,
-      builder: (context, snap) {
+      builder: (final BuildContext context, final AsyncSnapshot<String> snap) {
         if (snap.connectionState != ConnectionState.done) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -243,12 +241,12 @@ class _MyConfigSensorPageLoopState extends MyState<_MyConfigSensorPageLoop> {
           child: dropdownMap<String>(
             selection,
             options.keys.toList(growable: false),
-            onChanged: (selection) {
+            onChanged: (final String selection) {
               setState(() {
                 this.selection = selection;
               });
             },
-            mapping: (key) {
+            mapping: (final String key) {
               return options[key];
             },
           ),
@@ -318,7 +316,7 @@ class _MyConfigSensorPageEndState extends MyState<_MyConfigSensorPageEnd> {
           padding: const EdgeInsets.symmetric(vertical: 30.0),
           child: FutureBuilder<String>(
             future: future,
-            builder: (context, snap) {
+            builder: (final BuildContext context, final AsyncSnapshot<String> snap) {
               if (snap.connectionState != ConnectionState.done) {
                 return CircularProgressIndicator();
               }
@@ -416,7 +414,7 @@ class _MyConfigSensorPageXState extends MyState<_MyConfigSensorPageX> {
           child: dropdown(
             sensor,
             sensors,
-            onChanged: (String sensor) {
+            onChanged: (final String sensor) {
               indicateNull();
               setState(() {
                 this.sensor = sensor;

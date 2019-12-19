@@ -100,7 +100,7 @@ class _BigSliderState extends MyState<BigSlider> {
       behavior: HitTestBehavior.opaque,
       onPointerDown: _pointerDown,
       onPointerMove: _pointerMove,
-      onPointerUp: (event) {
+      onPointerUp: (final PointerUpEvent event) {
         widget.onChanged(value, true);
       },
       child: Padding(

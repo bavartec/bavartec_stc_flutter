@@ -1,13 +1,12 @@
 import 'package:bavartec_stc/api.dart';
 import 'package:bavartec_stc/common.dart';
 import 'package:bavartec_stc/components/linktext.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MyFeedbackPage extends StatefulWidget {
-  MyFeedbackPage({Key key, this.title}) : super(key: key);
-
-  final String title;
+  MyFeedbackPage({Key key}) : super(key: key);
 
   @override
   _MyFeedbackPageState createState() => _MyFeedbackPageState();
@@ -71,7 +70,7 @@ class _MyFeedbackPageState extends MyState<MyFeedbackPage> {
               fillColor: Colors.white,
               filled: true,
             ),
-            onChanged: (value) {
+            onChanged: (final String value) {
               setState(() {
                 message = value;
               });
@@ -88,7 +87,7 @@ class _MyFeedbackPageState extends MyState<MyFeedbackPage> {
               fillColor: Colors.white,
               filled: true,
             ),
-            onChanged: (value) {
+            onChanged: (final String value) {
               setState(() {
                 contactMethod = value;
               });
@@ -96,7 +95,7 @@ class _MyFeedbackPageState extends MyState<MyFeedbackPage> {
           ),
           const SizedBox(height: 30.0),
           LinkText(
-            builder: (context, recognizer) {
+            builder: (final BuildContext context, final TapGestureRecognizer recognizer) {
               return Text.rich(
                 TextSpan(
                   children: <TextSpan>[

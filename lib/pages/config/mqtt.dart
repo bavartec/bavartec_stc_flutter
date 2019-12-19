@@ -3,14 +3,13 @@ import 'package:bavartec_stc/common.dart';
 import 'package:bavartec_stc/components/linktext.dart';
 import 'package:bavartec_stc/main.dart';
 import 'package:bavartec_stc/mqtt.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MyConfigMQTTPage extends StatefulWidget {
-  MyConfigMQTTPage({Key key, this.title}) : super(key: key);
-
-  final String title;
+  MyConfigMQTTPage({Key key}) : super(key: key);
 
   @override
   _MyConfigMQTTPageState createState() => _MyConfigMQTTPageState();
@@ -132,12 +131,12 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
         dropdownMap<bool>(
           provider,
           [true, false],
-          onChanged: (provider) {
+          onChanged: (final bool provider) {
             setState(() {
               this.provider = provider;
             });
           },
-          mapping: (provider) {
+          mapping: (final bool provider) {
             return provider ? "BavarTec" : locale().custom;
           },
         ),
@@ -165,7 +164,7 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(255),
                       ],
-                      onChanged: (server) {
+                      onChanged: (final String server) {
                         indicateNull();
                         setState(() {
                           config.server = server;
@@ -197,7 +196,7 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
                         LengthLimitingTextInputFormatter(5),
                       ],
                       keyboardType: TextInputType.numberWithOptions(),
-                      onChanged: (port) {
+                      onChanged: (final String port) {
                         indicateNull();
                         setState(() {
                           config.port = int.tryParse(port);
@@ -231,7 +230,7 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(31),
                 ],
-                onChanged: (user) {
+                onChanged: (final String user) {
                   indicateNull();
                   setState(() {
                     config.user = user;
@@ -263,7 +262,7 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
                   LengthLimitingTextInputFormatter(63),
                 ],
                 obscureText: !showPass,
-                onChanged: (password) {
+                onChanged: (final String password) {
                   indicateNull();
                   setState(() {
                     config.pass = password;
@@ -273,7 +272,7 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
               ),
               CheckboxListTile(
                 value: showPass,
-                onChanged: (value) {
+                onChanged: (final bool value) {
                   indicateNull();
                   setState(() {
                     this.showPass = value;
@@ -293,7 +292,7 @@ class _MyConfigMQTTPageState extends MyState<MyConfigMQTTPage> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15.0),
                 child: LinkText(
-                  builder: (context, recognizer) {
+                  builder: (final BuildContext context, final TapGestureRecognizer recognizer) {
                     return Text.rich(
                       TextSpan(
                         children: <TextSpan>[

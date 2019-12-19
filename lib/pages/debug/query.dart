@@ -3,9 +3,7 @@ import 'package:bavartec_stc/common.dart';
 import 'package:flutter/material.dart';
 
 class MyQueryPage extends StatefulWidget {
-  MyQueryPage({Key key, this.title}) : super(key: key);
-
-  final String title;
+  MyQueryPage({Key key}) : super(key: key);
 
   @override
   _MyQueryPageState createState() => _MyQueryPageState();

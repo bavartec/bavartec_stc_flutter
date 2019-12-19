@@ -5,9 +5,7 @@ import 'package:bavartec_stc/common.dart';
 import 'package:flutter/material.dart';
 
 class MyListenPage extends StatefulWidget {
-  MyListenPage({Key key, this.title}) : super(key: key);
-
-  final String title;
+  MyListenPage({Key key}) : super(key: key);
 
   @override
   _MyListenPageState createState() => _MyListenPageState();

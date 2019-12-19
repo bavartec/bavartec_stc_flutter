@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyAboutPage extends StatefulWidget {
-  MyAboutPage({Key key, this.title}) : super(key: key);
-
-  final String title;
+  MyAboutPage({Key key}) : super(key: key);
 
   @override
   _MyAboutPageState createState() => _MyAboutPageState();

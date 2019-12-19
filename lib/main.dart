@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
     return showDialog<bool>(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) {
+      builder: (final BuildContext context) {
         return AlertDialog(
           title: Text(locale.confirmationRequired),
           content: SingleChildScrollView(
@@ -197,7 +197,7 @@ class MyAppState<T extends StatefulWidget> extends MyBaseState<T> {
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setStringList('/debug/query/keys', queryData.keys.toList(growable: false));
-    queryData.entries.forEach((entry) {
+    queryData.entries.forEach((final MapEntry<String, String> entry) {
       prefs.setString('/debug/query/${entry.key}', entry.value);
     });
     return true;
@@ -210,12 +210,12 @@ class MyAppState<T extends StatefulWidget> extends MyBaseState<T> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return WillPopScope(
       child: Navigator(
-        onGenerateRoute: (settings) {
+        onGenerateRoute: (final RouteSettings settings) {
           return MaterialPageRoute<dynamic>(
-            builder: (BuildContext context) {
+            builder: (final BuildContext context) {
               return scaffold(context, settings.name);
             },
           );
@@ -252,7 +252,7 @@ class MyAppState<T extends StatefulWidget> extends MyBaseState<T> {
             child: Padding(
               padding: EdgeInsets.all(1),
               child: Builder(
-                builder: (BuildContext context) {
+                builder: (final BuildContext context) {
                   this.innerContext = context;
                   return routes[path];
                 },
@@ -273,25 +273,25 @@ class MyAppState<T extends StatefulWidget> extends MyBaseState<T> {
               MyIndex(route: '/feedback'),
               MyIndex(
                 route: '/privacy',
-                action: (context) {
+                action: (final BuildContext context) {
                   launch("https://www.bavartec.de/privacy/");
                 },
               ),
-            ]
-                .map((index) => ListTile(
-                      title: Text(locale().routes[index.route]),
-                      onTap: () {
-                        if (index.action != null) {
-                          navigator().pop();
-                          index.action(context);
-                          return;
-                        }
+            ].map((final MyIndex index) {
+              return ListTile(
+                title: Text(locale().routes[index.route]),
+                onTap: () {
+                  if (index.action != null) {
+                    navigator().pop();
+                    index.action(context);
+                    return;
+                  }
 
-                        indicate(sync: Light.blue);
-                        navigator().popAndPushNamed(index.route);
-                      },
-                    ))
-                .toList(growable: false),
+                  indicate(sync: Light.blue);
+                  navigator().popAndPushNamed(index.route);
+                },
+              );
+            }).toList(growable: false),
           ),
         ),
       ),

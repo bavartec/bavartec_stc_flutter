@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class MyConfigWifiPage extends StatefulWidget {
-  MyConfigWifiPage({Key key, this.title}) : super(key: key);
-
-  final String title;
+  MyConfigWifiPage({Key key}) : super(key: key);
 
   @override
   _MyConfigWifiPageState createState() => _MyConfigWifiPageState();
@@ -133,7 +131,7 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
                   LengthLimitingTextInputFormatter(63),
                 ],
                 obscureText: !showPass,
-                onChanged: (password) {
+                onChanged: (final String password) {
                   indicateNull();
                   setState(() {
                     this.pass = password;
@@ -143,7 +141,7 @@ class _MyConfigWifiPageState extends MyState<MyConfigWifiPage> {
               ),
               CheckboxListTile(
                 value: showPass,
-                onChanged: (value) {
+                onChanged: (final bool value) {
                   indicateNull();
                   setState(() {
                     this.showPass = value;

@@ -16,9 +16,7 @@ const MIN_T = 12.0;
 const MAX_T = 28.0;
 
 class MyControlPage extends StatefulWidget {
-  MyControlPage({Key key, this.title}) : super(key: key);
-
-  final String title;
+  MyControlPage({Key key}) : super(key: key);
 
   @override
   _MyControlPageState createState() => _MyControlPageState();
@@ -68,14 +66,14 @@ class _MyControlPageState extends MyState<MyControlPage> {
     final Future<bool> localFuture = _syncLocal();
     final Future<bool> remoteFuture = _syncRemote();
 
-    final bool local = await localFuture.then((success) {
+    final bool local = await localFuture.then((final bool success) {
       if (success) {
         toast(locale().submitOkLocal);
       }
 
       return success;
     });
-    final bool remote = await remoteFuture.then((success) {
+    final bool remote = await remoteFuture.then((final bool success) {
       if (success) {
         toast(locale().submitOkRemote);
       }
@@ -150,7 +148,7 @@ class _MyControlPageState extends MyState<MyControlPage> {
                   max: MAX_T,
                   oldValue: currentValueL,
                   newValue: newValueL,
-                  onChanged: (value, done) {
+                  onChanged: (final double value, final bool done) {
                     indicate(null);
                     setState(() {
                       if (value > newValueH) {
@@ -169,7 +167,7 @@ class _MyControlPageState extends MyState<MyControlPage> {
                   max: MAX_T,
                   oldValue: currentValueH,
                   newValue: newValueH,
-                  onChanged: (value, done) {
+                  onChanged: (final double value, final bool done) {
                     indicate(null);
                     setState(() {
                       if (value < newValueL) {
@@ -193,7 +191,7 @@ class _MyControlPageState extends MyState<MyControlPage> {
             constraints: const BoxConstraints(maxWidth: 600.0),
             child: WeekSlider(
               times: weekly,
-              onChanged: (times) {
+              onChanged: (final List<List<bool>> times) {
                 indicateNull();
                 setState(() {
                   weekly = times;

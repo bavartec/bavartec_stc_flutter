@@ -37,7 +37,7 @@ class Lights {
 }
 
 String formatQueryString(final Map<String, String> data) {
-  return data.entries.map((entry) {
+  return data.entries.map((final MapEntry<String, String> entry) {
     return entry.key + ': ' + entry.value;
   }).join('\n');
 }
@@ -73,7 +73,7 @@ abstract class MyBaseState<T extends StatefulWidget> extends State<T> {
   @override
   void setState(fn) {
     if (mounted) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((final Duration duration) {
         super.setState(fn);
       });
       window.scheduleFrame();
@@ -187,7 +187,7 @@ abstract class MyState<T extends StatefulWidget> extends MyBaseState<T> {
     return DropdownButton<T>(
       value: value,
       onChanged: onChanged,
-      items: items.map<DropdownMenuItem<T>>((T value) {
+      items: items.map<DropdownMenuItem<T>>((final T value) {
         return DropdownMenuItem<T>(
           value: value,
           child: Text(mapping(value)),
