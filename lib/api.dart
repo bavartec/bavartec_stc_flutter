@@ -10,6 +10,12 @@ const String discovery_service = '_googlecast._tcp';
 
 class Api {
   static Future<bool> earlyAbort() async {
+    final WiFi config = await WiFi.load();
+
+    if (config == null) {
+      return true;
+    }
+
     final List<String> connectivity = await WiFi.getConnectivity();
 
     if (connectivity == null) {
@@ -17,11 +23,13 @@ class Api {
     }
 
     final String wifiName = connectivity[0];
-    return wifiName != (await WiFi.load())?.ssid;
+    return wifiName != config.ssid;
   }
 
-  static Future<String> mdnsQuery() async {
-    if (await earlyAbort()) {
+  static Future<String> mdnsQuery({
+    final bool idle = false,
+  }) async {
+    if (idle && await earlyAbort()) {
       return null;
     }
 

@@ -166,7 +166,7 @@ class MyAppState<T extends StatefulWidget> extends MyBaseState<T> {
 
   void _onLoad() async {
     periodicSafe(Duration(seconds: 1), () async {
-      indicate(mdns: (await Api.mdnsQuery()) != null ? Light.green : Light.red);
+      indicate(mdns: (await Api.mdnsQuery(idle: true)) != null ? Light.green : Light.red);
       return mounted;
     });
     periodicSafe(Duration(seconds: 1), () async {

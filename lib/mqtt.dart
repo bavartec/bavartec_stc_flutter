@@ -100,9 +100,14 @@ class MQTT {
       return _client.connectionStatus.state == MqttConnectionState.connected;
     }
 
+    final MQTT config = await load();
+
+    if (config == null) {
+      return false;
+    }
+
     lastConnect = DateTime.now().millisecondsSinceEpoch;
 
-    final MQTT config = await load();
     final String clientId = await Platform.deviceIdentifier();
 
     _client = MqttClient.withPort(config.server, clientId, config.port);
@@ -147,14 +152,24 @@ class MQTT {
     return prefs.getString('/debug/query/macSTA');
   }
 
-  static void publish(final String topic, final String payload) async {
+  static Future<bool> publish(final String topic, final String payload) async {
+    if (_client == null) {
+      return false;
+    }
+
     final MQTT config = await load();
+
+    if (config == null) {
+      return false;
+    }
+
     final String device = await seed();
 
     final MqttClientPayloadBuilder builder = MqttClientPayloadBuilder();
     builder.addString(payload);
 
     _client.publishMessage('user/${config.user}/device/$device/$topic', MqttQos.atLeastOnce, builder.payload);
+    return true;
   }
 
   Future<String> register() async {
