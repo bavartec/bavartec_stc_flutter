@@ -12,6 +12,7 @@ import 'package:bavartec_stc/pages/debug/listen.dart';
 import 'package:bavartec_stc/pages/debug/query.dart';
 import 'package:bavartec_stc/pages/feedback.dart';
 import 'package:bavartec_stc/pages/index.dart';
+import 'package:bavartec_stc/pages/legal/licenses.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -271,8 +272,9 @@ class MyAppState<T extends StatefulWidget> extends MyBaseState<T> {
               MyIndex(route: '/control'),
               MyIndex(route: '/debug'),
               MyIndex(route: '/feedback'),
+              MyIndex(route: '/legal/licenses'),
               MyIndex(
-                route: '/privacy',
+                route: '/legal/privacy',
                 action: (final BuildContext context) {
                   launch("https://www.bavartec.de/privacy/");
                 },
@@ -330,4 +332,5 @@ Map<String, Widget> routes = {
   '/debug/listen': MyListenPage(),
   '/debug/query': MyQueryPage(),
   '/feedback': MyFeedbackPage(),
+  '/legal/licenses': MyLicensesPage(),
 };

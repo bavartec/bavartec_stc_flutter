@@ -34,5 +34,9 @@ flutter:
 
   assets:
     - assets/
+    - assets/licenses/
+    - assets/licenses/dart-lang/
+    - assets/licenses/flutter/
+    - assets/licenses/shamblett/
     - assets/manual/
     - assets/manual/dip/
